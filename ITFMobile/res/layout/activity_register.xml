@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg"
+    android:orientation="vertical" >
+
+    <include layout="@layout/title_bar" />
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_repeat" >
+
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Your name"
+                android:textColor="@color/text"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edtRegisterName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:ems="10"
+                android:hint="David"
+                android:inputType="textPersonName"
+                android:padding="5dp"
+                android:textColor="@color/text"
+                android:textColorHint="@color/text_hint"
+                android:textSize="14sp" />
+<requestFocus />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingRight="10dp"
+                android:text="Your email"
+                android:textColor="@color/text"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edtRegisterEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:ems="10"
+                android:hint="email@example.com"
+                android:inputType="textEmailAddress"
+                android:padding="5dp"
+                android:textColor="@color/text"
+                android:textColorHint="@color/text_hint"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Password"
+                android:textColor="@color/text"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edtRegisterPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:ems="10"
+                android:hint="●●●●●●"
+                android:inputType="textPassword"
+                android:padding="5dp"
+                android:textColor="@color/text"
+                android:textColorHint="@color/text_hint"
+                android:textSize="14sp" >
+
+            </EditText>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Confirm password"
+                android:textColor="@color/text"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edtRegisterConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:ems="10"
+                android:hint="●●●●●●"
+                android:inputType="textPassword"
+                android:padding="5dp"
+                android:textColor="@color/text"
+                android:textColorHint="@color/text_hint"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnRegister"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_button"
+                android:onClick="onClick"
+                android:text="REGISTER"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

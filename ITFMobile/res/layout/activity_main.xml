@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.vphoainha.itfmobile.view.CustomSlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/slidingPane"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:layout_gravity="left"
+	 >
+
+	<include layout="@layout/slidingmenu" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical" >
+
+		<include layout="@layout/title_bar_fragment" />
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical" >
+			
+		    <LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:background="@drawable/bg_button_square"
+			    android:orientation="vertical" >
+
+			    <TextView
+			        android:id="@+id/btnRegister"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:background="@drawable/bg_repeat"
+			        android:clickable="true"
+			        android:padding="10dp"
+			        android:text="Forum > Class > 09T4"
+			        android:textColor="@color/white" />
+			</LinearLayout>
+			
+			<FrameLayout
+				android:id="@+id/content"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_weight="1" >
+			</FrameLayout>
+			 
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:background="@drawable/bg_button_square"
+			    android:orientation="vertical" >
+
+			    <TextView
+			        android:id="@+id/btnRegister"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:background="@drawable/bg_repeat"
+			        android:clickable="true"
+			        android:gravity="center_horizontal"
+			        android:onClick="onClick"
+			        android:padding="10dp"
+			        android:text="@string/register"
+			        android:textColor="@color/white" />
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+
+</com.vphoainha.itfmobile.view.CustomSlidingPaneLayout>

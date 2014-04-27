@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="app_name">ITF Mobile - Khoa CNTT ĐH Bách Khoa</string>
+	<string name="app_name_upcase">ITF MOBILE</string>
+	<string name="MY_APP_ID">1396493433964741</string>
+	
+	<string name="register">Register New User</string>
+	
+	<string name="login">LOG IN</string>
+	<string name="logout">LOG OUT</string>
+	
+	<string name="error_msg">Oops! Can\'t contact or get data from server</string>
+	<string name="cant_connect_internet">Can\'t connect to the Internet.\nPlease check the Internet connection of your device and try again.</string>
+	
+	<string name="TAG_QUESTION">tag_question</string>
+	<string name="TAG_ANSWER">tag_answer</string>
+	<string name="TAG_POS">tag_pos</string>
+</resources>
