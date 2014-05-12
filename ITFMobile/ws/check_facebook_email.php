@@ -11,6 +11,7 @@ if (isset($_POST["email"]) && isset($_POST["security"]) && isset($_POST['device_
     $device_id = $_POST['device_id'];
 
     if($security == "123454321"){
+		mysql_query('SET CHARACTER SET utf8');
         $result = mysql_query("SELECT * FROM user WHERE email = '".$email."'") ;
      
         if ($result && !empty($result)) {

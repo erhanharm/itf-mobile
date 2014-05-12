@@ -27,39 +27,26 @@
 				    android:focusable="false" >
 
 					<TextView
-					    android:id="@+id/tvId"
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content"
-					    android:layout_weight="1"
-					    android:clickable="false"
-					    android:focusable="false"
-					    android:gravity="left"
-					    android:text="#12434"
-					    android:textColor="@color/text"
-					    android:textSize="12sp" />
-
-					<TextView
-					    android:id="@+id/tvCategory"
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content"
-					    android:layout_weight="1"
-					    android:clickable="false"
-					    android:focusable="false"
-					    android:gravity="center"
-					    android:text="Computer"
-					    android:textColor="@color/text"
-					    android:textSize="12sp" />
-
-					<TextView
 					    android:id="@+id/tvDate"
 					    android:layout_width="match_parent"
 					    android:layout_height="wrap_content"
 					    android:layout_weight="1"
 					    android:clickable="false"
 					    android:focusable="false"
-					    android:gravity="right"
 					    android:text="3-15-2014"
 					    android:textColor="@color/dark_gray"
+					    android:textSize="12sp" />
+
+					<TextView
+					    android:id="@+id/tvId"
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_weight="1"
+					    android:clickable="false"
+					    android:focusable="false"
+					    android:gravity="right"
+					    android:text="#12434"
+					    android:textColor="@color/text"
 					    android:textSize="12sp" />
 
 				</LinearLayout>
@@ -100,29 +87,7 @@
 						    android:textColor="@color/text_hint"
 						    android:textSize="10sp" />
 
-						<TextView
-						    android:id="@+id/tvForUser"
-						    android:layout_width="match_parent"
-						    android:layout_height="wrap_content"
-						    android:clickable="false"
-						    android:focusable="false"
-						    android:text="for ???"
-						    android:textColor="@color/text_hint"
-						    android:textSize="10sp" />
-
 					</LinearLayout>
-
-					<TextView
-					    android:id="@+id/tvAnswered"
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:clickable="false"
-					    android:focusable="false"
-					    android:gravity="right"
-					    android:text="Solved"
-					    android:textColor="@color/text1"
-					    android:textSize="12sp"
-					    android:textStyle="bold" />
 
 					<Button
 					    android:id="@+id/btnAnswer"
@@ -132,28 +97,6 @@
 					    android:focusableInTouchMode="false"
 					    android:padding="7dp"
 					    android:text="Answer"
-					    android:textColor="#FFFFFF"
-					    android:textSize="14sp" />
-
-					<Button
-					    android:id="@+id/btnDeny"
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:layout_marginLeft="5dp"
-					    android:background="@drawable/bg_button_blue"
-					    android:padding="7dp"
-					    android:text="Deny"
-					    android:textColor="#FFFFFF"
-					    android:textSize="14sp" />
-
-					<Button
-					    android:id="@+id/btnSolved"
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:layout_marginLeft="5dp"
-					    android:background="@drawable/bg_button_blue"
-					    android:padding="7dp"
-					    android:text="Solved"
 					    android:textColor="#FFFFFF"
 					    android:textSize="14sp" />
 

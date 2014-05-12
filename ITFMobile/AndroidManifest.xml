@@ -36,7 +36,7 @@
 			android:name=".AddAnswerActivity">
 		</activity>
 		<activity
-			android:name=".TopExpertActivity">
+			android:name=".ThreadActivity">
 		</activity>
 		<activity
 			android:name=".LoginActivity">

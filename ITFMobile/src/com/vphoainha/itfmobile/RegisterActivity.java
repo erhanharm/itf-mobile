@@ -70,8 +70,8 @@ public class RegisterActivity extends FatherActivity {
 	/**
 	 * get list employ from service
 	 */
-	public void accessWebserviceREGISTER(String name, String email, String password, String deviceId) {
-		(new JsonReadTaskREGISTER()).execute(new String[] { WsUrl.URL_REGISTER, name, email, password, deviceId });
+	public void accessWebserviceREGISTER(String userName, String email, String password, String deviceId) {
+		(new JsonReadTaskREGISTER()).execute(new String[] { WsUrl.URL_REGISTER, userName, email, password, deviceId });
 	}
 
 	private class JsonReadTaskREGISTER extends AsyncTask<String, Void, String> {

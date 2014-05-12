@@ -80,7 +80,7 @@ public class MainActivity extends FragmentActivity {
 		mySharedPreferences.getSaveUserPreferences();
 		if(Utils.isLogin){
 			Log.i("======", Utils.saveUser.getEmail()+"    "+ Utils.saveUser.getPassword());
-			(new JsonReadTaskReLogin()).execute(new String[] { WsUrl.URL_LOGIN, Utils.saveUser.getEmail(), Utils.saveUser.getPassword(), Utils.getDeviceID(this)});
+			(new JsonReadTaskReLogin()).execute(new String[] { WsUrl.URL_LOGIN, Utils.saveUser.getUsername(), Utils.saveUser.getPassword(), Utils.getDeviceID(this)});
 		}
 
 		tvUsername = (TextView) findViewById(R.id.tvUserName);
@@ -96,6 +96,7 @@ public class MainActivity extends FragmentActivity {
 		lnLogin = (LinearLayout) findViewById(R.id.lnLogin);
 		lnLogout = (LinearLayout) findViewById(R.id.lnLogout);
 
+		btn_new.setVisibility(View.GONE);
 		btn_new.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -125,11 +126,11 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
 		super.onActivityResult(arg0, arg1, arg2);
-		if(arg1==RESULT_OK){
-			if(cur_frag==0) homeFragment.accessWebserviceReset();
-			if(cur_frag==1) myQuestionsFragment.accessWebserviceReset();
-			if(cur_frag==2) myAnswersFragment.accessWebserviceReset();
-		}
+//		if(arg1==RESULT_OK){
+//			if(cur_frag==0) homeFragment.accessWebserviceReset();
+//			if(cur_frag==1) myQuestionsFragment.accessWebserviceReset();
+//			if(cur_frag==2) myAnswersFragment.accessWebserviceReset();
+//		}
 	}
 	
 	@Override
@@ -158,8 +159,6 @@ public class MainActivity extends FragmentActivity {
 		}
 		else{
 			showLoggedFunction();
-			
-			tv_register.setVisibility(View.GONE);
 		}
 	}
 
@@ -240,16 +239,17 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	public void showLoggedFunction() {
-		fl_numnotify.setVisibility(View.VISIBLE);
-		lnMyQuestions.setVisibility(View.VISIBLE);
-		lnMyAnswers.setVisibility(View.VISIBLE);
-		lnMyRating.setVisibility(View.VISIBLE);
+//		fl_numnotify.setVisibility(View.VISIBLE);
+//		lnMyQuestions.setVisibility(View.VISIBLE);
+//		lnMyAnswers.setVisibility(View.VISIBLE);
+//		lnMyRating.setVisibility(View.VISIBLE);
 		lnAccount.setVisibility(View.VISIBLE);
 		
 		lnLogin.setVisibility(View.GONE);
 		lnLogout.setVisibility(View.VISIBLE);
 		if(Utils.saveUser!=null){
-			tvUsername.setText(Utils.saveUser.getName());
+			if(Utils.saveUser.getName().equals("")) tvUsername.setText(Utils.saveUser.getUsername());
+			else tvUsername.setText(Utils.saveUser.getName());
 			tvUserEmail.setText(Utils.saveUser.getEmail());
 		}
 	}
@@ -276,12 +276,12 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		protected Integer doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
-			par.add(new BasicNameValuePair("email", params[1]));
+			par.add(new BasicNameValuePair("username", params[1]));
 			par.add(new BasicNameValuePair("password", params[2]));
-			par.add(new BasicNameValuePair("deviceId", params[3]));
+			par.add(new BasicNameValuePair("device_id", params[3]));
 			
 			JSONParser jsonParser = new JSONParser();
-			JSONObject json = jsonParser.makeHttpRequest(params[0], "GET", par);
+			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
 			Log.d("Create Response", json.toString());
 
 			try {

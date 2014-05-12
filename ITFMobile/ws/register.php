@@ -12,6 +12,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['emai
  
     $db = new DB_CONNECT();
 
+	mysql_query('SET CHARACTER SET utf8');
     $result = mysql_query("SELECT * FROM user WHERE username='".$username."'");
     if($result && mysql_num_rows($result)==0){
         $result = mysql_query("SELECT * FROM user WHERE email = '".$email."'");

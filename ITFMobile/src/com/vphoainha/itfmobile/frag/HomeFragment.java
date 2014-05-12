@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,24 +24,31 @@ import android.widget.Toast;
 
 import com.vphoainha.itfmobile.MainActivity;
 import com.vphoainha.itfmobile.R;
+import com.vphoainha.itfmobile.ThreadActivity;
+import com.vphoainha.itfmobile.adapter.HomeGroupAdapter;
+import com.vphoainha.itfmobile.adapter.HomeGroupAdapter.IndexPath;
+import com.vphoainha.itfmobile.adapter.HomeGroupAdapter.SectionListAdapterAdapterDelegate;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
-import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.model.Folder;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SectionListAdapterAdapterDelegate{
 	static View view;
 
 	TextView tv_title;
-	private List<Thread> listData;
+	private List<Folder> lstFolders;
+	private List<Folder> lstFolder1;
+	private List<List<Folder>> lstFolder2;
+	
+	HomeGroupAdapter adapter;
+	LayoutInflater inflater;
+	
 //	ThreadAdapter adapter;
-	ListView list;
+	ListView lvHome;
 	
 	String msg;
-
-	int from;
-	boolean isMaximum;
 
 	public static HomeFragment newInstance() {
 		return new HomeFragment();
@@ -53,46 +60,128 @@ public class HomeFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater linflater, ViewGroup container, Bundle savedInstanceState) {
 		if (view != null) {
 			ViewGroup parent = (ViewGroup) view.getParent();
 			if (parent != null)
 				parent.removeView(view);
 		}
 		try {
-			view = inflater.inflate(R.layout.frag_home, container, false);
+			view = linflater.inflate(R.layout.frag_home, container, false);
 		} catch (InflateException e) {}
 
 		((MainActivity) getActivity()).changeMainTitleBarText(getString(R.string.app_name));
 		
-		listData = new ArrayList<Thread>();
-		list = (ListView) view.findViewById(R.id.lv_ques);
+		
+//		lstFolder1=new ArrayList<Folder>();
+//		Folder f=new Folder();
+//		f.setName("abc");
+//		lstFolder1.add(f);
+//		lstFolder1.add(f);
+//		
+//		lstFolder2=new ArrayList<List<Folder>>();
+////		Folder f=new Folder();
+////		f.setName("abc");
+//		lstFolder2.add(lstFolder1);
+//		lstFolder2.add(lstFolder1);
+		
+		
+		lvHome = (ListView) view.findViewById(R.id.lvHome);
+		
+		inflater = LayoutInflater.from(getActivity());
+		adapter = new HomeGroupAdapter();
+        adapter.delegate = HomeFragment.this;
+        lvHome.setOnItemClickListener(adapter.itemClickListener);
+		
 //		adapter = new ThreadAdapter(
 //				getActivity(), R.layout.list_item_question,
 //				R.id.tvId, listData, ThreadAdapter.ALL_QUESTION);
 //		list.setAdapter(adapter);
 		
-//		accessWebserviceReset();
+		accessWebserviceGetFolders();
 		return view;
 	}
 	
-	public void accessWebserviceReset() {
-		listData = new ArrayList<Thread>();
-		isMaximum = false;
-		from = 1;
+	@Override
+	public int sectionCount() {
+		try
+		{
+			if(lstFolder1!=null)
+			{
+				return lstFolder1.size();
+			}
+		}catch (Exception e) {}
 		
-		accessWebservice();
-	}
-	
-	public boolean isMaximum() {
-		return isMaximum;
+		return 0;
 	}
 
-	public void accessWebservice() {
+	@Override
+	public int rowsInSection(int section) {
+		try
+		{
+			if(lstFolder2!=null){
+				//Log.i("rowsInSection", cart_ingredients.get(section).size()+"");
+				return lstFolder2.get(section).size();
+			}
+		}catch (Exception e) {}
+		return 0;
+	}
+
+	@Override
+	public View viewForRowAtIndexPath(IndexPath path) {
+		View view = inflater.inflate(R.layout.row_home_group2, null);
+		TextView tvTitle = (TextView)view.findViewById(R.id.tvTitle);
+		TextView tvNote = (TextView)view.findViewById(R.id.tvNote);
+		
+		Folder f=lstFolder2.get(path.section).get(path.row);
+		tvTitle.setText(f.getName());
+		
+		if(f.getNote()!=null && !f.getNote().equals("")){
+			tvNote.setText(f.getNote());
+			tvNote.setVisibility(View.VISIBLE);
+		}
+		else tvNote.setVisibility(View.GONE);
+		return view;
+	}
+
+	@Override
+	public View viewForHeaderInSection(int section) {
+		View view = inflater.inflate(R.layout.row_home_group1, null);
+		TextView tvTitle = (TextView)view.findViewById(R.id.tvTitle);
+		TextView tvNote = (TextView)view.findViewById(R.id.tvNote);
+		
+		tvTitle.setText(lstFolder1.get(section).getName());
+		tvNote.setText(lstFolder1.get(section).getNote());
+
+		if(lstFolder1.get(section).getNote()!=null && !lstFolder1.get(section).getNote().equals("")){
+			tvNote.setText(lstFolder1.get(section).getNote());
+			tvNote.setVisibility(View.VISIBLE);
+		}
+		else tvNote.setVisibility(View.GONE);
+		return view;
+	}
+
+	@Override
+	public void itemSelectedAtIndexPath(IndexPath path) {
+		Intent intent = new Intent(getActivity(), ThreadActivity.class);
+		Folder f=lstFolder2.get(path.section).get(path.row);
+		for(Folder f2:lstFolder1)
+			if(f.getParrentId()==f2.getId()){
+				intent.putExtra("folder", f);
+				intent.putExtra("folderParrent", f2);
+				break;
+			}
+		startActivity(intent);
+	}
+	
+	
+	//============================================//
+
+	public void accessWebserviceGetFolders() {
 		if(!Utils.checkInternetConnection(getActivity()))
 			Toast.makeText(getActivity(), getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else		
-			(new JsonReadTask()).execute(new String[] { WsUrl.URL_GET_QUESTIONS, Integer.toString(from), Integer.toString(from += 10) });
+			(new JsonReadTask()).execute(new String[] { WsUrl.URL_GET_FOLDERS});
 	}
 
 	private class JsonReadTask extends AsyncTask<String, Void, Integer> {
@@ -105,13 +194,13 @@ public class HomeFragment extends Fragment {
 			pd.setMessage("Loading...");
 			pd.setCancelable(false);
 			pd.show();
+			
+			lstFolders=new ArrayList<Folder>();
 		}
 		
 		@Override
 		protected Integer doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
-			par.add(new BasicNameValuePair("from", params[1]));
-			par.add(new BasicNameValuePair("to", params[2]));
 
 			JSONParser jsonParser=new JSONParser();
 			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
@@ -120,40 +209,23 @@ public class HomeFragment extends Fragment {
 			try {
 				int success = json.getInt(JsonTag.TAG_SUCCESS);
 				if (success == 1) {
-					JSONArray array = json.getJSONArray(JsonTag.TAG_THREADS);
-
-					if(array.length()== 0){
-						isMaximum = true;
-					}else{
-						from++;
-					}
+					JSONArray array = json.getJSONArray(JsonTag.TAG_FOLDERS);
 
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject obj = array.getJSONObject(i);
 
-						Thread question = new Thread();
-//						question.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
-//						question.setForUserId(Integer.parseInt(obj.getString(JsonTag.TAG_FOR_USER_Id)));
-//						question.setUserId(Integer.parseInt(obj.getString(JsonTag.TAG_USER_ID)));
-//						question.setUserName(obj.getString(JsonTag.TAG_USER_NAME));
-//						try{
-//							question.setForUserName(obj.getString(JsonTag.TAG_FOR_USER_NAME));
-//						}catch(JSONException ex){
-//							question.setForUserName("");
-//						}
-//						question.setContent(obj.getString(JsonTag.TAG_CONTENT));
-//						question.setCategoryId(Integer.parseInt(obj.getString(JsonTag.TAG_CATEGORY_ID)));
-//						question.setCategoryName(obj.getString(JsonTag.TAG_CATEGORY_NAME));
-//						question.setIsAnswered(Integer.parseInt(obj.getString(JsonTag.TAG_IS_ANSWERED)));
-//						question.setTime(DateTimeHelper.stringToDateTime(obj.getString(JsonTag.TAG_TIME)));
-//						question.setSaveUserId(Integer.parseInt(obj.getString(JsonTag.TAG_SAVEUSERID)));
+						Folder f = new Folder();
+						f.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
+						f.setName(obj.getString(JsonTag.TAG_NAME));
+						f.setNote(obj.getString(JsonTag.TAG_NOTE));
+						f.setParrentId(Integer.parseInt(obj.getString(JsonTag.TAG_PARRENT_ID)));
+						f.setFolderIndex(Integer.parseInt(obj.getString(JsonTag.TAG_FOLDER_INDEX)));
 						
-						listData.add(question);
+						lstFolders.add(f);
 					}
 					return 1;
 				} else {
 					msg=json.getString("message");
-					isMaximum = true;
 					return 0;
 				}
 			} catch (JSONException e) {
@@ -168,12 +240,26 @@ public class HomeFragment extends Fragment {
 			if(pd!=null && pd.isShowing())  pd.dismiss();
 			
 			if (result==1) {
+				lstFolder1=new ArrayList<Folder>();
+				lstFolder2=new ArrayList<List<Folder>>();
+				
+				for(Folder f:lstFolders)
+					if(f.getParrentId()==-1)
+						lstFolder1.add(f);
+				
+				List<Folder> lst;
+				for(Folder f:lstFolder1)
+				{
+					lst=new ArrayList<Folder>();
+					for(Folder f2:lstFolders)
+						if(f2.getParrentId()==f.getId())
+							lst.add(f2);
+					lstFolder2.add(lst);
+				}
+				
 				((MainActivity) getActivity()).runOnUiThread(new Runnable() {
 					public void run() {
-//						adapter = new ThreadAdapter(
-//								getActivity(), R.layout.list_item_question,
-//								R.id.tvId, listData, ThreadAdapter.ALL_QUESTION);
-//						list.setAdapter(adapter);
+						lvHome.setAdapter(adapter);
 					}
 				});
 			} else {
@@ -181,4 +267,6 @@ public class HomeFragment extends Fragment {
 			}
 		}
 	}
+
+	
 }

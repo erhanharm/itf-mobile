@@ -21,24 +21,6 @@
 			android:layout_height="match_parent"
 			android:orientation="vertical" >
 			
-		    <LinearLayout
-		        android:id="@+id/lnNavBar"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:background="@drawable/bg_button_square"
-		        android:orientation="vertical" >
-
-			    <TextView
-			        android:id="@+id/tvNavBar"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
-			        android:background="@drawable/bg_repeat"
-			        android:clickable="true"
-			        android:padding="10dp"
-			        android:text="Forum > Class > 09T4"
-			        android:textColor="@color/white" />
-			</LinearLayout>
-			
 			<FrameLayout
 				android:id="@+id/content"
 				android:layout_width="match_parent"

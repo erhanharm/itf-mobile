@@ -10,6 +10,7 @@ $response = array();
 
     $db = new DB_CONNECT();
 
+	mysql_query('SET CHARACTER SET utf8');
     $result = mysql_query("SELECT thread.id as id, title, content, time, status, thread.folder_id as folder_id, thread.user_id as user_id, user.username as username, folder.name as folder_name FROM thread, user, folder WHERE folder_id = ".$folder_id." AND user_id = user.id and folder_id = folder.id ORDER BY time DESC") or die(mysql_error());
 
     if ($result && mysql_num_rows($result) > 0) {

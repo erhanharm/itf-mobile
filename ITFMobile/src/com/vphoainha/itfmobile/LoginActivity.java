@@ -82,7 +82,7 @@ public class LoginActivity extends FatherActivity {
 										Response response) {
 									if (user != null) {
 										faceUser=user;
-										Log.i("========", "facebook login ok"+user.getFirstName());
+//										Log.i("========", "facebook login ok"+user.getFirstName());
 										
 										accessWebserviceCHECKEMAIL(user.asMap().get("email").toString());
 									}
@@ -135,7 +135,7 @@ public class LoginActivity extends FatherActivity {
 		String password = txtPassword.getText().toString();
 		if (password.equals(""))
 			msg = "Password is not be empty!";
-		if (!userName.equals(""))
+		if (userName.equals(""))
 			msg = "Username is not be empty!";
 		if (!msg.equals("")) {
 			Utils.showAlert(LoginActivity.this, "", msg);

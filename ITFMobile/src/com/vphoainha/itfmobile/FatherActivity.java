@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,12 +15,14 @@ public class FatherActivity extends Activity{
 	
 	protected TextView tvTitle;
 	protected LinearLayout lnBack;
+	protected ImageButton btn_ok;
 		
 	protected void initFather() {
 		sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this);
 		
 		tvTitle=(TextView)findViewById(R.id.tv_title);
 		lnBack=(LinearLayout)findViewById(R.id.ln_back);
+		btn_ok = (ImageButton) findViewById(R.id.btn_ok);
 		
 		lnBack.setOnClickListener(new OnClickListener() {
 			@Override
@@ -27,6 +30,8 @@ public class FatherActivity extends Activity{
 				finish();
 			}
 		});
+		
+		tvTitle.setSelected(true);
 	}
 	
 	

@@ -10,6 +10,7 @@ $response = array();
 
     $db = new DB_CONNECT();
 
+	mysql_query('SET CHARACTER SET utf8');
     $result = mysql_query("SELECT reply.id as id, content, time, thread_id, reply.user_id as user_id, user.username as username FROM reply, user WHERE thread_id = ".$thread_id." AND user_id = user.id ORDER BY time DESC") or die(mysql_error());
 
     if ($result && mysql_num_rows($result) > 0) {

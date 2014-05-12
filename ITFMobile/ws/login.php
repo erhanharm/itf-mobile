@@ -10,6 +10,7 @@ if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST['devi
  
 	$db = new DB_CONNECT();
 	
+	mysql_query('SET CHARACTER SET utf8');
     $result = mysql_query("SELECT * FROM user WHERE username = '".$username."' AND password = '".$password."'");
  
     if ($result && !empty($result)) {

@@ -164,8 +164,8 @@ public class MyQuestionsFragment extends Fragment {
 			if (result ==1) {
 				((MainActivity) getActivity()).runOnUiThread(new Runnable() {
 					public void run() {
-						ListView list = (ListView) view
-								.findViewById(R.id.lv_ques);
+//						ListView list = (ListView) view
+//								.findViewById(R.id.lv_ques);
 //						ThreadAdapter adapter = new ThreadAdapter(
 //								getActivity(), R.layout.list_item_question,
 //								R.id.tv_index, listData, ThreadAdapter.MY_QUESTION);

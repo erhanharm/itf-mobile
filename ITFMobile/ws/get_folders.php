@@ -6,6 +6,7 @@ $response = array();
 
     $db = new DB_CONNECT();
 
+	mysql_query('SET CHARACTER SET utf8');
     $result = mysql_query("SELECT * FROM folder ORDER BY folder_index ASC") or die(mysql_error());
 
     if ($result && mysql_num_rows($result) > 0) {
