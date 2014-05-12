@@ -20,11 +20,6 @@ public class Utils {
 	public static boolean isLogin=false;
 	public static User saveUser=null;
 	
-	public static int getUserId(){
-		if(saveUser.getIsAnonymous()==1) return -1;
-		return saveUser.getId();
-	}
-	
 	public static boolean checkInternetConnection(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);

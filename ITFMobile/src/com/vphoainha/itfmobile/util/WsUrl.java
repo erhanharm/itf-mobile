@@ -2,10 +2,43 @@ package com.vphoainha.itfmobile.util;
 
 public class WsUrl {
 //	public final static String URL = "http://192.168.1.43/answermeservice/";
-	public final static String URL = "http://instanswer.me/";
+	public final static String URL = "http://instanswer.me/itf";
+	
 	public final static String URL_REGISTER = URL + "register.php";
 	public final static String URL_LOGIN = URL + "login.php";
-	public final static String URL_CHECK_EMAIL = URL + "checkEmail.php";
+	
+	public final static String URL_ADD_THREAD = URL + "add_thread.php";
+	public final static String URL_EDIT_THREAD = URL + "edit_thread.php";
+	public final static String URL_DELETE_THREAD = URL + "delete_thread.php";
+	public final static String URL_GET_THREADS = URL + "get_threads.php";
+	
+	public final static String URL_ADD_REPLY = URL + "add_reply.php";
+	public final static String URL_EDIT_REPLY = URL + "edit_reply.php";
+	public final static String URL_DELETE_REPLY = URL + "delete_reply.php";
+	public final static String URL_GET_REPLIES = URL + "get_replies.php";
+	
+	public final static String URL_GET_FOLDERS = URL + "get_folders.php";
+
+	public final static String URL_CHECK_FACEBOOK_EMAIL = URL + "check_facebook_email.php";
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public final static String URL_ADD_QUESTION = URL + "add_question.php";
 	public final static String URL_ADD_ANSWER = URL + "add_answer.php";

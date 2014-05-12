@@ -190,24 +190,6 @@
 
 						    <LinearLayout
 						        android:layout_width="match_parent"
-						        android:layout_height="wrap_content"
-						        android:background="@drawable/bg_topbutton"
-						        android:clickable="true"
-						        android:gravity="center_vertical"
-						        android:onClick="onclickTopExpert"
-						        android:padding="10dp" >
-
-						        <TextView
-						            android:layout_width="wrap_content"
-						            android:layout_height="wrap_content"
-						            android:layout_weight="1"
-						            android:text="Top Expert"
-						            android:textColor="#FFFFFF"
-						            android:textSize="16sp" />
-						    </LinearLayout>
-
-						    <LinearLayout
-						        android:layout_width="match_parent"
 						        android:layout_height="0dp"
 						        android:layout_weight="1"
 						        android:orientation="vertical" >

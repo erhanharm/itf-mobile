@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,11 +18,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookException;
@@ -36,16 +32,17 @@ import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.OnErrorListener;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.User;
+import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.MySharedPreferences;
 import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends FatherActivity {
 	final String SECURITY_CODE = "123454321";
 	final String DEFAULT_PASS = "123456";
 
-	private EditText emailEdt, passwordEdt;
+	private EditText txtUsername, txtPassword;
 	
 	private JSONObject object;
 	GraphUser faceUser;
@@ -53,21 +50,13 @@ public class LoginActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
+		initFather();
 
-		TextView tv_title = (TextView) findViewById(R.id.tv_title);
-		tv_title.setText("Login");
-		LinearLayout ln_back = (LinearLayout) findViewById(R.id.ln_back);
-		ln_back.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
+		tvTitle.setText("Login");
 
-		emailEdt = (EditText) findViewById(R.id.edtLoginEmail);
-		passwordEdt = (EditText) findViewById(R.id.edtLoginPassword);
+		txtUsername = (EditText) findViewById(R.id.edtLoginEmail);
+		txtPassword = (EditText) findViewById(R.id.edtLoginPassword);
 
 		LoginButton btnLoginFacebook = (LoginButton) findViewById(R.id.btnLoginFacebook);
 		btnLoginFacebook.setOnErrorListener(new OnErrorListener() {
@@ -111,8 +100,7 @@ public class LoginActivity extends Activity {
 			accessWebserviceLOGIN();
 			break;
 		case R.id.btnRegister:
-			startActivity(new Intent(getApplicationContext(),
-					RegisterActivity.class));
+			startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
 			break;
 		default:
 			break;
@@ -143,12 +131,12 @@ public class LoginActivity extends Activity {
 
 	private void accessWebserviceLOGIN() {
 		String msg = "";
-		String email = emailEdt.getText().toString();
-		String password = passwordEdt.getText().toString();
+		String userName = txtUsername.getText().toString();
+		String password = txtPassword.getText().toString();
 		if (password.equals(""))
 			msg = "Password is not be empty!";
-		if (!Utils.validateEmail(email))
-			msg = "Email is not correct!";
+		if (!userName.equals(""))
+			msg = "Username is not be empty!";
 		if (!msg.equals("")) {
 			Utils.showAlert(LoginActivity.this, "", msg);
 			return;
@@ -159,7 +147,7 @@ public class LoginActivity extends Activity {
 					Toast.LENGTH_SHORT).show();
 		else
 			(new JsonReadTaskLOGIN()).execute(new String[] { WsUrl.URL_LOGIN,
-					email, Utils.md5(password), Utils.getDeviceID(this) });
+					userName, Utils.md5(password), Utils.getDeviceID(this) });
 	}
 
 	public class JsonReadTaskLOGIN extends AsyncTask<String, Void, String> {
@@ -177,12 +165,12 @@ public class LoginActivity extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
-			par.add(new BasicNameValuePair("email", params[1]));
+			par.add(new BasicNameValuePair("username", params[1]));
 			par.add(new BasicNameValuePair("password", params[2]));
-			par.add(new BasicNameValuePair("deviceId", params[3]));
+			par.add(new BasicNameValuePair("device_id", params[3]));
 
 			JSONParser jsonParser = new JSONParser();
-			JSONObject json = jsonParser.makeHttpRequest(params[0], "GET", par);
+			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
 			Log.d("Create Response", json.toString());
 
 			try {
@@ -220,7 +208,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void accessWebserviceCHECKEMAIL(String email) {
-		(new JsonReadTaskCHECKEMAIL()).execute(new String[] { WsUrl.URL_CHECK_EMAIL,
+		(new JsonReadTaskCHECKEMAIL()).execute(new String[] { WsUrl.URL_CHECK_FACEBOOK_EMAIL,
 				email, SECURITY_CODE, Utils.getDeviceID(this) });
 	}
 
@@ -242,10 +230,10 @@ public class LoginActivity extends Activity {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
 			par.add(new BasicNameValuePair("email", params[1]));
 			par.add(new BasicNameValuePair("security", params[2]));
-			par.add(new BasicNameValuePair("deviceId", params[3]));
+			par.add(new BasicNameValuePair("device_id", params[3]));
 
 			JSONParser jsonParser = new JSONParser();
-			JSONObject json = jsonParser.makeHttpRequest(params[0], "GET", par);
+			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
 			Log.d("Create Response", json.toString());
 
 			try {
@@ -295,10 +283,10 @@ public class LoginActivity extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
-			par.add(new BasicNameValuePair("name", params[1]));
+			par.add(new BasicNameValuePair("username", params[1]));
 			par.add(new BasicNameValuePair("email", params[2]));
 			par.add(new BasicNameValuePair("password", params[3]));
-			par.add(new BasicNameValuePair("deviceId", params[4]));
+			par.add(new BasicNameValuePair("device_id", params[4]));
 			
 			JSONParser jsonParser = new JSONParser();
 			JSONObject json = jsonParser
@@ -347,16 +335,20 @@ public class LoginActivity extends Activity {
 			try {
 				Utils.isLogin = true;
 				Utils.saveUser = new User();
-				Utils.saveUser.setEmail(object.getString(JsonTag.TAG_EMAIL));
-				Utils.saveUser.setId(Integer.parseInt(object
-						.getString(JsonTag.TAG_ID)));
-				Utils.saveUser.setIsAnonymous(Integer.parseInt(object
-						.getString(JsonTag.TAG_ISANONYMOUS)));
-				Utils.saveUser.setName(object.getString(JsonTag.TAG_NAME));
-				Utils.saveUser.setDeviceId(object
-						.getString(JsonTag.TAG_DEVICE_ID));
-				Utils.saveUser.setPassword(object
-						.getString(JsonTag.TAG_PASSWORD));
+				Utils.saveUser.setId(Integer.parseInt(object.getString(JsonTag.TAG_ID)));
+				Utils.saveUser.setUsername(object.getString(JsonTag.TAG_USER_NAME));
+				Utils.saveUser.setPassword(object.getString(JsonTag.TAG_PASSWORD));
+				Utils.saveUser.setName(object.getString(JsonTag.TAG_NAME));	
+				Utils.saveUser.setEmail(object.getString(JsonTag.TAG_EMAIL));	
+				Utils.saveUser.setUserType(Integer.parseInt(object.getString(JsonTag.TAG_USER_TYPE)));
+				Utils.saveUser.setUserClass(object.getString(JsonTag.TAG_CLASS));	
+				Utils.saveUser.setBirthday(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_BIRTHDAY)));	
+				Utils.saveUser.setJoinDate(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_JOINDATE)));	
+				Utils.saveUser.setAddress(object.getString(JsonTag.TAG_ADDRESS));	
+				Utils.saveUser.setInterest(object.getString(JsonTag.TAG_INTEREST));	
+				Utils.saveUser.setSignature(object.getString(JsonTag.TAG_SIGNATURE));	
+				Utils.saveUser.setName(object.getString(JsonTag.TAG_NAME));	
+				Utils.saveUser.setDeviceId(object.getString(JsonTag.TAG_DEVICE_ID));
 
 				new MySharedPreferences(ctx)
 						.setSaveUserPreferences();

@@ -114,7 +114,7 @@ public class NotificationActivity extends Activity{
 				int success = json.getInt(JsonTag.TAG_SUCCESS);
 				message = json.getString(JsonTag.TAG_MESSAGE);
 				if (success == 1) {
-					array = json.getJSONArray(JsonTag.TAG_NOTIFICATION);
+					array = json.getJSONArray(JsonTag.TAG_REPLIES);
 					if(array.length()== 0){
 						isMaximum = true;
 					}else{

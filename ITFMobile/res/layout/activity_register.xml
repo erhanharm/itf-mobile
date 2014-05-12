@@ -22,7 +22,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your name"
+                android:text="Username"
                 android:textColor="@color/text"
                 android:textSize="14sp" />
 
@@ -40,12 +40,12 @@
                 android:textColorHint="@color/text_hint"
                 android:textSize="14sp" />
 <requestFocus />
-            <TextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:paddingRight="10dp"
-                android:text="Your email"
+                android:text="Email"
                 android:textColor="@color/text"
                 android:textSize="14sp" />
 

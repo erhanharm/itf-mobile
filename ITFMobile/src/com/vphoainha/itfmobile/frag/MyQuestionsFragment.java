@@ -23,9 +23,8 @@ import android.widget.Toast;
 
 import com.vphoainha.itfmobile.MainActivity;
 import com.vphoainha.itfmobile.R;
-import com.vphoainha.itfmobile.adapter.QuestionAdapter;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
-import com.vphoainha.itfmobile.model.Question;
+import com.vphoainha.itfmobile.model.Thread;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.Utils;
@@ -34,7 +33,7 @@ import com.vphoainha.itfmobile.util.WsUrl;
 public class MyQuestionsFragment extends Fragment {
 	static View view;
 	
-	private List<Question> listData;
+	private List<Thread> listData;
 	String msg;
 
 	int from;
@@ -69,7 +68,7 @@ public class MyQuestionsFragment extends Fragment {
 	}
 	
 	public void accessWebserviceReset() {
-		listData = new ArrayList<Question>();
+		listData = new ArrayList<Thread>();
 		isMaximum = false;
 		from = 1;
 		
@@ -117,7 +116,7 @@ public class MyQuestionsFragment extends Fragment {
 			try {
 				int success = json.getInt(JsonTag.TAG_SUCCESS);
 				if (success == 1) {
-					JSONArray array = json.getJSONArray(JsonTag.TAG_QUESTION);
+					JSONArray array = json.getJSONArray(JsonTag.TAG_THREADS);
 					if(array.length()== 0){
 						isMaximum = true;
 					}else{
@@ -126,22 +125,22 @@ public class MyQuestionsFragment extends Fragment {
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject obj = array.getJSONObject(i);
 
-						Question question = new Question();
-						question.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
-						question.setForUserId(Integer.parseInt(obj.getString(JsonTag.TAG_FOR_USER_Id)));
-						question.setUserId(Integer.parseInt(obj.getString(JsonTag.TAG_USER_ID)));
-						question.setUserName(obj.getString(JsonTag.TAG_USER_NAME));
-						try{
-							question.setForUserName(obj.getString(JsonTag.TAG_FOR_USER_NAME));
-						}catch(JSONException ex){
-							question.setForUserName("");
-						}
-						question.setContent(obj.getString(JsonTag.TAG_CONTENT));
-						question.setCategoryId(Integer.parseInt(obj.getString(JsonTag.TAG_CATEGORY_ID)));
-						question.setCategoryName(obj.getString(JsonTag.TAG_CATEGORY_NAME));
-						question.setIsAnswered(Integer.parseInt(obj.getString(JsonTag.TAG_IS_ANSWERED)));
-						question.setTime(DateTimeHelper.stringToDateTime(obj.getString(JsonTag.TAG_TIME)));
-						question.setSaveUserId(Integer.parseInt(obj.getString(JsonTag.TAG_SAVEUSERID)));
+						Thread question = new Thread();
+//						question.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
+//						question.setForUserId(Integer.parseInt(obj.getString(JsonTag.TAG_FOR_USER_Id)));
+//						question.setUserId(Integer.parseInt(obj.getString(JsonTag.TAG_USER_ID)));
+//						question.setUserName(obj.getString(JsonTag.TAG_USER_NAME));
+//						try{
+//							question.setForUserName(obj.getString(JsonTag.TAG_FOR_USER_NAME));
+//						}catch(JSONException ex){
+//							question.setForUserName("");
+//						}
+//						question.setContent(obj.getString(JsonTag.TAG_CONTENT));
+//						question.setCategoryId(Integer.parseInt(obj.getString(JsonTag.TAG_CATEGORY_ID)));
+//						question.setCategoryName(obj.getString(JsonTag.TAG_CATEGORY_NAME));
+//						question.setIsAnswered(Integer.parseInt(obj.getString(JsonTag.TAG_IS_ANSWERED)));
+//						question.setTime(DateTimeHelper.stringToDateTime(obj.getString(JsonTag.TAG_TIME)));
+//						question.setSaveUserId(Integer.parseInt(obj.getString(JsonTag.TAG_SAVEUSERID)));
 						
 						listData.add(question);
 					}
@@ -167,11 +166,10 @@ public class MyQuestionsFragment extends Fragment {
 					public void run() {
 						ListView list = (ListView) view
 								.findViewById(R.id.lv_ques);
-						QuestionAdapter adapter = new QuestionAdapter(
-								getActivity(), R.layout.list_item_question,
-								R.id.tv_index, listData, QuestionAdapter.MY_QUESTION);
-						list.setAdapter(adapter);
-						list.setSelection(from-10);
+//						ThreadAdapter adapter = new ThreadAdapter(
+//								getActivity(), R.layout.list_item_question,
+//								R.id.tv_index, listData, ThreadAdapter.MY_QUESTION);
+//						list.setAdapter(adapter);
 					}
 				});
 			} else {

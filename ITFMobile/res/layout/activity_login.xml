@@ -22,7 +22,7 @@
 			        android:layout_width="match_parent"
 			        android:layout_height="wrap_content"
 			        android:paddingRight="10dp"
-			        android:text="Email"
+			        android:text="Username"
 			        android:textColor="@color/text"
 			        android:textSize="14sp" />
 
@@ -33,7 +33,7 @@
 			        android:layout_weight="1"
 			        android:background="@drawable/bg_edittext"
 			        android:ems="10"
-			        android:hint="email@example.com"
+			        android:hint="David"
 			        android:inputType="textEmailAddress"
 			        android:padding="5dp"
 			        android:textColor="@color/text"

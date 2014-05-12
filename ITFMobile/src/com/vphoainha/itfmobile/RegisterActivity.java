@@ -27,43 +27,35 @@ import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
-public class RegisterActivity extends Activity {
-	private EditText nameEdt, emailEdt, passwordEdt, confirmEdt;
+public class RegisterActivity extends FatherActivity {
+	private EditText txtUsername, txtEmail, txtPassword, txtConfirm;
 	private JSONObject object;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_register);
-
-		TextView tv_title = (TextView) findViewById(R.id.tv_title);
-		tv_title.setText("Register an account");
-		LinearLayout ln_back = (LinearLayout) findViewById(R.id.ln_back);
-		ln_back.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
+		initFather();
 		
-		nameEdt = (EditText) findViewById(R.id.edtRegisterName);
-		emailEdt = (EditText) findViewById(R.id.edtRegisterEmail);
-		passwordEdt = (EditText) findViewById(R.id.edtRegisterPassword);
-		confirmEdt = (EditText) findViewById(R.id.edtRegisterConfirm);
+		tvTitle.setText("Register an account");
+		
+		txtUsername = (EditText) findViewById(R.id.edtRegisterName);
+		txtEmail = (EditText) findViewById(R.id.edtRegisterEmail);
+		txtPassword = (EditText) findViewById(R.id.edtRegisterPassword);
+		txtConfirm = (EditText) findViewById(R.id.edtRegisterConfirm);
 	}
 
 	public void onClick(View view) {
 		if (view.getId() == R.id.btnRegister) {
 			String msg="";
-			String name = nameEdt.getText().toString().trim();
-			String email = emailEdt.getText().toString().trim();
-			String password = passwordEdt.getText().toString();
-			String confirm = confirmEdt.getText().toString();
+			String username = txtUsername.getText().toString().trim();
+			String email = txtEmail.getText().toString().trim();
+			String password = txtPassword.getText().toString();
+			String confirm = txtConfirm.getText().toString();
 			if(!confirm.equals(password)) msg="Confirm password is not same with password!";
 			if(password.equals("")) msg="Password is not be empty!";
 			if(!Utils.validateEmail(email)) msg="Email is not correct!";
-			if(name.equals("")) msg="Name is not be empty!";
+			if(username.equals("")) msg="User name is not be empty!";
 			if(!msg.equals("")){
 				Utils.showAlert(RegisterActivity.this, "", msg);
 				return;
@@ -71,7 +63,7 @@ public class RegisterActivity extends Activity {
 			
 			if(!Utils.checkInternetConnection(this))
 				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
-			else accessWebserviceREGISTER(name, email, password, Utils.getDeviceID(this));
+			else accessWebserviceREGISTER(username, email, Utils.md5(password), Utils.getDeviceID(this));
 		}
 	}
 
@@ -97,10 +89,10 @@ public class RegisterActivity extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
-			par.add(new BasicNameValuePair("name", params[1]));
+			par.add(new BasicNameValuePair("username", params[1]));
 			par.add(new BasicNameValuePair("email", params[2]));
 			par.add(new BasicNameValuePair("password", params[3]));
-			par.add(new BasicNameValuePair("deviceId", params[4]));
+			par.add(new BasicNameValuePair("device_id", params[4]));
 			
 			JSONParser jsonParser = new JSONParser();
 			JSONObject json = jsonParser

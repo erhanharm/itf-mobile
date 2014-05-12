@@ -102,8 +102,8 @@ public class MainActivity extends FragmentActivity {
 				if(!Utils.isLogin){
 					startActivity(new Intent(getApplicationContext(),LoginActivity.class));
 				}
-				else 		
-					startActivityForResult(new Intent(getApplicationContext(),AddQuestionActivity.class), 0);
+//				else 		
+//					startActivityForResult(new Intent(getApplicationContext(),AddQuestionActivity.class), 0);
 			}
 		});
 		
@@ -155,14 +155,6 @@ public class MainActivity extends FragmentActivity {
 		TextView tv_register=(TextView)findViewById(R.id.btnRegister);
 		if(!Utils.isLogin){
 			hideLoggedFunction();
-			
-			tv_register.setVisibility(View.VISIBLE);
-			tv_register.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					startActivity(new Intent(MainActivity.this,RegisterActivity.class));
-				}
-			});
 		}
 		else{
 			showLoggedFunction();
@@ -185,13 +177,9 @@ public class MainActivity extends FragmentActivity {
 
 	public void onclickSetting(View v) {
 		spl.closePane();
-		startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+//		startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
 	}
-
-	public void onclickTopExpert(View v) {
-		startActivity(new Intent(getApplicationContext(), TopExpertActivity.class));
-	}
-
+	
 	public void onclickHome(View v) {
 		spl.closePane();
 		cur_frag=0;
