@@ -1,19 +1,20 @@
 <?php
 $response = array();
  
-if (isset($_POST['reply_id'])) {
+if (isset($_POST['name']) && isset($_POST['note']) && isset($_POST['parrent_id'])) {
  
-    $reply_id = $_POST['reply_id'];
+    $note = $_POST['note'];
+    $parrent_id = $_POST['parrent_id'];
+    $name = $_POST['name'];
  
     require_once __DIR__ . '/db_connect.php';
  
     $db = new DB_CONNECT();
-	
-	mysql_query("update thread set num_reply=num_reply-1 where id=".$thread_id);
-    $result = mysql_query("delete from reply where id=".$reply_id);
+
+    $result = mysql_query("INSERT INTO folder(name, note, parrent_id) VALUES('$name', '$note', '$parrent_id')");
        if ($result) {
             $response["success"] = 1;
-            $response["message"] = "Delete reply successful.";
+            $response["message"] = "Create new folder completed.";
      
             echo json_encode($response);
         } else {

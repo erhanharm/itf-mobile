@@ -10,12 +10,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vphoainha.itfmobile.adapter.FolderAdapter;
 import com.vphoainha.itfmobile.adapter.ThreadAdapter;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
@@ -32,6 +40,8 @@ public class SubFolderActivity extends FatherActivity {
 	String msg;
 	
 	Folder curFolder;
+	List<Folder> subFolders;
+	
 	ListView lvFolder, lvThread;
 	
 	@Override
@@ -48,7 +58,40 @@ public class SubFolderActivity extends FatherActivity {
 		tvTitle.setText(curFolder.getName());
 		tvSubTitle.setText("ITF"+subtitle);
 		
+		lvFolder = (ListView) findViewById(R.id.lvFolder);
+		subFolders=AppData.getSubFolders(curFolder.getId());
+		FolderAdapter adapter = new FolderAdapter(SubFolderActivity.this,R.layout.list_item_folder, R.id.tv_index, subFolders);
+		lvFolder.setAdapter(adapter);
+		Util.setListViewHeightBasedOnChildren(lvFolder, adapter);
+		if(subFolders.size()<=0){
+			((LinearLayout)findViewById(R.id.lnFolder)).setVisibility(View.GONE);
+		}
+		lvFolder.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				Intent intent = new Intent(SubFolderActivity.this, SubFolderActivity.class);
+				AppData.folders.add(subFolders.get(arg2));
+				startActivity(intent);
+			}
+		});
+		
+		TextView tvThreadsinFolder = (TextView) findViewById(R.id.tvThreadsinFolder);
+		tvThreadsinFolder.setText(tvThreadsinFolder.getText().toString()+curFolder.getName());
+		btn_new.setVisibility(View.VISIBLE);
+		btn_new.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				
+			}
+		});
+		
 		wsGetThreads();
+	}
+	
+	@Override
+	public void finish() {
+		super.finish();
+		AppData.folders.remove(AppData.folders.size()-1);
 	}
 
 	public void wsGetThreads() {
@@ -98,7 +141,10 @@ public class SubFolderActivity extends FatherActivity {
 						t.setTime(DateTimeHelper.stringToDateTime(obj.getString(JsonTag.TAG_TIME)));
 						t.setFolderId(Integer.parseInt(obj.getString(JsonTag.TAG_FOLDER_ID)));
 						t.setUserId(Integer.parseInt(obj.getString(JsonTag.TAG_USER_ID)));
+						t.setUserName(obj.getString(JsonTag.TAG_USER_NAME));
 						t.setStatus(Integer.parseInt(obj.getString(JsonTag.TAG_STATUS)));
+						t.setNum_reply(Integer.parseInt(obj.getString(JsonTag.TAG_NUM_REPLY)));
+						t.setNum_view(Integer.parseInt(obj.getString(JsonTag.TAG_NUM_VIEW)));
 						
 						threads.add(t);
 					}
@@ -127,6 +173,19 @@ public class SubFolderActivity extends FatherActivity {
 								R.layout.list_item_thread, R.id.tv_index,
 								threads);
 						lvThread.setAdapter(adapter);
+						Util.setListViewHeightBasedOnChildren(lvThread, adapter);
+						if(threads.size()<=0){
+							((LinearLayout)findViewById(R.id.lnThread)).setVisibility(View.GONE);
+						}
+						lvThread.setOnItemClickListener(new OnItemClickListener() {
+							@Override
+							public void onItemClick(AdapterView<?> arg0,
+									View arg1, int arg2, long arg3) {
+								Intent intent = new Intent(SubFolderActivity.this, ThreadActivity.class);
+								intent.putExtra("thread", threads.get(arg2));
+								startActivity(intent);
+							}
+						});
 					}
 				});
 			} else {

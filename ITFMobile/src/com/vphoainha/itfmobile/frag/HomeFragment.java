@@ -25,9 +25,9 @@ import android.widget.Toast;
 import com.vphoainha.itfmobile.MainActivity;
 import com.vphoainha.itfmobile.R;
 import com.vphoainha.itfmobile.SubFolderActivity;
-import com.vphoainha.itfmobile.adapter.HomeGroupAdapter;
-import com.vphoainha.itfmobile.adapter.HomeGroupAdapter.IndexPath;
-import com.vphoainha.itfmobile.adapter.HomeGroupAdapter.SectionListAdapterAdapterDelegate;
+import com.vphoainha.itfmobile.adapter.HomeFolderAdapter;
+import com.vphoainha.itfmobile.adapter.HomeFolderAdapter.IndexPath;
+import com.vphoainha.itfmobile.adapter.HomeFolderAdapter.SectionListAdapterAdapterDelegate;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
 import com.vphoainha.itfmobile.util.AppData;
@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 	private List<Folder> lstFolder1;
 	private List<List<Folder>> lstFolder2;
 	
-	HomeGroupAdapter adapter;
+	HomeFolderAdapter adapter;
 	LayoutInflater inflater;
 	
 	ListView lvHome;
@@ -73,11 +73,11 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 		lvHome = (ListView) view.findViewById(R.id.lvHome);
 		
 		inflater = LayoutInflater.from(getActivity());
-		adapter = new HomeGroupAdapter();
+		adapter = new HomeFolderAdapter();
         adapter.delegate = HomeFragment.this;
         lvHome.setOnItemClickListener(adapter.itemClickListener);
 		
-		accessWebserviceGetFolders();
+        wsGetFolders();
 		return view;
 	}
 	
@@ -145,26 +145,34 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 		
 		Intent intent = new Intent(getActivity(), SubFolderActivity.class);
 		Folder f=lstFolder2.get(path.section).get(path.row);
-		for(Folder f2:lstFolder1)
-			if(f.getParrentId()==f2.getId()){
+		for(Folder fParrent:lstFolder1)
+			if(f.getParrentId()==fParrent.getId()){
+				AppData.folders.add(fParrent);
 				AppData.folders.add(f);
-				AppData.folders.add(f2);
 				break;
 			}
 		startActivity(intent);
 	}
 	
+	@Override
+	public void itemSelectedAtSection(int section) {
+		AppData.folders=new ArrayList<Folder>();
+		
+		Intent intent = new Intent(getActivity(), SubFolderActivity.class);
+		AppData.folders.add(lstFolder1.get(section));
+		startActivity(intent);
+	}
 	
 	//============================================//
 
-	public void accessWebserviceGetFolders() {
+	public void wsGetFolders() {
 		if(!Util.checkInternetConnection(getActivity()))
 			Toast.makeText(getActivity(), getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else		
-			(new JsonReadTask()).execute(new String[] { WsUrl.URL_GET_FOLDERS});
+			(new jsGetFolders()).execute(new String[] { WsUrl.URL_GET_FOLDERS});
 	}
 
-	private class JsonReadTask extends AsyncTask<String, Void, Integer> {
+	private class jsGetFolders extends AsyncTask<String, Void, Integer> {
 		ProgressDialog pd;
 		
 		@Override
@@ -200,6 +208,7 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 						f.setNote(obj.getString(JsonTag.TAG_NOTE));
 						f.setParrentId(Integer.parseInt(obj.getString(JsonTag.TAG_PARRENT_ID)));
 						f.setFolderIndex(Integer.parseInt(obj.getString(JsonTag.TAG_FOLDER_INDEX)));
+						f.setNum_thread(Integer.parseInt(obj.getString(JsonTag.TAG_NUM_THREAD)));
 						
 						AppData.allFolders.add(f);
 					}
@@ -247,6 +256,8 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 			}
 		}
 	}
+
+	
 
 	
 }

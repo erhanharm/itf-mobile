@@ -6,7 +6,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 
-public class HomeGroupAdapter extends BaseAdapter {
+public class HomeFolderAdapter extends BaseAdapter {
 
 	public class IndexPath {
 		public int section;
@@ -19,6 +19,7 @@ public class HomeGroupAdapter extends BaseAdapter {
 		public View viewForRowAtIndexPath(IndexPath path);
 		public View viewForHeaderInSection(int section);
 		public void itemSelectedAtIndexPath(IndexPath path);
+		public void itemSelectedAtSection(int section);
 	}
 
 	public SectionListAdapterAdapterDelegate delegate;
@@ -27,13 +28,13 @@ public class HomeGroupAdapter extends BaseAdapter {
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int position,long arg3) {
 			
-			IndexPath path = HomeGroupAdapter.this.indexPathForPosition(position);
+			IndexPath path = HomeFolderAdapter.this.indexPathForPosition(position);
 			
 			if(path.row >= 0)
 			{
 				delegate.itemSelectedAtIndexPath(path);
 			}
-			
+			else delegate.itemSelectedAtSection(path.section);
 		}
 	};
 	

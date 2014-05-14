@@ -14,7 +14,9 @@ if (isset($_POST['content']) && isset($_POST['thread_id']) && isset($_POST['user
     date_default_timezone_set('Australia/Melbourne');
     $time = date('m/d/y h:i:s', time());
 	
+	mysql_query("update thread set num_reply=num_reply+1 where id=".$thread_id);
     $result = mysql_query("INSERT INTO reply(content, time, user_id, thread_id) VALUES('$content', NOW(), '$user_id', '$thread_id')");
+	
        if ($result) {
             $response["success"] = 1;
             $response["message"] = "Create new reply completed.";

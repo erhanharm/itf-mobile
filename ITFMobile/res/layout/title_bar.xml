@@ -49,7 +49,7 @@
                 android:singleLine="true"
                 android:text="title"
                 android:textColor="#F8F8F8"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 

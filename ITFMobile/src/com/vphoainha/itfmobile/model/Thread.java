@@ -8,7 +8,7 @@ public class Thread implements Serializable{
 	private String title;
 	private String content;
 	private Date time;
-	private int folderId;
+	private int folderId, num_reply, num_view;
 	private String folderName;
 	private int userId;
 	private String userName;
@@ -95,6 +95,18 @@ public class Thread implements Serializable{
 	}
 	public void setIsDisliked(int isDisliked) {
 		this.isDisliked = isDisliked;
+	}
+	public int getNum_reply() {
+		return num_reply;
+	}
+	public void setNum_reply(int num_reply) {
+		this.num_reply = num_reply;
+	}
+	public int getNum_view() {
+		return num_view;
+	}
+	public void setNum_view(int num_view) {
+		this.num_view = num_view;
 	}
 
 	

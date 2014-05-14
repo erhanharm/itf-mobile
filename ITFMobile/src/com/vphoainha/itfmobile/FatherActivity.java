@@ -15,7 +15,7 @@ public class FatherActivity extends Activity{
 	
 	protected TextView tvTitle, tvSubTitle;
 	protected LinearLayout lnBack;
-	protected ImageButton btn_ok;
+	protected ImageButton btn_ok, btn_new;
 		
 	protected void initFather() {
 		sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this);
@@ -24,6 +24,7 @@ public class FatherActivity extends Activity{
 		tvSubTitle=(TextView)findViewById(R.id.tv_subtitle);
 		lnBack=(LinearLayout)findViewById(R.id.ln_back);
 		btn_ok = (ImageButton) findViewById(R.id.btn_ok);
+		btn_new = (ImageButton) findViewById(R.id.btn_new);
 		
 		lnBack.setOnClickListener(new OnClickListener() {
 			@Override

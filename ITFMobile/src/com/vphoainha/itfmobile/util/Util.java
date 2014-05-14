@@ -11,6 +11,11 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.provider.Settings.Secure;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 public class Util {
 	public static boolean checkInternetConnection(Context context) {
@@ -86,5 +91,20 @@ public class Util {
             e.printStackTrace();
         }
         return "";
+    }
+    
+    public static void setListViewHeightBasedOnChildren(ListView lv, BaseAdapter adapter) {
+        int totalHeight = lv.getPaddingTop() + lv.getPaddingBottom();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View listItem = adapter.getView(i, null, lv);
+            if (listItem instanceof ViewGroup)
+                listItem.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = lv.getLayoutParams();
+        params.height = totalHeight + (lv.getDividerHeight() * (adapter.getCount() - 1));
+        lv.setLayoutParams(params);
     }
 }

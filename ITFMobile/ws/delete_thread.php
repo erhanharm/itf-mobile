@@ -9,18 +9,26 @@ if (isset($_POST['thread_id'])) {
  
     $db = new DB_CONNECT();
 	
-    $result = mysql_query("delete from thread where id=".$thread_id);
-       if ($result) {
-            $response["success"] = 1;
-            $response["message"] = "Delete thread successful.";
-     
-            echo json_encode($response);
-        } else {
-            $response["success"] = 0;
-            $response["message"] = "Oops! An error occurred.";
+	$rs = mysql_query("SELECT thread.folder_id FROM thread WHERE id = ".$thread_id) or die(mysql_error());
+    if ($rs && mysql_num_rows($rs) > 0) {
+		while ($r = mysql_fetch_array($rs)) {
+			mysql_query("update folder set num_thread=num_thread-1 where id=".$r["folder_id"]);
+		}
+	}
+		
+		$result = mysql_query("delete from thread where id=".$thread_id);
+		if ($result) {
+			$response["success"] = 1;
+			$response["message"] = "Delete thread successful.";
+		 
+			echo json_encode($response);
+		} else {
+			$response["success"] = 0;
+			$response["message"] = "Oops! An error occurred.";
 
-            echo json_encode($response);
-        }
+			echo json_encode($response);
+		}   
+			
 } else {
     $response["success"] = 0;
     $response["message"] = "Required field(s) is missing";

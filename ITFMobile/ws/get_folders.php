@@ -21,6 +21,7 @@ $response = array();
                 $thread["note"] = $row["note"];
                 $thread["parrent_id"] = $row["parrent_id"];
                 $thread["folder_index"] = $row["folder_index"];
+				$thread["num_thread"] = $row["num_thread"];
 
                 array_push($response["folders"], $thread);
             //}

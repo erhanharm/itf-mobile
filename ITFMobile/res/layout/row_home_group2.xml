@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg"
+    android:background="@color/text_hint"
     android:gravity="center"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/bg_topbutton"
+        android:layout_marginBottom="1dp"
+        android:layout_weight="1"
+        android:background="@color/white"
         android:orientation="vertical"
         android:padding="10dp" >
 
@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="title"
-            android:textColor="@color/text1"
+            android:textColor="@color/text2"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -30,13 +30,11 @@
             android:id="@+id/tvNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="ingredient ingredient ingredient ingredient ingredient"
-            android:textColor="@color/dark_gray"
-            android:textSize="14sp" />
-
+            android:textColor="@color/text_unlike"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>

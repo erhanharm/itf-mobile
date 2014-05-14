@@ -10,26 +10,26 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.vphoainha.itfmobile.R;
-import com.vphoainha.itfmobile.model.Reply;
+import com.vphoainha.itfmobile.model.Folder;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 
-public class ReplyAdapter extends ArrayAdapter<Reply> {
+public class FolderAdapter extends ArrayAdapter<Folder> {
 	
 	Activity act;
-	List<Reply> lst;
+	List<Folder> lst;
 	String msg;
 	
-	Reply save_q;
+	Folder save_q;
 	int save_pos;
 	
-	public ReplyAdapter(Activity context, int resource, int textViewResourceId, List<Reply> objects) {
+	public FolderAdapter(Activity context, int resource, int textViewResourceId, List<Folder> objects) {
 		super(context, resource, textViewResourceId, objects);
 		act=context;
 		lst=objects;
 	}
 	
 	public static class ViewHolder {
-		public TextView tvDate, tvContent, tvAuthor, tvNumLike;
+		public TextView tvTile, tvNumThread, tvDescription;
 	}
 
 	@Override
@@ -39,30 +39,33 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 		if (convertView == null) {
 			holder = new ViewHolder();
 			LayoutInflater inflater = act.getLayoutInflater();
-			convertView = inflater.inflate(R.layout.list_item_reply, null);
+			convertView = inflater.inflate(R.layout.list_item_folder, null);
 	      
-			holder.tvDate = (TextView) convertView.findViewById(R.id.tvDate);
-			holder.tvContent = (TextView) convertView.findViewById(R.id.tvContent);
-			holder.tvNumLike = (TextView) convertView.findViewById(R.id.tvNumLike);
-			holder.tvAuthor = (TextView) convertView.findViewById(R.id.tvAuthor);
+			holder.tvTile = (TextView) convertView.findViewById(R.id.tv_title);
+			holder.tvNumThread = (TextView) convertView.findViewById(R.id.tv_numthread);
+			holder.tvDescription = (TextView) convertView.findViewById(R.id.tv_description);
 			convertView.setTag(holder);
 	    }
 		holder = (ViewHolder) convertView.getTag();
 
-		Reply f = lst.get(position);
+		Folder q = lst.get(position);
 
-		holder.tvDate.setText(DateTimeHelper.dateTimeToDateString(f.getTime()));
-		holder.tvContent.setText(f.getContent());
-		holder.tvAuthor.setText("by "+f.getUserName());
-		holder.tvNumLike.setText(f.getCountLiked());
-		
+		holder.tvTile.setText(q.getName());
+		holder.tvNumThread.setText(q.getNum_thread()+" threads");
+		if(q.getNote()!=null && !q.getNote().equals("")){
+			holder.tvDescription.setText("by "+q.getNote());
+			holder.tvDescription.setVisibility(View.VISIBLE);
+		}
+		else holder.tvDescription.setVisibility(View.GONE);
+
 		return convertView;
 	}
-
+	
 	@Override
 	public int getCount() {
 		return lst.size();
 	}
+
 //	
 //	//=======================================//
 //	public void accessSolvedWebservice(int ques_id) {

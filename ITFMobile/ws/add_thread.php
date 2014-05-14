@@ -17,6 +17,7 @@ if (isset($_POST['title']) && isset($_POST['content']) && isset($_POST['folder_i
     date_default_timezone_set('Australia/Melbourne');
     $time = date('m/d/y h:i:s', time());
 	
+	mysql_query("update folder set num_thread=num_thread+1 where id=".$folder_id);
     $result = mysql_query("INSERT INTO thread(title, content, time, folder_id, user_id, status) VALUES('$title', '$content', NOW(), '$folder_id', '$user_id', '$status')");
        if ($result) {
             $response["success"] = 1;

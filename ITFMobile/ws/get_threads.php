@@ -11,7 +11,7 @@ $response = array();
     $db = new DB_CONNECT();
 
 	mysql_query('SET CHARACTER SET utf8');
-    $result = mysql_query("SELECT thread.id as id, title, content, time, status, thread.folder_id as folder_id, thread.user_id as user_id, user.username as username, folder.name as folder_name FROM thread, user, folder WHERE folder_id = ".$folder_id." AND user_id = user.id and folder_id = folder.id ORDER BY time DESC") or die(mysql_error());
+    $result = mysql_query("SELECT thread.id as id, title, content, time, status, thread.folder_id as folder_id, thread.user_id as user_id,num_reply,num_view, user.username as username, folder.name as folder_name FROM thread, user, folder WHERE folder_id = ".$folder_id." AND user_id = user.id and folder_id = folder.id ORDER BY time DESC") or die(mysql_error());
 
     if ($result && mysql_num_rows($result) > 0) {
         $response["threads"] = array();
@@ -29,6 +29,8 @@ $response = array();
                 $thread["user_id"] = $row["user_id"];
                 $thread["username"] = $row["username"];
                 $thread["status"] = $row["status"];
+				$thread["num_reply"] = $row["num_reply"];
+				$thread["num_view"] = $row["num_view"];
 
                 array_push($response["threads"], $thread);
             //}

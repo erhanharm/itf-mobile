@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Folder implements Serializable{
 	private int id;
 	private int parrentId;
-	private int folderIndex;
+	private int folderIndex, num_thread;
 	private String name;
 	private String note;
 	
@@ -38,6 +38,12 @@ public class Folder implements Serializable{
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public int getNum_thread() {
+		return num_thread;
+	}
+	public void setNum_thread(int num_thread) {
+		this.num_thread = num_thread;
 	}
 	
 }

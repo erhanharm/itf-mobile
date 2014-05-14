@@ -21,6 +21,7 @@
                 android:id="@+id/lnFolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:orientation="vertical" >
 
                 <TextView
@@ -32,15 +33,15 @@
                     android:text="Sub Folders"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <ListView
                     android:id="@+id/lvFolder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:cacheColorHint="@color/bg"
-                    android:divider="@android:color/transparent"
-                    android:dividerHeight="0dp"
+                    android:divider="@color/text_hint"
+                    android:dividerHeight="1dp"
                     android:listSelector="@android:color/transparent" >
                 </ListView>
             </LinearLayout>
@@ -55,21 +56,20 @@
                     android:id="@+id/tvThreadsinFolder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:background="#96CE1C"
                     android:padding="5dp"
                     android:text="Threads in Folder: "
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <ListView
                     android:id="@+id/lvThread"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:cacheColorHint="@color/bg"
-                    android:divider="@android:color/transparent"
-                    android:dividerHeight="0dp"
+                    android:divider="@color/text_hint"
+                    android:dividerHeight="1dp"
                     android:listSelector="@android:color/transparent" >
                 </ListView>
             </LinearLayout>

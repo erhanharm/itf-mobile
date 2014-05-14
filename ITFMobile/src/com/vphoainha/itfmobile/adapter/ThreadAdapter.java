@@ -31,9 +31,7 @@ public class ThreadAdapter extends ArrayAdapter<Thread> {
 	}
 	
 	public static class ViewHolder {
-		public TextView tvId,tvCategory,tvDate, tvTitle, tvAuthor, tvAnswered, tvForUser;
-		public Button btnAnswer, btnDeny, btnSolved;
-		public LinearLayout lnRow;
+		public TextView tvDate, tvTitle, tvAuthor, tvNumview, tvNumreply;
 	}
 
 	@Override
@@ -45,28 +43,33 @@ public class ThreadAdapter extends ArrayAdapter<Thread> {
 			LayoutInflater inflater = act.getLayoutInflater();
 			convertView = inflater.inflate(R.layout.list_item_thread, null);
 	      
-			holder.tvId = (TextView) convertView.findViewById(R.id.tvId);
 			holder.tvDate = (TextView) convertView.findViewById(R.id.tvDate);
 			holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
 			holder.tvAuthor = (TextView) convertView.findViewById(R.id.tvAuthor);
-			holder.btnAnswer=(Button)convertView.findViewById(R.id.btnAnswer);
-			holder.lnRow=(LinearLayout)convertView.findViewById(R.id.lnRow);
+			holder.tvNumview=(TextView)convertView.findViewById(R.id.tvNumview);
+			holder.tvNumreply=(TextView)convertView.findViewById(R.id.tvNumreply);
 			convertView.setTag(holder);
 	    }
 		holder = (ViewHolder) convertView.getTag();
 
-		Thread q = lst.get(position);
+		Thread f = lst.get(position);
 
-		holder.tvId.setText("#" + q.getId());
-		holder.tvDate.setText(DateTimeHelper.dateTimeToDateStringDMY(q.getTime()));
-		holder.tvTitle.setText(q.getContent());
+		holder.tvDate.setText(DateTimeHelper.dateTimeToDateString(f.getTime()));
+		holder.tvTitle.setText(f.getContent());
+		holder.tvAuthor.setText("by "+f.getUserName());
+		holder.tvNumreply.setText(f.getNum_reply()+" replies");
+		holder.tvNumview.setText(f.getNum_view()+" views");
 		
-		holder.tvAuthor.setText("by "+q.getUserName());
+		holder.tvAuthor.setText("by "+f.getUserName());
 		
 
 		return convertView;
 	}
 
+	@Override
+	public int getCount() {
+		return lst.size();
+	}
 //	
 //	//=======================================//
 //	public void accessSolvedWebservice(int ques_id) {
