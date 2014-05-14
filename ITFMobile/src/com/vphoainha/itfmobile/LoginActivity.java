@@ -18,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,10 +31,11 @@ import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.OnErrorListener;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.User;
+import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.MySharedPreferences;
-import com.vphoainha.itfmobile.util.Utils;
+import com.vphoainha.itfmobile.util.Util;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class LoginActivity extends FatherActivity {
@@ -138,16 +138,16 @@ public class LoginActivity extends FatherActivity {
 		if (userName.equals(""))
 			msg = "Username is not be empty!";
 		if (!msg.equals("")) {
-			Utils.showAlert(LoginActivity.this, "", msg);
+			Util.showAlert(LoginActivity.this, "", msg);
 			return;
 		}
 
-		if (!Utils.checkInternetConnection(this))
+		if (!Util.checkInternetConnection(this))
 			Toast.makeText(this, getString(R.string.cant_connect_internet),
 					Toast.LENGTH_SHORT).show();
 		else
 			(new JsonReadTaskLOGIN()).execute(new String[] { WsUrl.URL_LOGIN,
-					userName, Utils.md5(password), Utils.getDeviceID(this) });
+					userName, Util.md5(password), Util.getDeviceID(this) });
 	}
 
 	public class JsonReadTaskLOGIN extends AsyncTask<String, Void, String> {
@@ -209,7 +209,7 @@ public class LoginActivity extends FatherActivity {
 
 	private void accessWebserviceCHECKEMAIL(String email) {
 		(new JsonReadTaskCHECKEMAIL()).execute(new String[] { WsUrl.URL_CHECK_FACEBOOK_EMAIL,
-				email, SECURITY_CODE, Utils.getDeviceID(this) });
+				email, SECURITY_CODE, Util.getDeviceID(this) });
 	}
 
 	public class JsonReadTaskCHECKEMAIL extends
@@ -263,7 +263,7 @@ public class LoginActivity extends FatherActivity {
 				setResult(RESULT_OK);
 				finish();
 			} else {
-				(new JsonReadTaskREGISTER()).execute(new String[] { WsUrl.URL_REGISTER, faceUser.getUsername(), faceUser.asMap().get("email").toString(), Utils.md5(DEFAULT_PASS), Utils.getDeviceID(LoginActivity.this)});
+				(new JsonReadTaskREGISTER()).execute(new String[] { WsUrl.URL_REGISTER, faceUser.getUsername(), faceUser.asMap().get("email").toString(), Util.md5(DEFAULT_PASS), Util.getDeviceID(LoginActivity.this)});
 			}
 		}
 	}
@@ -317,7 +317,7 @@ public class LoginActivity extends FatherActivity {
 			if (result != null) {
 				readAndSaveLoginJsonObject(LoginActivity.this, object);
 				
-				Utils.showAlert(LoginActivity.this, "", "Register successfully! Your new account password is 123456, please go to your profile to change the password!", new DialogInterface.OnClickListener() {
+				Util.showAlert(LoginActivity.this, "", "Register successfully! Your new account password is 123456, please go to your profile to change the password!", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						finish();
@@ -333,22 +333,22 @@ public class LoginActivity extends FatherActivity {
 	public static void readAndSaveLoginJsonObject(Context ctx, JSONObject object) {
 		if (object != null) {
 			try {
-				Utils.isLogin = true;
-				Utils.saveUser = new User();
-				Utils.saveUser.setId(Integer.parseInt(object.getString(JsonTag.TAG_ID)));
-				Utils.saveUser.setUsername(object.getString(JsonTag.TAG_USER_NAME));
-				Utils.saveUser.setPassword(object.getString(JsonTag.TAG_PASSWORD));
-				Utils.saveUser.setName(object.getString(JsonTag.TAG_NAME));	
-				Utils.saveUser.setEmail(object.getString(JsonTag.TAG_EMAIL));	
-				Utils.saveUser.setUserType(Integer.parseInt(object.getString(JsonTag.TAG_USER_TYPE)));
-				Utils.saveUser.setUserClass(object.getString(JsonTag.TAG_CLASS));	
-				Utils.saveUser.setBirthday(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_BIRTHDAY)));	
-				Utils.saveUser.setJoinDate(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_JOINDATE)));	
-				Utils.saveUser.setAddress(object.getString(JsonTag.TAG_ADDRESS));	
-				Utils.saveUser.setInterest(object.getString(JsonTag.TAG_INTEREST));	
-				Utils.saveUser.setSignature(object.getString(JsonTag.TAG_SIGNATURE));	
-				Utils.saveUser.setName(object.getString(JsonTag.TAG_NAME));	
-				Utils.saveUser.setDeviceId(object.getString(JsonTag.TAG_DEVICE_ID));
+				AppData.isLogin = true;
+				AppData.saveUser = new User();
+				AppData.saveUser.setId(Integer.parseInt(object.getString(JsonTag.TAG_ID)));
+				AppData.saveUser.setUsername(object.getString(JsonTag.TAG_USER_NAME));
+				AppData.saveUser.setPassword(object.getString(JsonTag.TAG_PASSWORD));
+				AppData.saveUser.setName(object.getString(JsonTag.TAG_NAME));	
+				AppData.saveUser.setEmail(object.getString(JsonTag.TAG_EMAIL));	
+				AppData.saveUser.setUserType(Integer.parseInt(object.getString(JsonTag.TAG_USER_TYPE)));
+				AppData.saveUser.setUserClass(object.getString(JsonTag.TAG_CLASS));	
+				AppData.saveUser.setBirthday(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_BIRTHDAY)));	
+				AppData.saveUser.setJoinDate(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_JOINDATE)));	
+				AppData.saveUser.setAddress(object.getString(JsonTag.TAG_ADDRESS));	
+				AppData.saveUser.setInterest(object.getString(JsonTag.TAG_INTEREST));	
+				AppData.saveUser.setSignature(object.getString(JsonTag.TAG_SIGNATURE));	
+				AppData.saveUser.setName(object.getString(JsonTag.TAG_NAME));	
+				AppData.saveUser.setDeviceId(object.getString(JsonTag.TAG_DEVICE_ID));
 
 				new MySharedPreferences(ctx)
 						.setSaveUserPreferences();

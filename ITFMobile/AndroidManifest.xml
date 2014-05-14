@@ -36,7 +36,7 @@
 			android:name=".AddAnswerActivity">
 		</activity>
 		<activity
-			android:name=".ThreadActivity">
+			android:name=".SubFolderActivity">
 		</activity>
 		<activity
 			android:name=".LoginActivity">

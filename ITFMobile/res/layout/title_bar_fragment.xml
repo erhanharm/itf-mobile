@@ -82,11 +82,4 @@
 
     </FrameLayout>
 
-    <ImageButton
-        android:id="@+id/btn_new"
-        android:layout_width="45dp"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_topbutton"
-        android:src="@drawable/btn_add" />
-
 </LinearLayout>

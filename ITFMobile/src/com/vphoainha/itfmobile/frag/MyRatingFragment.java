@@ -24,8 +24,9 @@ import android.widget.Toast;
 import com.vphoainha.itfmobile.MainActivity;
 import com.vphoainha.itfmobile.R;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
+import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Utils;
+import com.vphoainha.itfmobile.util.Util;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 
@@ -74,10 +75,10 @@ public class MyRatingFragment extends Fragment {
 	}
 	
 	public void accessGetMyExpertWebservice() {
-		if(!Utils.checkInternetConnection(getActivity()))
+		if(!Util.checkInternetConnection(getActivity()))
 			Toast.makeText(getActivity(), getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else	
-			(new JsonReadTask()).execute(new String[] { WsUrl.URL_GET_MYEXPERT, Integer.toString(Utils.saveUser.getId())});
+			(new JsonReadTask()).execute(new String[] { WsUrl.URL_GET_MYEXPERT, Integer.toString(AppData.saveUser.getId())});
 	}
 
 	public class JsonReadTask extends AsyncTask<String, Void, Integer> {

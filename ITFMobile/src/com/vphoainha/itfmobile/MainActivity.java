@@ -19,10 +19,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +30,10 @@ import com.vphoainha.itfmobile.frag.MyAnswersFragment;
 import com.vphoainha.itfmobile.frag.MyQuestionsFragment;
 import com.vphoainha.itfmobile.frag.MyRatingFragment;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
+import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.MySharedPreferences;
-import com.vphoainha.itfmobile.util.Utils;
+import com.vphoainha.itfmobile.util.Util;
 import com.vphoainha.itfmobile.util.WsUrl;
 import com.vphoainha.itfmobile.view.CustomSlidingPaneLayout;
 
@@ -43,7 +42,6 @@ public class MainActivity extends FragmentActivity {
 	private CustomSlidingPaneLayout spl;
 	private MySharedPreferences mySharedPreferences;
 	
-	private ImageButton btn_new;
 	private LinearLayout lnMyQuestions, lnMyAnswers, lnMyRating, lnAccount, lnLogin, lnLogout;
 	private TextView tvUsername, tvUserEmail, tv_title;
 	private FrameLayout fl_numnotify;
@@ -65,8 +63,8 @@ public class MainActivity extends FragmentActivity {
 
 		spl = (CustomSlidingPaneLayout) findViewById(R.id.slidingPane);
 
-		if(!Utils.checkInternetConnection(this)){
-			Utils.showAlert(this, "Sorry!", getString(R.string.cant_connect_internet), new DialogInterface.OnClickListener() {
+		if(!Util.checkInternetConnection(this)){
+			Util.showAlert(this, "Sorry!", getString(R.string.cant_connect_internet), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
 					finish();
@@ -75,17 +73,10 @@ public class MainActivity extends FragmentActivity {
 			return;
 		}
 		
-		//load user saved
-		mySharedPreferences = new MySharedPreferences(this);
-		mySharedPreferences.getSaveUserPreferences();
-		if(Utils.isLogin){
-			Log.i("======", Utils.saveUser.getEmail()+"    "+ Utils.saveUser.getPassword());
-			(new JsonReadTaskReLogin()).execute(new String[] { WsUrl.URL_LOGIN, Utils.saveUser.getUsername(), Utils.saveUser.getPassword(), Utils.getDeviceID(this)});
-		}
+		init();
 
 		tvUsername = (TextView) findViewById(R.id.tvUserName);
 		tvUserEmail = (TextView) findViewById(R.id.tvUserEmail);
-		btn_new = (ImageButton) findViewById(R.id.btn_new);
 		tv_title = (TextView) findViewById(R.id.tv_title);
 		fl_numnotify = (FrameLayout) findViewById(R.id.fl_numnotify);
 
@@ -96,22 +87,22 @@ public class MainActivity extends FragmentActivity {
 		lnLogin = (LinearLayout) findViewById(R.id.lnLogin);
 		lnLogout = (LinearLayout) findViewById(R.id.lnLogout);
 
-		btn_new.setVisibility(View.GONE);
-		btn_new.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(!Utils.isLogin){
-					startActivity(new Intent(getApplicationContext(),LoginActivity.class));
-				}
-//				else 		
-//					startActivityForResult(new Intent(getApplicationContext(),AddQuestionActivity.class), 0);
-			}
-		});
-		
 		initViewMenu();
 		cur_frag=0;
 		homeFragment=HomeFragment.newInstance();
 		setView(homeFragment);
+	}
+	
+	private void init(){
+		
+		
+		//load user saved
+		mySharedPreferences = new MySharedPreferences(this);
+		mySharedPreferences.getSaveUserPreferences();
+		if(AppData.isLogin){
+			Log.i("======", AppData.saveUser.getEmail()+"    "+ AppData.saveUser.getPassword());
+			(new JsonReadTaskReLogin()).execute(new String[] { WsUrl.URL_LOGIN, AppData.saveUser.getUsername(), AppData.saveUser.getPassword(), Util.getDeviceID(this)});
+		}		
 	}
 	
 	@Override
@@ -154,7 +145,7 @@ public class MainActivity extends FragmentActivity {
 
 	private void initViewMenu() {
 		TextView tv_register=(TextView)findViewById(R.id.btnRegister);
-		if(!Utils.isLogin){
+		if(!AppData.isLogin){
 			hideLoggedFunction();
 		}
 		else{
@@ -213,8 +204,8 @@ public class MainActivity extends FragmentActivity {
 	public void onclickLogout(View v) {
 		hideLoggedFunction();
 		
-		Utils.isLogin=false;
-		Utils.saveUser=null;
+		AppData.isLogin=false;
+		AppData.saveUser=null;
 		mySharedPreferences.setSaveUserPreferences();	
 		
 		try{
@@ -247,10 +238,10 @@ public class MainActivity extends FragmentActivity {
 		
 		lnLogin.setVisibility(View.GONE);
 		lnLogout.setVisibility(View.VISIBLE);
-		if(Utils.saveUser!=null){
-			if(Utils.saveUser.getName().equals("")) tvUsername.setText(Utils.saveUser.getUsername());
-			else tvUsername.setText(Utils.saveUser.getName());
-			tvUserEmail.setText(Utils.saveUser.getEmail());
+		if(AppData.saveUser!=null){
+			if(AppData.saveUser.getName().equals("")) tvUsername.setText(AppData.saveUser.getUsername());
+			else tvUsername.setText(AppData.saveUser.getName());
+			tvUserEmail.setText(AppData.saveUser.getEmail());
 		}
 	}
 	
@@ -311,7 +302,7 @@ public class MainActivity extends FragmentActivity {
 					showLoggedFunction();
 				}
 			} else {
-				Utils.showAlert(MainActivity.this, "", "Your previous user info is incorrect. Please login again!");
+				Util.showAlert(MainActivity.this, "", "Your previous user info is incorrect. Please login again!");
 				onclickLogout(null);
 			}
 		}

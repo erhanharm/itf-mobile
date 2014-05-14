@@ -18,16 +18,15 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vphoainha.itfmobile.MainActivity;
 import com.vphoainha.itfmobile.R;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Thread;
-import com.vphoainha.itfmobile.util.DateTimeHelper;
+import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Utils;
+import com.vphoainha.itfmobile.util.Util;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class MyQuestionsFragment extends Fragment {
@@ -80,12 +79,12 @@ public class MyQuestionsFragment extends Fragment {
 	}
 
 	public void accessWebservice() {
-		if(!Utils.checkInternetConnection(getActivity()))
+		if(!Util.checkInternetConnection(getActivity()))
 			Toast.makeText(getActivity(), getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else	
 			(new JsonReadTask()).execute(new String[] {
 				WsUrl.URL_GET_QUESTION_BY_USER,
-				Integer.toString(Utils.saveUser.getId()), Integer.toString(from),
+				Integer.toString(AppData.saveUser.getId()), Integer.toString(from),
 				Integer.toString(from = +10) });
 	}
 

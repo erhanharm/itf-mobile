@@ -12,14 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.provider.Settings.Secure;
 
-import com.vphoainha.itfmobile.model.User;
-
-public class Utils {
-	public static final int DEFAUT_VALUE=-1; 
-	
-	public static boolean isLogin=false;
-	public static User saveUser=null;
-	
+public class Util {
 	public static boolean checkInternetConnection(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -13,7 +13,7 @@ public class FatherActivity extends Activity{
 	protected SharedPreferences sharedPreferences;
 	protected SharedPreferences.Editor sharedPreferencesEditor;
 	
-	protected TextView tvTitle;
+	protected TextView tvTitle, tvSubTitle;
 	protected LinearLayout lnBack;
 	protected ImageButton btn_ok;
 		
@@ -21,6 +21,7 @@ public class FatherActivity extends Activity{
 		sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this);
 		
 		tvTitle=(TextView)findViewById(R.id.tv_title);
+		tvSubTitle=(TextView)findViewById(R.id.tv_subtitle);
 		lnBack=(LinearLayout)findViewById(R.id.ln_back);
 		btn_ok = (ImageButton) findViewById(R.id.btn_ok);
 		

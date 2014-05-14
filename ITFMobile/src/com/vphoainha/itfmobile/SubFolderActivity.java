@@ -20,47 +20,52 @@ import com.vphoainha.itfmobile.adapter.ThreadAdapter;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
 import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Utils;
+import com.vphoainha.itfmobile.util.Util;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 
-public class ThreadActivity extends FatherActivity {
-	List<Thread> listData;
-	Folder folderParrent;
-	Folder folder;
+public class SubFolderActivity extends FatherActivity {
+	List<Thread> threads;
 	String msg;
+	
+	Folder curFolder;
+	ListView lvFolder, lvThread;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_thread);
+		setContentView(R.layout.activity_subfolder);
 		initFather();
 
-		folderParrent=(Folder)getIntent().getSerializableExtra("folderParrent");
-		folder=(Folder)getIntent().getSerializableExtra("folder");
+		String subtitle="";
+		for(int i=0;i<AppData.folders.size()-1;i++)
+			subtitle+=" > "+AppData.folders.get(i).getName();
 		
-		tvTitle.setText("Forum > "+folderParrent.getName()+" > "+folder.getName());
+		curFolder=AppData.folders.get(AppData.folders.size()-1);
+		tvTitle.setText(curFolder.getName());
+		tvSubTitle.setText("ITF"+subtitle);
 		
-		accessWebservice();
+		wsGetThreads();
 	}
 
-	public void accessWebservice() {
-		if(!Utils.checkInternetConnection(this))
+	public void wsGetThreads() {
+		if(!Util.checkInternetConnection(this))
 			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else	
-			(new JsonReadTask()).execute(new String[] { WsUrl.URL_GET_THREADS, Integer.toString(folder.getId()) });
+			(new jsGetThreads()).execute(new String[] { WsUrl.URL_GET_THREADS, Integer.toString(curFolder.getId()) });
 	}
 
-	public class JsonReadTask extends AsyncTask<String, Void, Integer> {
+	public class jsGetThreads extends AsyncTask<String, Void, Integer> {
 		
 		ProgressDialog pd;
 		
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			pd=new ProgressDialog(ThreadActivity.this);
+			pd=new ProgressDialog(SubFolderActivity.this);
 			pd.setMessage("Loading...");
 			pd.setCancelable(false);
 			pd.show();
@@ -79,7 +84,7 @@ public class ThreadActivity extends FatherActivity {
 			try {
 				int success = json.getInt(JsonTag.TAG_SUCCESS);
 				if (success == 1) {
-					listData = new ArrayList<Thread>();
+					threads = new ArrayList<Thread>();
 					JSONArray array = json.getJSONArray(JsonTag.TAG_THREADS);
 
 					// looping through All Products
@@ -95,7 +100,7 @@ public class ThreadActivity extends FatherActivity {
 						t.setUserId(Integer.parseInt(obj.getString(JsonTag.TAG_USER_ID)));
 						t.setStatus(Integer.parseInt(obj.getString(JsonTag.TAG_STATUS)));
 						
-						listData.add(t);
+						threads.add(t);
 					}
 					msg=json.getString("message");
 					return 1;
@@ -116,16 +121,16 @@ public class ThreadActivity extends FatherActivity {
 			if (result ==1) {
 				runOnUiThread(new Runnable() {
 					public void run() {
-						ListView list = (ListView) findViewById(R.id.lv);
+						lvThread = (ListView) findViewById(R.id.lvThread);
 						ThreadAdapter adapter = new ThreadAdapter(
-								ThreadActivity.this,
+								SubFolderActivity.this,
 								R.layout.list_item_thread, R.id.tv_index,
-								listData);
-						list.setAdapter(adapter);
+								threads);
+						lvThread.setAdapter(adapter);
 					}
 				});
 			} else {
-				Toast.makeText(ThreadActivity.this, msg, Toast.LENGTH_SHORT).show();
+				Toast.makeText(SubFolderActivity.this, msg, Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

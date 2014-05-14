@@ -24,28 +24,26 @@ import android.widget.Toast;
 
 import com.vphoainha.itfmobile.MainActivity;
 import com.vphoainha.itfmobile.R;
-import com.vphoainha.itfmobile.ThreadActivity;
+import com.vphoainha.itfmobile.SubFolderActivity;
 import com.vphoainha.itfmobile.adapter.HomeGroupAdapter;
 import com.vphoainha.itfmobile.adapter.HomeGroupAdapter.IndexPath;
 import com.vphoainha.itfmobile.adapter.HomeGroupAdapter.SectionListAdapterAdapterDelegate;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
+import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Utils;
+import com.vphoainha.itfmobile.util.Util;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class HomeFragment extends Fragment implements SectionListAdapterAdapterDelegate{
 	static View view;
 
-	TextView tv_title;
-	private List<Folder> lstFolders;
 	private List<Folder> lstFolder1;
 	private List<List<Folder>> lstFolder2;
 	
 	HomeGroupAdapter adapter;
 	LayoutInflater inflater;
 	
-//	ThreadAdapter adapter;
 	ListView lvHome;
 	
 	String msg;
@@ -72,31 +70,12 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 
 		((MainActivity) getActivity()).changeMainTitleBarText(getString(R.string.app_name));
 		
-		
-//		lstFolder1=new ArrayList<Folder>();
-//		Folder f=new Folder();
-//		f.setName("abc");
-//		lstFolder1.add(f);
-//		lstFolder1.add(f);
-//		
-//		lstFolder2=new ArrayList<List<Folder>>();
-////		Folder f=new Folder();
-////		f.setName("abc");
-//		lstFolder2.add(lstFolder1);
-//		lstFolder2.add(lstFolder1);
-		
-		
 		lvHome = (ListView) view.findViewById(R.id.lvHome);
 		
 		inflater = LayoutInflater.from(getActivity());
 		adapter = new HomeGroupAdapter();
         adapter.delegate = HomeFragment.this;
         lvHome.setOnItemClickListener(adapter.itemClickListener);
-		
-//		adapter = new ThreadAdapter(
-//				getActivity(), R.layout.list_item_question,
-//				R.id.tvId, listData, ThreadAdapter.ALL_QUESTION);
-//		list.setAdapter(adapter);
 		
 		accessWebserviceGetFolders();
 		return view;
@@ -120,7 +99,6 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 		try
 		{
 			if(lstFolder2!=null){
-				//Log.i("rowsInSection", cart_ingredients.get(section).size()+"");
 				return lstFolder2.get(section).size();
 			}
 		}catch (Exception e) {}
@@ -163,12 +141,14 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 
 	@Override
 	public void itemSelectedAtIndexPath(IndexPath path) {
-		Intent intent = new Intent(getActivity(), ThreadActivity.class);
+		AppData.folders=new ArrayList<Folder>();
+		
+		Intent intent = new Intent(getActivity(), SubFolderActivity.class);
 		Folder f=lstFolder2.get(path.section).get(path.row);
 		for(Folder f2:lstFolder1)
 			if(f.getParrentId()==f2.getId()){
-				intent.putExtra("folder", f);
-				intent.putExtra("folderParrent", f2);
+				AppData.folders.add(f);
+				AppData.folders.add(f2);
 				break;
 			}
 		startActivity(intent);
@@ -178,7 +158,7 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 	//============================================//
 
 	public void accessWebserviceGetFolders() {
-		if(!Utils.checkInternetConnection(getActivity()))
+		if(!Util.checkInternetConnection(getActivity()))
 			Toast.makeText(getActivity(), getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else		
 			(new JsonReadTask()).execute(new String[] { WsUrl.URL_GET_FOLDERS});
@@ -195,7 +175,7 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 			pd.setCancelable(false);
 			pd.show();
 			
-			lstFolders=new ArrayList<Folder>();
+			AppData.allFolders=new ArrayList<Folder>();
 		}
 		
 		@Override
@@ -221,7 +201,7 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 						f.setParrentId(Integer.parseInt(obj.getString(JsonTag.TAG_PARRENT_ID)));
 						f.setFolderIndex(Integer.parseInt(obj.getString(JsonTag.TAG_FOLDER_INDEX)));
 						
-						lstFolders.add(f);
+						AppData.allFolders.add(f);
 					}
 					return 1;
 				} else {
@@ -243,7 +223,7 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 				lstFolder1=new ArrayList<Folder>();
 				lstFolder2=new ArrayList<List<Folder>>();
 				
-				for(Folder f:lstFolders)
+				for(Folder f:AppData.allFolders)
 					if(f.getParrentId()==-1)
 						lstFolder1.add(f);
 				
@@ -251,7 +231,7 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 				for(Folder f:lstFolder1)
 				{
 					lst=new ArrayList<Folder>();
-					for(Folder f2:lstFolders)
+					for(Folder f2:AppData.allFolders)
 						if(f2.getParrentId()==f.getId())
 							lst.add(f2);
 					lstFolder2.add(lst);

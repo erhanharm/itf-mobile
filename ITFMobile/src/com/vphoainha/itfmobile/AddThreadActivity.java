@@ -23,8 +23,9 @@ import android.widget.Toast;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
 import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Utils;
+import com.vphoainha.itfmobile.util.Util;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class AddThreadActivity extends FatherActivity {
@@ -70,7 +71,7 @@ public class AddThreadActivity extends FatherActivity {
 		if (content.equals("")) {
 			Toast.makeText(context, "Please fill question content!", Toast.LENGTH_SHORT).show();
 		} else {
-			if(!Utils.checkInternetConnection(this))
+			if(!Util.checkInternetConnection(this))
 				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 			else{
 				categoryId=categories.get(sp_category.getSelectedItemPosition()).getId();
@@ -82,7 +83,7 @@ public class AddThreadActivity extends FatherActivity {
 							Integer.toString(1),
 							Integer.toString(forUserId),
 							Integer.toString(categoryId),
-							Integer.toString(Utils.saveUser.getId())});
+							Integer.toString(AppData.saveUser.getId())});
 			}
 		}
 	}

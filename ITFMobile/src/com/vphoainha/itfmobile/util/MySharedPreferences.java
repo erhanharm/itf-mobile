@@ -20,44 +20,44 @@ public class MySharedPreferences {
 	}
 	
 	public void getSaveUserPreferences() {
-		Utils.isLogin=myShare.getBoolean("isLogin", false);
+		AppData.isLogin=myShare.getBoolean("isLogin", false);
 		
-		if(Utils.isLogin){
-			Utils.saveUser=new User();
-			Utils.saveUser.setId(myShare.getInt("id", -1));
-			Utils.saveUser.setUsername(myShare.getString("username", ""));
-			Utils.saveUser.setName(myShare.getString("name", ""));
-			Utils.saveUser.setEmail(myShare.getString("email", ""));
-			Utils.saveUser.setDeviceId(myShare.getString("device_id", ""));
-			Utils.saveUser.setPassword(myShare.getString("password", ""));
-			Utils.saveUser.setBirthday(new Date(myShare.getLong("birthday", 0)));
-			Utils.saveUser.setJoinDate(new Date(myShare.getLong("join_date", 0)));
-			Utils.saveUser.setUserClass(myShare.getString("class", ""));
-			Utils.saveUser.setAddress(myShare.getString("address", ""));
-			Utils.saveUser.setInterest(myShare.getString("interest", ""));
-			Utils.saveUser.setSignature(myShare.getString("signature", ""));
-			Utils.saveUser.setUserType(myShare.getInt("user_type", 0));
+		if(AppData.isLogin){
+			AppData.saveUser=new User();
+			AppData.saveUser.setId(myShare.getInt("id", -1));
+			AppData.saveUser.setUsername(myShare.getString("username", ""));
+			AppData.saveUser.setName(myShare.getString("name", ""));
+			AppData.saveUser.setEmail(myShare.getString("email", ""));
+			AppData.saveUser.setDeviceId(myShare.getString("device_id", ""));
+			AppData.saveUser.setPassword(myShare.getString("password", ""));
+			AppData.saveUser.setBirthday(new Date(myShare.getLong("birthday", 0)));
+			AppData.saveUser.setJoinDate(new Date(myShare.getLong("join_date", 0)));
+			AppData.saveUser.setUserClass(myShare.getString("class", ""));
+			AppData.saveUser.setAddress(myShare.getString("address", ""));
+			AppData.saveUser.setInterest(myShare.getString("interest", ""));
+			AppData.saveUser.setSignature(myShare.getString("signature", ""));
+			AppData.saveUser.setUserType(myShare.getInt("user_type", 0));
 		}
-		else Utils.saveUser=null;
+		else AppData.saveUser=null;
 	}
 	
 	public void setSaveUserPreferences() {
-		editor.putBoolean("isLogin", Utils.isLogin);
+		editor.putBoolean("isLogin", AppData.isLogin);
 	
-		if(Utils.isLogin) {
-			editor.putInt("id", Utils.saveUser.getId());
-			editor.putString("username", Utils.saveUser.getUsername());
-			editor.putString("name", Utils.saveUser.getName());
-			editor.putString("email", Utils.saveUser.getEmail());
-			editor.putString("device_id", Utils.saveUser.getDeviceId());
-			editor.putString("password", Utils.saveUser.getPassword());
-			editor.putLong("birthday", Utils.saveUser.getBirthday().getTime());
-			editor.putLong("join_date", Utils.saveUser.getJoinDate().getTime());
-			editor.putString("class", Utils.saveUser.getUserClass());
-			editor.putString("address", Utils.saveUser.getAddress());
-			editor.putString("interest", Utils.saveUser.getInterest());
-			editor.putString("signature", Utils.saveUser.getSignature());
-			editor.putInt("user_type", Utils.saveUser.getUserType());
+		if(AppData.isLogin) {
+			editor.putInt("id", AppData.saveUser.getId());
+			editor.putString("username", AppData.saveUser.getUsername());
+			editor.putString("name", AppData.saveUser.getName());
+			editor.putString("email", AppData.saveUser.getEmail());
+			editor.putString("device_id", AppData.saveUser.getDeviceId());
+			editor.putString("password", AppData.saveUser.getPassword());
+			editor.putLong("birthday", AppData.saveUser.getBirthday().getTime());
+			editor.putLong("join_date", AppData.saveUser.getJoinDate().getTime());
+			editor.putString("class", AppData.saveUser.getUserClass());
+			editor.putString("address", AppData.saveUser.getAddress());
+			editor.putString("interest", AppData.saveUser.getInterest());
+			editor.putString("signature", AppData.saveUser.getSignature());
+			editor.putInt("user_type", AppData.saveUser.getUserType());
 		}
 		
 		editor.commit();

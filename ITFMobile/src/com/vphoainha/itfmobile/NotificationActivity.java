@@ -29,9 +29,9 @@ import android.widget.Toast;
 
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Notification;
+import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class NotificationActivity extends Activity{	
@@ -74,7 +74,7 @@ public class NotificationActivity extends Activity{
 	
 	public void accessWebservice() {
 		(new JsonReadTask()).execute(new String[] {
-				WsUrl.URL_GET_NOTIFICATIONS, Integer.toString(Utils.saveUser.getId()),
+				WsUrl.URL_GET_NOTIFICATIONS, Integer.toString(AppData.saveUser.getId()),
 				Integer.toString(from), Integer.toString(from+=10) });
 	}
 	
