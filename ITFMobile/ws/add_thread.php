@@ -20,7 +20,9 @@ if (isset($_POST['title']) && isset($_POST['content']) && isset($_POST['folder_i
 	mysql_query("update folder set num_thread=num_thread+1 where id=".$folder_id);
     $result = mysql_query("INSERT INTO thread(title, content, time, folder_id, user_id, status) VALUES('$title', '$content', NOW(), '$folder_id', '$user_id', '$status')");
        if ($result) {
-            $response["success"] = 1;
+           // mysql_query("update folder set  INTO thread(title, content, time, folder_id, user_id, status) VALUES('$title', '$content', NOW(), '$folder_id', '$user_id', '$status')");
+			
+			$response["success"] = 1;
             $response["message"] = "Create new thread completed.";
      
             echo json_encode($response);

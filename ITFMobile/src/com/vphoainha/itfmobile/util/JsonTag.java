@@ -40,10 +40,16 @@ public class JsonTag {
 	public final static String TAG_NUM_REPLY = "num_reply";
 	public final static String TAG_NUM_VIEW = "num_view";
 	
+	public final static String TAG_COUNT_LIKED = "count_liked";
+	public final static String TAG_COUNT_DISLIKED = "count_disliked";
+	public final static String TAG_ISLIKED = "is_liked";
+	public final static String TAG_ISDISLIKED = "is_disliked";
 	
 	
 	
 	
+	
+	////
 	
 	public final static String TAG_QUESTION_ID = "questionId";
 	public final static String TAG_ANSWER_ID = "answerId";
@@ -56,16 +62,12 @@ public class JsonTag {
 //	public final static String TAG_TIME = "time";
 //	public final static String TAG_CONTENT = "content";
 	
-	public final static String TAG_COUNT_LIKED = "countLiked";
-	public final static String TAG_COUNT_DISLIKED = "countDisLiked";
-	public final static String TAG_COUNTER_LIKED = "counterLiked";
-	public final static String TAG_COUNTER_DISLIKED = "counterDisLiked";
+	
 	public final static String TAG_COUNTER_ASKED = "counterAsked";
 	public final static String TAG_COUNTER_ANSWER = "counterAnswer";
 	public final static String TAG_COUNTER_QUESTION = "counterQuestion";
 	
-	public final static String TAG_ISLIKED = "isLiked";
-	public final static String TAG_ISDISLIKED = "isDisLiked";
+	
 	public final static String TAG_RANK = "rank";
 	
 	public final static String TAG_FOR_USER_Id = "forUserId";

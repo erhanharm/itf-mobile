@@ -13,6 +13,7 @@ public class Reply {
 	private int countDisliked;
 	private int isLiked;
 	private int isDisliked;
+	
 	public int getId() {
 		return id;
 	}

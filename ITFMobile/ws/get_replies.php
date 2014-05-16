@@ -2,9 +2,10 @@
 
 $response = array();
  
- if (isset($_POST['thread_id'])) {
+ if (isset($_POST['thread_id']) && isset($_POST['user_id'])) {
      
     $thread_id = $_POST['thread_id'];
+	$user_id = $_POST['user_id'];
 
     require_once __DIR__ . '/db_connect.php';
 
@@ -27,6 +28,42 @@ $response = array();
                 $reply["username"] = $row["username"];
                 $reply["thread_id"] = $row["thread_id"];
 
+				$result_temp = mysql_query("SELECT count(id) as count_liked FROM _like WHERE reply_id = ".$reply["id"]." group by reply_id") or die(mysql_error());
+				if ($result_temp && mysql_num_rows($result_temp) > 0) {
+					while ($row = mysql_fetch_array($result_temp)) {
+					$reply["count_liked"] = $row["count_liked"];
+					}
+				}else{
+					$reply["count_liked"] = 0;
+				}
+
+				$result_temp = mysql_query("SELECT count(id) as count_disliked FROM _dislike WHERE reply_id = ".$reply["id"]." group by reply_id") or die(mysql_error());
+				if ($result_temp && mysql_num_rows($result_temp) > 0) {
+					while ($row = mysql_fetch_array($result_temp)) {
+					$reply["count_disliked"] = $row["count_disliked"];
+					}
+				}else{
+					$reply["count_disliked"] = 0;
+				}
+
+				$result_temp = mysql_query("SELECT id FROM _like WHERE reply_id = ".$reply["id"]." AND user_id = ".$user_id) or die(mysql_error());
+				if ($result_temp && mysql_num_rows($result_temp) > 0) {
+					while ($row = mysql_fetch_array($result_temp)) {
+						$reply["is_liked"] = 1;
+					}
+				}else{
+					$reply["is_liked"] = 0;
+				}
+
+				$result_temp = mysql_query("SELECT id FROM _dislike WHERE reply_id = ".$reply["id"]." AND user_id = ".$user_id) or die(mysql_error());
+				if ($result_temp && mysql_num_rows($result_temp) > 0) {
+					while ($row = mysql_fetch_array($result_temp)) {
+						$reply["is_disliked"] = 1;
+					}
+				}else{
+						$reply["is_disliked"] = 0;
+				}
+				
                 array_push($response["replies"], $reply);
             //}
         }

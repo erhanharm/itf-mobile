@@ -15,35 +15,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
-import com.vphoainha.itfmobile.model.Thread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.Util;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class AddThreadActivity extends FatherActivity {
-	private List<Thread> listData;
-	private List<Folder> categories;
-	EditText txtContent;
-	Spinner sp_category, sp_askFor;
+	EditText txtContent, txtTitle;
 	
 	Context context;
-	int forUserId;
-	int categoryId;
 	
-	List<String> listAskOption;
-	List<String> listCategory;
-	ArrayAdapter<String> dataAskOptionAdapter;
-
-	static final int CHOOSE_EXPERT = 0;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,47 +41,47 @@ public class AddThreadActivity extends FatherActivity {
 		btn_ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				accessAddQuestionWebservice();
+				wsAddThread();
 			}
 		});
 		
 		txtContent = (EditText) findViewById(R.id.txtContent);
-		
-		listData = new ArrayList<Thread>();
+		txtTitle = (EditText) findViewById(R.id.txtTitle);
 		
 		this.context = this;
 	}
 
-	public void accessAddQuestionWebservice() {
+	public void wsAddThread() {
 		String content = txtContent.getText().toString().trim();
-		if (content.equals("")) {
-			Toast.makeText(context, "Please fill question content!", Toast.LENGTH_SHORT).show();
+		String title = txtContent.getText().toString().trim();
+		if (title.equals("")) {
+			Toast.makeText(context, "Please fill title of this thread!", Toast.LENGTH_SHORT).show();
+		}else if (content.equals("")) {
+			Toast.makeText(context, "Please fill content of this thread!", Toast.LENGTH_SHORT).show();
 		} else {
 			if(!Util.checkInternetConnection(this))
 				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 			else{
-				categoryId=categories.get(sp_category.getSelectedItemPosition()).getId();
-				Log.i("====categoryId===", categoryId+"");
+				Folder f=AppData.folders.get(AppData.folders.size()-1);
 				
-				(new JsonAddQuestionTask())
-					.execute(new String[] { WsUrl.URL_ADD_QUESTION,
-							txtContent.getText().toString(),
-							Integer.toString(1),
-							Integer.toString(forUserId),
-							Integer.toString(categoryId),
+				(new jsAddThread())
+					.execute(new String[] { WsUrl.URL_ADD_THREAD,
+							title,
+							content,
+							Integer.toString(f.getId()),
 							Integer.toString(AppData.saveUser.getId())});
 			}
 		}
 	}
 
-	public class JsonAddQuestionTask extends AsyncTask<String, Void, String> {
+	public class jsAddThread extends AsyncTask<String, Void, String> {
 		ProgressDialog pd;
 		
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 			pd=new ProgressDialog(AddThreadActivity.this);
-			pd.setMessage("Posting your new question...");
+			pd.setMessage("Posting your new thread...");
 			pd.setCancelable(false);
 			pd.show();
 		}
@@ -103,11 +89,10 @@ public class AddThreadActivity extends FatherActivity {
 		@Override
 		protected String doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
-			par.add(new BasicNameValuePair("content", params[1]));
-			par.add(new BasicNameValuePair("userId", params[2]));
-			par.add(new BasicNameValuePair("forUserId", params[3]));
-			par.add(new BasicNameValuePair("categoryId", params[4]));
-			par.add(new BasicNameValuePair("saveUserId", params[5]));
+			par.add(new BasicNameValuePair("title", params[1]));
+			par.add(new BasicNameValuePair("content", params[2]));
+			par.add(new BasicNameValuePair("folder_id", params[3]));
+			par.add(new BasicNameValuePair("user_id", params[4]));
 			
 			JSONParser jsonParser = new JSONParser();
 			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
@@ -132,12 +117,12 @@ public class AddThreadActivity extends FatherActivity {
 			if(pd!=null && pd.isShowing())  pd.dismiss();
 			
 			if (result != null) {
-				Toast.makeText(context, "Your question was posted!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "Your thread was posted!", Toast.LENGTH_SHORT).show();
 				
 				setResult(RESULT_OK);
 				finish();
 			} else {
-				Toast.makeText(context, "Sorry! Posting fail, try a again later!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "Sorry! Posted fail, try a again later!", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

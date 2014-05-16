@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Resources.Theme;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,6 +44,8 @@ public class SubFolderActivity extends FatherActivity {
 	List<Folder> subFolders;
 	
 	ListView lvFolder, lvThread;
+	int selectedIndexThread;
+	ThreadAdapter threadAdapter;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,12 @@ public class SubFolderActivity extends FatherActivity {
 		btn_new.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				
+				if(!AppData.isLogin){
+					startActivity(new Intent(SubFolderActivity.this,LoginActivity.class));
+				}
+				else {
+					startActivity(new Intent(SubFolderActivity.this,AddThreadActivity.class));
+				}
 			}
 		});
 		
@@ -168,12 +176,12 @@ public class SubFolderActivity extends FatherActivity {
 				runOnUiThread(new Runnable() {
 					public void run() {
 						lvThread = (ListView) findViewById(R.id.lvThread);
-						ThreadAdapter adapter = new ThreadAdapter(
+						threadAdapter = new ThreadAdapter(
 								SubFolderActivity.this,
 								R.layout.list_item_thread, R.id.tv_index,
 								threads);
-						lvThread.setAdapter(adapter);
-						Util.setListViewHeightBasedOnChildren(lvThread, adapter);
+						lvThread.setAdapter(threadAdapter);
+						Util.setListViewHeightBasedOnChildren(lvThread, threadAdapter);
 						if(threads.size()<=0){
 							((LinearLayout)findViewById(R.id.lnThread)).setVisibility(View.GONE);
 						}
@@ -181,9 +189,8 @@ public class SubFolderActivity extends FatherActivity {
 							@Override
 							public void onItemClick(AdapterView<?> arg0,
 									View arg1, int arg2, long arg3) {
-								Intent intent = new Intent(SubFolderActivity.this, ThreadActivity.class);
-								intent.putExtra("thread", threads.get(arg2));
-								startActivity(intent);
+								selectedIndexThread=arg2;
+								wsViewThread();
 							}
 						});
 					}
@@ -191,6 +198,65 @@ public class SubFolderActivity extends FatherActivity {
 			} else {
 				Toast.makeText(SubFolderActivity.this, msg, Toast.LENGTH_SHORT).show();
 			}
+		}
+	}
+	
+	public void wsViewThread() {
+		if(!Util.checkInternetConnection(this))
+			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
+		else	
+			(new jsViewThread()).execute(new String[] { WsUrl.URL_VIEW_THREAD, Integer.toString(threads.get(selectedIndexThread).getId()) });
+	}
+
+	public class jsViewThread extends AsyncTask<String, Void, Integer> {
+		
+		ProgressDialog pd;
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pd=new ProgressDialog(SubFolderActivity.this);
+			pd.setMessage("Processing...");
+			pd.setCancelable(false);
+			pd.show();
+		}
+		
+		@Override
+		protected Integer doInBackground(String... params) {
+			List<NameValuePair> par = new ArrayList<NameValuePair>();
+			par.add(new BasicNameValuePair("thread_id", params[1]));
+			
+			JSONParser jsonParser = new JSONParser();
+			JSONObject json = jsonParser
+					.makeHttpRequest(params[0], "POST", par);
+			Log.d("Create Response", json.toString());
+			try {
+				int success = json.getInt(JsonTag.TAG_SUCCESS);
+				msg=json.getString(JsonTag.TAG_MESSAGE);
+				if (success == 1) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return 0;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			if(pd!=null && pd.isShowing())  pd.dismiss();
+			
+			if(result==1){
+				threads.get(selectedIndexThread).setNum_view(threads.get(selectedIndexThread).getNum_view()+1);
+				threadAdapter.notifyDataSetChanged();
+			}
+			
+			Intent intent = new Intent(SubFolderActivity.this, ThreadActivity.class);
+			intent.putExtra("thread", threads.get(selectedIndexThread));
+			startActivity(intent);
 		}
 	}
 }

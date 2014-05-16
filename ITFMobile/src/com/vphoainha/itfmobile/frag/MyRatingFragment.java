@@ -113,7 +113,7 @@ public class MyRatingFragment extends Fragment {
 						rank = Integer.parseInt(obj.getString(JsonTag.TAG_RANK));
 						counterAnswer = Integer.parseInt(obj.getString(JsonTag.TAG_COUNTER_ANSWER));
 						counterQuestion = Integer.parseInt(obj.getString(JsonTag.TAG_COUNTER_QUESTION));
-						counterLiked = Integer.parseInt(obj.getString(JsonTag.TAG_COUNTER_LIKED));
+//						counterLiked = Integer.parseInt(obj.getString(JsonTag.TAG_COUNTER_LIKED));
 					}
 					return 1;
 				} else {

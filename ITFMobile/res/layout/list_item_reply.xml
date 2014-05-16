@@ -50,40 +50,59 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvNumLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
-            android:text="0"
-            android:textColor="@color/text_like"
-            android:textSize="14sp" />
-
         <LinearLayout
             android:id="@+id/lnLike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_button"
+            android:background="@drawable/bg_topbutton"
+            android:clickable="true"
             android:padding="3dp" >
 
-            <ImageView
-                android:id="@+id/ivLike"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/like" />
+				    <TextView
+				        android:id="@+id/tvNumLike"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:layout_gravity="bottom"
+				        android:layout_marginRight="5dp"
+				        android:gravity="center_vertical"
+				        android:text="0"
+				        android:textColor="@color/text_like"
+				        android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/TextView01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:text="Thanks"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+				    <ImageView
+				        android:id="@+id/ivLike"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:src="@drawable/like" />
 
-        </LinearLayout>
+				</LinearLayout>
+
+				<LinearLayout
+				    android:id="@+id/lnDisLike"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:background="@drawable/bg_topbutton"
+				    android:clickable="true"
+				    android:padding="3dp" >
+
+				    <TextView
+				        android:id="@+id/tvNumDisLike"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:layout_gravity="bottom"
+				        android:layout_marginRight="5dp"
+				        android:gravity="center_vertical"
+				        android:text="4"
+				        android:textColor="@color/text_like"
+				        android:textSize="14sp" />
+
+				    <ImageView
+				        android:id="@+id/ivDisLike"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:src="@drawable/dislike" />
+
+				</LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

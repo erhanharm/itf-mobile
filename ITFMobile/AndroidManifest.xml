@@ -51,7 +51,7 @@
 			android:name=".RegisterActivity">
 		</activity>
 		<activity
-			android:name=".AddQuestionActivity">
+			android:name=".AddThreadActivity">
 		</activity>
 		<activity
 			android:name=".ThreadActivity">
