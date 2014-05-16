@@ -48,7 +48,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 	}
 	
 	public static class ViewHolder {
-		public TextView tvTime, tvContent, tvAuthor, tvNumLike, tvNumDisLike;
+		public TextView tvTime, tvIndex, tvContent, tvAuthor, tvNumLike, tvNumDisLike;
 		public LinearLayout lnLike, lnDisLike;
 		public ImageView ivLike, ivDisLike;
 	}
@@ -63,6 +63,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 			convertView = inflater.inflate(R.layout.list_item_reply, null);
 	      
 			holder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
+			holder.tvIndex = (TextView) convertView.findViewById(R.id.tvIndex);
 			holder.tvContent = (TextView) convertView.findViewById(R.id.tvContent);
 			holder.tvNumLike = (TextView) convertView.findViewById(R.id.tvNumLike);
 			holder.tvNumDisLike = (TextView) convertView.findViewById(R.id.tvNumDisLike);
@@ -77,6 +78,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 
 		Reply r = lst.get(position);
 
+		holder.tvIndex.setText("#"+position+2);
 		holder.tvTime.setText(DateTimeHelper.dateTimeToDateString(r.getTime()));
 		holder.tvContent.setText(r.getContent());
 		holder.tvAuthor.setText("by "+r.getUserName());

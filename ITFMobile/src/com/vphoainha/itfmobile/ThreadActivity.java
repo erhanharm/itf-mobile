@@ -16,7 +16,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vphoainha.itfmobile.adapter.ReplyAdapter;
@@ -35,7 +38,11 @@ public class ThreadActivity extends FatherActivity {
 	String msg;
 	
 	Thread curThread;
+	
 	ListView lvReply;
+	public TextView tvTime, tvContent, tvAuthor, tvNumLike, tvNumDisLike;
+	public LinearLayout lnLike, lnDisLike;
+	public ImageView ivLike, ivDisLike;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,8 +55,22 @@ public class ThreadActivity extends FatherActivity {
 			subtitle+=" > "+AppData.folders.get(i).getName();
 		
 		curThread=(Thread)getIntent().getSerializableExtra("thread");
-		tvTitle.setText(curThread.getContent());
+		tvTitle.setText(curThread.getTitle());
 		tvSubTitle.setText("ITF"+subtitle);
+		
+		tvTime = (TextView) findViewById(R.id.tvTime);
+		tvContent = (TextView) findViewById(R.id.tvContent);
+//		tvNumLike = (TextView) findViewById(R.id.tvNumLike);
+//		tvNumDisLike = (TextView) findViewById(R.id.tvNumDisLike);
+		tvAuthor = (TextView) findViewById(R.id.tvAuthor);
+//		lnLike=(LinearLayout)findViewById(R.id.lnLike);
+//		lnDisLike=(LinearLayout)findViewById(R.id.lnDisLike);
+//		ivLike=(ImageView)findViewById(R.id.ivLike);
+//		ivDisLike=(ImageView)findViewById(R.id.ivDisLike);
+		
+		tvTime.setText(DateTimeHelper.dateTimeToDateString(curThread.getTime()));
+		tvContent.setText(curThread.getContent());
+		tvAuthor.setText(curThread.getUserName());
 		
 //		btn_new.setVisibility(View.VISIBLE);
 //		btn_new.setOnClickListener(new OnClickListener() {
@@ -149,6 +170,7 @@ public class ThreadActivity extends FatherActivity {
 								R.layout.list_item_thread, R.id.tv_index,
 								replies);
 						lvReply.setAdapter(adapter);
+						Util.setListViewHeightBasedOnChildren(lvReply, adapter);
 					}
 				});
 			} else {

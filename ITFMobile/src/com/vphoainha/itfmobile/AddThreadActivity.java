@@ -37,6 +37,7 @@ public class AddThreadActivity extends FatherActivity {
 		initFather();
 		
 		tvTitle.setText("Post a new thread");
+		tvSubTitle.setVisibility(View.GONE);
 		btn_ok.setVisibility(View.VISIBLE);
 		btn_ok.setOnClickListener(new OnClickListener() {
 			@Override
@@ -53,7 +54,7 @@ public class AddThreadActivity extends FatherActivity {
 
 	public void wsAddThread() {
 		String content = txtContent.getText().toString().trim();
-		String title = txtContent.getText().toString().trim();
+		String title = txtTitle.getText().toString().trim();
 		if (title.equals("")) {
 			Toast.makeText(context, "Please fill title of this thread!", Toast.LENGTH_SHORT).show();
 		}else if (content.equals("")) {
