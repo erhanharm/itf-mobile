@@ -88,12 +88,20 @@ public class SubFolderActivity extends FatherActivity {
 					startActivity(new Intent(SubFolderActivity.this,LoginActivity.class));
 				}
 				else {
-					startActivity(new Intent(SubFolderActivity.this,AddThreadActivity.class));
+					startActivityForResult(new Intent(SubFolderActivity.this,AddThreadActivity.class), 111);
 				}
 			}
 		});
 		
 		wsGetThreads();
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if((requestCode==111 || requestCode==112) && resultCode==RESULT_OK){
+			wsGetThreads();
+		}
 	}
 	
 	@Override
@@ -256,7 +264,7 @@ public class SubFolderActivity extends FatherActivity {
 			
 			Intent intent = new Intent(SubFolderActivity.this, ThreadActivity.class);
 			intent.putExtra("thread", threads.get(selectedIndexThread));
-			startActivity(intent);
+			startActivityForResult(intent, 112);
 		}
 	}
 }

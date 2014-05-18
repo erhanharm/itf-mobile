@@ -33,7 +33,7 @@
 			android:name=".QuestionActivity">
 		</activity>
 		<activity
-			android:name=".AddAnswerActivity">
+			android:name=".AddReplyActivity">
 		</activity>
 		<activity
 			android:name=".SubFolderActivity">

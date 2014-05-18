@@ -10,6 +10,10 @@
 	<string name="login">LOG IN</string>
 	<string name="logout">LOG OUT</string>
 	
+	<string name="quote"><u>Quote</u></string>
+	<string name="edit"><u>Edit</u></string>
+	<string name="delete"><u>Delete</u></string>
+	
 	<string name="error_msg">Oops! Can\'t contact or get data from server</string>
 	<string name="cant_connect_internet">Can\'t connect to the Internet.\nPlease check the Internet connection of your device and try again.</string>
 	

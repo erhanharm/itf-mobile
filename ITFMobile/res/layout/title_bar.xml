@@ -80,4 +80,12 @@
         android:src="@drawable/btn_add"
         android:visibility="gone" />
 
+    <ImageButton
+        android:id="@+id/btn_reply"
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_topbutton"
+        android:src="@drawable/ic_reply"
+        android:visibility="gone" />
+
 </LinearLayout>

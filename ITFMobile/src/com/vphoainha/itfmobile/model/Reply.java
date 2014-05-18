@@ -1,8 +1,9 @@
 package com.vphoainha.itfmobile.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Reply {
+public class Reply implements Serializable{
 	private int id;
 	private int threadId;
 	private String content;

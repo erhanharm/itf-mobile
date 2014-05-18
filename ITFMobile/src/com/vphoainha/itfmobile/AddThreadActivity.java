@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
+import com.vphoainha.itfmobile.model.Thread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.Util;
@@ -29,6 +31,8 @@ public class AddThreadActivity extends FatherActivity {
 	EditText txtContent, txtTitle;
 	
 	Context context;
+	private int mode=1;
+	private Thread curThread;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,18 +40,29 @@ public class AddThreadActivity extends FatherActivity {
 		setContentView(R.layout.activity_add_thread);
 		initFather();
 		
-		tvTitle.setText("Post a new thread");
+		txtContent = (EditText) findViewById(R.id.txtContent);
+		txtTitle = (EditText) findViewById(R.id.txtTitle);
+		
+		mode=getIntent().getIntExtra("mode", 1);
+		if(mode==1) tvTitle.setText("Post a new thread");
+		else{
+			curThread=(Thread)getIntent().getSerializableExtra("thread");
+			tvTitle.setText("Edit thread");
+			txtTitle.setEnabled(false);
+			
+			txtTitle.setText(curThread.getTitle());
+			txtContent.setText(curThread.getContent());
+		}
+		
 		tvSubTitle.setVisibility(View.GONE);
 		btn_ok.setVisibility(View.VISIBLE);
 		btn_ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				wsAddThread();
+				if(mode==1)	wsAddThread();
+				else wsEditThread();
 			}
 		});
-		
-		txtContent = (EditText) findViewById(R.id.txtContent);
-		txtTitle = (EditText) findViewById(R.id.txtTitle);
 		
 		this.context = this;
 	}
@@ -82,7 +97,7 @@ public class AddThreadActivity extends FatherActivity {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			pd=new ProgressDialog(AddThreadActivity.this);
-			pd.setMessage("Posting your new thread...");
+			pd.setMessage("Posting...");
 			pd.setCancelable(false);
 			pd.show();
 		}
@@ -124,6 +139,80 @@ public class AddThreadActivity extends FatherActivity {
 				finish();
 			} else {
 				Toast.makeText(context, "Sorry! Posted fail, try a again later!", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+	
+	public void wsEditThread() {
+		String content = txtContent.getText().toString().trim();
+		String title = txtTitle.getText().toString().trim();
+		if (content.equals("")) {
+			Toast.makeText(context, "Please fill content of this thread!", Toast.LENGTH_SHORT).show();
+		} else {
+			if(!Util.checkInternetConnection(this))
+				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
+			else{
+				(new jsEditThread())
+					.execute(new String[] { WsUrl.URL_EDIT_THREAD,
+							title,
+							content,
+							Integer.toString(1),
+							Integer.toString(curThread.getId())});
+			}
+		}
+	}
+
+	public class jsEditThread extends AsyncTask<String, Void, String> {
+		ProgressDialog pd;
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pd=new ProgressDialog(AddThreadActivity.this);
+			pd.setMessage("Saving...");
+			pd.setCancelable(false);
+			pd.show();
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			List<NameValuePair> par = new ArrayList<NameValuePair>();
+			par.add(new BasicNameValuePair("title", params[1]));
+			par.add(new BasicNameValuePair("content", params[2]));
+			par.add(new BasicNameValuePair("status", params[3]));
+			par.add(new BasicNameValuePair("thread_id", params[4]));
+			
+			JSONParser jsonParser = new JSONParser();
+			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
+			Log.d("Create Response", json.toString());
+
+			try {
+				int success = json.getInt(JsonTag.TAG_SUCCESS);
+				if (success == 1) {
+					return "success";
+				} else {
+					return null;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			if(pd!=null && pd.isShowing())  pd.dismiss();
+			
+			if (result != null) {
+				Toast.makeText(context, "Your thread was saved!", Toast.LENGTH_SHORT).show();
+				
+				Intent in=new Intent();
+				in.putExtra("content", txtContent.getText().toString());
+				setResult(RESULT_OK, in);
+				finish();
+			} else {
+				Toast.makeText(context, "Sorry! Saved fail, try a again later!", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

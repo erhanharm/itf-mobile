@@ -9,7 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,7 +43,7 @@ public class ThreadActivity extends FatherActivity {
 	Thread curThread;
 	
 	ListView lvReply;
-	public TextView tvTime, tvContent, tvAuthor, tvNumLike, tvNumDisLike;
+	public TextView tvTime, tvContent, tvAuthor, tvNumLike, tvNumDisLike, tvEdit, tvDelete, tvQuote;
 	public LinearLayout lnLike, lnDisLike;
 	public ImageView ivLike, ivDisLike;
 	
@@ -63,6 +66,9 @@ public class ThreadActivity extends FatherActivity {
 //		tvNumLike = (TextView) findViewById(R.id.tvNumLike);
 //		tvNumDisLike = (TextView) findViewById(R.id.tvNumDisLike);
 		tvAuthor = (TextView) findViewById(R.id.tvAuthor);
+		tvEdit = (TextView) findViewById(R.id.tvEdit);
+		tvDelete = (TextView) findViewById(R.id.tvDelete);
+		tvQuote = (TextView) findViewById(R.id.tvQuote);
 //		lnLike=(LinearLayout)findViewById(R.id.lnLike);
 //		lnDisLike=(LinearLayout)findViewById(R.id.lnDisLike);
 //		ivLike=(ImageView)findViewById(R.id.ivLike);
@@ -70,22 +76,78 @@ public class ThreadActivity extends FatherActivity {
 		
 		tvTime.setText(DateTimeHelper.dateTimeToDateString(curThread.getTime()));
 		tvContent.setText(curThread.getContent());
-		tvAuthor.setText(curThread.getUserName());
+		tvAuthor.setText("by "+curThread.getUserName());
 		
-//		btn_new.setVisibility(View.VISIBLE);
-//		btn_new.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View arg0) {
-//				if(!AppData.isLogin){
-//					startActivity(new Intent(ThreadActivity.this,LoginActivity.class));
-//				}
-//				else {
-//					startActivity(new Intent(ThreadActivity.this,AddThreadActivity.class));
-//				}
-//			}
-//		});
+		if(curThread.getUserId()==AppData.saveUser.getId()) tvEdit.setVisibility(View.VISIBLE);
+		else tvEdit.setVisibility(View.GONE);
+		tvEdit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				Intent in=new Intent(ThreadActivity.this, AddThreadActivity.class);
+				in.putExtra("mode", 2);
+				in.putExtra("thread", curThread);
+				startActivityForResult(in, 111);
+			}
+		});
+		tvDelete.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				Builder ad = new AlertDialog.Builder(ThreadActivity.this);
+				ad.setMessage("Do you want to delete this thread?");
+				ad.setCancelable(true);
+				ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						wsDeleteThread();
+					}
+				});
+				ad.setNegativeButton("No", null);
+				ad.show();
+			}
+		});
+		tvQuote.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				if(!AppData.isLogin){
+					startActivity(new Intent(ThreadActivity.this,LoginActivity.class));
+				}
+				else {
+					Intent in=new Intent(ThreadActivity.this,AddReplyActivity.class);
+					in.putExtra("thread_id", curThread.getId());
+					in.putExtra("quote_content", curThread.getUserName()+" told: \" "+curThread.getContent()+" \"");
+					startActivityForResult(in, 112);
+				}
+			}
+		});
+		
+		btn_reply.setVisibility(View.VISIBLE);
+		btn_reply.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				if(!AppData.isLogin){
+					startActivity(new Intent(ThreadActivity.this,LoginActivity.class));
+				}
+				else {
+					Intent in=new Intent(ThreadActivity.this,AddReplyActivity.class);
+					in.putExtra("thread_id", curThread.getId());
+					startActivityForResult(in, 112);
+				}
+			}
+		});
 		
 		wsGetReplies();
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode==111 && resultCode==RESULT_OK){
+			curThread.setContent(data.getStringExtra("content"));
+			tvContent.setText(curThread.getContent());
+		}
+		else if((requestCode==112 || requestCode==113) && resultCode==RESULT_OK){
+			wsGetReplies();
+		}
 	}
 
 	public void wsGetReplies() {
@@ -179,5 +241,63 @@ public class ThreadActivity extends FatherActivity {
 		}
 	}
 	
-	
+	public void wsDeleteThread() {
+			if(!Util.checkInternetConnection(this))
+				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
+			else{
+				(new jsDeleteThread())
+					.execute(new String[] { WsUrl.URL_DELETE_THREAD,
+							Integer.toString(curThread.getId())});
+			}
+	}
+
+	public class jsDeleteThread extends AsyncTask<String, Void, String> {
+		ProgressDialog pd;
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pd=new ProgressDialog(ThreadActivity.this);
+			pd.setMessage("Deleting...");
+			pd.setCancelable(false);
+			pd.show();
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			List<NameValuePair> par = new ArrayList<NameValuePair>();
+			par.add(new BasicNameValuePair("thread_id", params[1]));
+			
+			JSONParser jsonParser = new JSONParser();
+			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
+			Log.d("Create Response", json.toString());
+
+			try {
+				int success = json.getInt(JsonTag.TAG_SUCCESS);
+				if (success == 1) {
+					return "success";
+				} else {
+					return null;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			if(pd!=null && pd.isShowing())  pd.dismiss();
+			
+			if (result != null) {
+				Toast.makeText(ThreadActivity.this, "Your thread was deleted!", Toast.LENGTH_SHORT).show();
+				
+				setResult(RESULT_OK);
+				finish();
+			} else {
+				Toast.makeText(ThreadActivity.this, "Sorry! Deleted fail, try a again later!", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
 }

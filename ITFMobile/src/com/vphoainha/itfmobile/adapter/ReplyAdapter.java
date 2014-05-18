@@ -9,7 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -21,7 +24,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.vphoainha.itfmobile.AddReplyActivity;
 import com.vphoainha.itfmobile.LoginActivity;
 import com.vphoainha.itfmobile.R;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
@@ -48,7 +53,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 	}
 	
 	public static class ViewHolder {
-		public TextView tvTime, tvIndex, tvContent, tvAuthor, tvNumLike, tvNumDisLike;
+		public TextView tvTime, tvIndex, tvContent, tvAuthor, tvNumLike, tvNumDisLike, tvEdit, tvDelete, tvQuote;
 		public LinearLayout lnLike, lnDisLike;
 		public ImageView ivLike, ivDisLike;
 	}
@@ -65,6 +70,9 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 			holder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
 			holder.tvIndex = (TextView) convertView.findViewById(R.id.tvIndex);
 			holder.tvContent = (TextView) convertView.findViewById(R.id.tvContent);
+			holder.tvEdit = (TextView) convertView.findViewById(R.id.tvEdit);
+			holder.tvDelete = (TextView) convertView.findViewById(R.id.tvDelete);
+			holder.tvQuote = (TextView) convertView.findViewById(R.id.tvQuote);
 			holder.tvNumLike = (TextView) convertView.findViewById(R.id.tvNumLike);
 			holder.tvNumDisLike = (TextView) convertView.findViewById(R.id.tvNumDisLike);
 			holder.tvAuthor = (TextView) convertView.findViewById(R.id.tvAuthor);
@@ -76,19 +84,19 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 	    }
 		holder = (ViewHolder) convertView.getTag();
 
-		Reply r = lst.get(position);
+		final Reply reply = lst.get(position);
 
-		holder.tvIndex.setText("#"+position+2);
-		holder.tvTime.setText(DateTimeHelper.dateTimeToDateString(r.getTime()));
-		holder.tvContent.setText(r.getContent());
-		holder.tvAuthor.setText("by "+r.getUserName());
-		holder.tvNumLike.setText(r.getCountLiked()+"");
-		holder.tvNumDisLike.setText(r.getCountDisliked()+"");
+		holder.tvIndex.setText("#"+(position+2));
+		holder.tvTime.setText(DateTimeHelper.dateTimeToDateString(reply.getTime()));
+		holder.tvContent.setText(reply.getContent());
+		holder.tvAuthor.setText("by "+reply.getUserName());
+		holder.tvNumLike.setText(reply.getCountLiked()+"");
+		holder.tvNumDisLike.setText(reply.getCountDisliked()+"");
 		
 		int clike,cunlike;
 		clike=act.getResources().getColor(R.color.text_like);
 		cunlike=act.getResources().getColor(R.color.text_unlike);
-		if(r.getIsLiked()==1){
+		if(reply.getIsLiked()==1){
 			holder.ivLike.setImageDrawable(Util.getDrawable(act, "like"));
 			holder.tvNumLike.setTextColor(clike);
 		}
@@ -96,7 +104,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 			holder.ivLike.setImageDrawable(Util.getDrawable(act, "unlike"));
 			holder.tvNumLike.setTextColor(cunlike);
 		}
-		if(r.getIsDisliked()==1){
+		if(reply.getIsDisliked()==1){
 			holder.ivDisLike.setImageDrawable(Util.getDrawable(act, "dislike"));
 			holder.tvNumDisLike.setTextColor(clike);
 		}
@@ -105,9 +113,9 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 			holder.tvNumDisLike.setTextColor(cunlike);
 		}
 
-		holder.lnLike.setTag(R.string.TAG_REPLY, r);
+		holder.lnLike.setTag(R.string.TAG_REPLY, reply);
 		holder.lnLike.setTag(R.string.TAG_POS, position);
-		holder.lnDisLike.setTag(R.string.TAG_REPLY, r);
+		holder.lnDisLike.setTag(R.string.TAG_REPLY, reply);
 		holder.lnDisLike.setTag(R.string.TAG_POS, position);
 		
 		holder.lnLike.setOnClickListener(new OnClickListener() {
@@ -137,6 +145,60 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 					if(save_reply.getIsDisliked()==0)
 						wsLikeDislike(WsUrl.URL_DISLIKE_REPLY, 2, save_reply.getId());
 					else wsLikeDislike(WsUrl.URL_UNDISLIKE_REPLY, 3, save_reply.getId());
+				}
+			}
+		});
+		
+		if(reply.getUserId()==AppData.saveUser.getId()) holder.tvEdit.setVisibility(View.VISIBLE);
+		else holder.tvEdit.setVisibility(View.GONE);
+		
+		holder.tvEdit.setTag(R.string.TAG_REPLY, reply);
+		holder.tvDelete.setTag(R.string.TAG_REPLY, reply);
+		holder.tvQuote.setTag(R.string.TAG_REPLY, reply);
+		holder.tvDelete.setTag(R.string.TAG_POS, position);
+		holder.tvEdit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				save_reply=(Reply)v.getTag(R.string.TAG_REPLY);
+				
+				Intent in=new Intent(act, AddReplyActivity.class);
+				in.putExtra("mode", 2);
+				in.putExtra("reply", save_reply);
+				act.startActivityForResult(in, 113);
+			}
+		});
+		holder.tvDelete.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				save_reply=(Reply)v.getTag(R.string.TAG_REPLY);
+				save_pos=(Integer)v.getTag(R.string.TAG_POS);
+				
+				Builder ad = new AlertDialog.Builder(act);
+				ad.setMessage("Do you want to reply this thread?");
+				ad.setCancelable(true);
+				ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						wsDeleteReply();
+					}
+				});
+				ad.setNegativeButton("No", null);
+				ad.show();
+			}
+		});
+		holder.tvQuote.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(!AppData.isLogin){
+					act.startActivity(new Intent(act,LoginActivity.class));
+				}
+				else {
+					save_reply=(Reply)v.getTag(R.string.TAG_REPLY);
+					
+					Intent in=new Intent(act,AddReplyActivity.class);
+					in.putExtra("thread_id", save_reply.getThreadId());
+					in.putExtra("quote_content", save_reply.getUserName()+" told: \" "+save_reply.getContent()+" \"");
+					act.startActivityForResult(in, 113);
 				}
 			}
 		});
@@ -223,5 +285,67 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 				notifyDataSetChanged();
 			}
 		}
-	}		
+	}	
+	
+	//=======================================================
+	
+	public void wsDeleteReply() {
+		if(!Util.checkInternetConnection(act))
+			Toast.makeText(act, act.getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
+		else{
+			(new jsDeleteReply())
+				.execute(new String[] { WsUrl.URL_DELETE_REPLY,
+						Integer.toString(save_reply.getId())});
+		}
+	}
+	
+	public class jsDeleteReply extends AsyncTask<String, Void, String> {
+		ProgressDialog pd;
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pd=new ProgressDialog(act);
+			pd.setMessage("Deleting...");
+			pd.setCancelable(false);
+			pd.show();
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			List<NameValuePair> par = new ArrayList<NameValuePair>();
+			par.add(new BasicNameValuePair("reply_id", params[1]));
+			
+			JSONParser jsonParser = new JSONParser();
+			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
+			Log.d("Create Response", json.toString());
+	
+			try {
+				int success = json.getInt(JsonTag.TAG_SUCCESS);
+				if (success == 1) {
+					return "success";
+				} else {
+					return null;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+	
+			return null;
+		}
+	
+		@Override
+		protected void onPostExecute(String result) {
+			if(pd!=null && pd.isShowing())  pd.dismiss();
+			
+			if (result != null) {
+				Toast.makeText(act, "Your reply was deleted!", Toast.LENGTH_SHORT).show();
+				
+				lst.remove(save_pos);
+				notifyDataSetChanged();
+			} else {
+				Toast.makeText(act, "Sorry! Deleted fail, try a again later!", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
 }
