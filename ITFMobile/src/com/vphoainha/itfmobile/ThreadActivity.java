@@ -54,13 +54,16 @@ public class ThreadActivity extends FatherActivity {
 		setContentView(R.layout.activity_thread);
 		initFather();
 
-		String subtitle="";
-		for(int i=0;i<AppData.folders.size();i++)
-			subtitle+=" > "+AppData.folders.get(i).getName();
+		if(AppData.folders!=null){
+			String subtitle="";
+			for(int i=0;i<AppData.folders.size();i++)
+				subtitle+=" > "+AppData.folders.get(i).getName();
+			tvSubTitle.setText("ITF"+subtitle);
+		}
+		else tvSubTitle.setVisibility(View.GONE);
 		
 		curThread=(Thread)getIntent().getSerializableExtra("thread");
 		tvTitle.setText(curThread.getTitle());
-		tvSubTitle.setText("ITF"+subtitle);
 		
 		tvTime = (TextView) findViewById(R.id.tvTime);
 		tvContent = (TextView) findViewById(R.id.tvContent);
@@ -80,7 +83,7 @@ public class ThreadActivity extends FatherActivity {
 		tvContent.setText(curThread.getContent());
 		tvAuthor.setText("by "+curThread.getUserName());
 		
-		if(curThread.getUserId()==AppData.saveUser.getId()) tvEdit.setVisibility(View.VISIBLE);
+		if(AppData.isLogin==true && curThread.getUserId()==AppData.saveUser.getId()) tvEdit.setVisibility(View.VISIBLE);
 		else tvEdit.setVisibility(View.GONE);
 		tvEdit.setOnClickListener(new OnClickListener() {
 			@Override

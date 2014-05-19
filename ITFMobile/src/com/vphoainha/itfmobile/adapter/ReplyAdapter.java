@@ -149,7 +149,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 			}
 		});
 		
-		if(reply.getUserId()==AppData.saveUser.getId()) holder.tvEdit.setVisibility(View.VISIBLE);
+		if(AppData.isLogin==true && reply.getUserId()==AppData.saveUser.getId()) holder.tvEdit.setVisibility(View.VISIBLE);
 		else holder.tvEdit.setVisibility(View.GONE);
 		
 		holder.tvEdit.setTag(R.string.TAG_REPLY, reply);
@@ -167,6 +167,8 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 				act.startActivityForResult(in, 113);
 			}
 		});
+		
+		
 		holder.tvDelete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

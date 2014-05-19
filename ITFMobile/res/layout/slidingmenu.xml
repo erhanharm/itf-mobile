@@ -31,7 +31,7 @@
 					    android:background="@drawable/bg_button_profile"
 					    android:clickable="true"
 					    android:gravity="center_vertical"
-					    android:onClick="onclickSetting"
+					    android:onClick="onclickProfile"
 					    android:orientation="horizontal"
 					    android:padding="10dp" >
 
@@ -85,12 +85,41 @@
 			    android:layout_weight="1"
 			    android:orientation="vertical" >
 
+				<LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="10dp" >
+
+					<EditText
+					    android:id="@+id/txtSearch"
+					    android:layout_width="0dp"
+					    android:layout_height="wrap_content"
+					    android:layout_weight="1"
+					    android:background="@color/white"
+					    android:ems="10"
+					    android:hint="search"
+					    android:padding="5dp"
+					    android:textSize="16sp" >
+
+					    <requestFocus />
+					</EditText>
+
+					<ImageButton
+					    android:id="@+id/btnSearch"
+					    android:layout_width="wrap_content"
+					    android:layout_height="match_parent"
+					    android:background="@color/white"
+					    android:padding="3dp"
+					    android:src="@drawable/ic_btn_search"
+					    android:text="Button" />
+
+				</LinearLayout>
+
 				<TextView
 				    android:id="@+id/TextView01"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:layout_marginLeft="10dp"
-				    android:layout_marginTop="10dp"
 				    android:text="MENU"
 				    android:textColor="@color/text"
 				    android:textSize="12sp"
@@ -125,6 +154,22 @@
 						            android:layout_width="wrap_content"
 						            android:layout_height="wrap_content"
 						            android:text="Forum"
+						            android:textColor="#FFFFFF"
+						            android:textSize="16sp" />
+						    </LinearLayout>
+
+						    <LinearLayout
+						        android:layout_width="match_parent"
+						        android:layout_height="wrap_content"
+						        android:background="@drawable/bg_topbutton"
+						        android:clickable="true"
+						        android:gravity="center_vertical"
+						        android:padding="10dp" >
+
+						        <TextView
+						            android:layout_width="wrap_content"
+						            android:layout_height="wrap_content"
+						            android:text="Top Member"
 						            android:textColor="#FFFFFF"
 						            android:textSize="16sp" />
 						    </LinearLayout>

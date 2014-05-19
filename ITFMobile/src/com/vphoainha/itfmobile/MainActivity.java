@@ -19,8 +19,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +32,8 @@ import com.vphoainha.itfmobile.frag.HomeFragment;
 import com.vphoainha.itfmobile.frag.MyAnswersFragment;
 import com.vphoainha.itfmobile.frag.MyQuestionsFragment;
 import com.vphoainha.itfmobile.frag.MyRatingFragment;
+import com.vphoainha.itfmobile.frag.ProfileFragment;
+import com.vphoainha.itfmobile.frag.SearchFragment;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
@@ -39,19 +44,27 @@ import com.vphoainha.itfmobile.view.CustomSlidingPaneLayout;
 
 public class MainActivity extends FragmentActivity {
 
+	final int FRAG_HOME=0;
+	final int FRAG_SEARCH=1;
+	final int FRAG_PROFILE=3;
+	
 	private CustomSlidingPaneLayout spl;
 	private MySharedPreferences mySharedPreferences;
 	
 	private LinearLayout lnMyQuestions, lnMyAnswers, lnMyRating, lnAccount, lnLogin, lnLogout;
 	private TextView tvUsername, tvUserEmail, tv_title;
+	private EditText txtSearch;
+	private ImageButton btnSearch;
 	private FrameLayout fl_numnotify;
 
 	private boolean _doubleBackToExitPressedOnce = false;
 	
 	private JSONObject object;
-	int cur_frag=0;
+	int cur_frag=FRAG_HOME;
 	
 	HomeFragment homeFragment;
+	SearchFragment searchFragment;
+	ProfileFragment profileFragment;
 	MyQuestionsFragment myQuestionsFragment;
 	MyAnswersFragment myAnswersFragment;
 	
@@ -86,9 +99,19 @@ public class MainActivity extends FragmentActivity {
 		lnAccount = (LinearLayout) findViewById(R.id.lnAccount);
 		lnLogin = (LinearLayout) findViewById(R.id.lnLogin);
 		lnLogout = (LinearLayout) findViewById(R.id.lnLogout);
+		
+		txtSearch = (EditText) findViewById(R.id.txtSearch);
+		btnSearch = (ImageButton) findViewById(R.id.btnSearch);
+		btnSearch.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startSearch();
+			}
+		});
+//		txtSearch.seton
 
 		initViewMenu();
-		cur_frag=0;
+		cur_frag=FRAG_HOME;
 		homeFragment=HomeFragment.newInstance();
 		setView(homeFragment);
 	}
@@ -103,6 +126,18 @@ public class MainActivity extends FragmentActivity {
 			Log.i("======", AppData.saveUser.getEmail()+"    "+ AppData.saveUser.getPassword());
 			(new JsonReadTaskReLogin()).execute(new String[] { WsUrl.URL_LOGIN, AppData.saveUser.getUsername(), AppData.saveUser.getPassword(), Util.getDeviceID(this)});
 		}		
+	}
+	
+	private void startSearch(){
+		String searchContent=txtSearch.getText().toString();
+		if(searchContent.equals("")) {
+			Toast.makeText(MainActivity.this, "Please fill search content!", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		spl.closePane();
+		cur_frag=FRAG_SEARCH;
+		searchFragment=SearchFragment.newInstance(searchContent);
+		setView(searchFragment);
 	}
 	
 	@Override
@@ -144,7 +179,6 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void initViewMenu() {
-		TextView tv_register=(TextView)findViewById(R.id.btnRegister);
 		if(!AppData.isLogin){
 			hideLoggedFunction();
 		}
@@ -164,37 +198,19 @@ public class MainActivity extends FragmentActivity {
 			spl.openPane();
 		}
 	}
-
-	public void onclickSetting(View v) {
-		spl.closePane();
-//		startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-	}
 	
 	public void onclickHome(View v) {
 		spl.closePane();
-		cur_frag=0;
+		cur_frag=FRAG_HOME;
 		homeFragment=HomeFragment.newInstance();
 		setView(homeFragment);
 	}
-
-	public void onclickMyQuestions(View v) {
+	
+	public void onclickProfile(View v) {
 		spl.closePane();
-		cur_frag=1;
-		myQuestionsFragment=MyQuestionsFragment.newInstance();
-		setView(myQuestionsFragment);
-	}
-
-	public void onclickMyAnswers(View v) {
-		spl.closePane();
-		cur_frag=2;
-		myAnswersFragment=MyAnswersFragment.newInstance();
-		setView(myAnswersFragment);
-	}
-
-	public void onclickMyRating(View v) {
-		spl.closePane();
-		cur_frag=3;
-		setView(MyRatingFragment.newInstance());
+		cur_frag=FRAG_PROFILE;
+		profileFragment=ProfileFragment.newInstance();
+		setView(profileFragment);
 	}
 
 	public void onclickLogin(View v) {

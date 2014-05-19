@@ -6,12 +6,14 @@ public class WsUrl {
 	
 	public final static String URL_REGISTER = URL + "register.php";
 	public final static String URL_LOGIN = URL + "login.php";
+	public final static String URL_UPDATE_PROFILE = URL + "update_profile.php";
 	
 	public final static String URL_ADD_THREAD = URL + "add_thread.php";
 	public final static String URL_EDIT_THREAD = URL + "edit_thread.php";
 	public final static String URL_DELETE_THREAD = URL + "delete_thread.php";
 	public final static String URL_GET_THREADS = URL + "get_threads.php";
 	public final static String URL_VIEW_THREAD = URL + "view_thread.php";
+	public final static String URL_SEARCH_THREAD = URL + "search_thread.php";
 	
 	public final static String URL_ADD_REPLY = URL + "add_reply.php";
 	public final static String URL_EDIT_REPLY = URL + "edit_reply.php";
@@ -72,5 +74,4 @@ public class WsUrl {
 	public final static String URL_set_Question_Is_Answered = URL + "setQuestionIsAnswered.php";
 	public final static String URL_DENY_QUESTION = URL + "denyQuestion.php";
 	
-	public final static String URL_UPDATE_PROFILE = URL + "updateProfile.php";
 }
