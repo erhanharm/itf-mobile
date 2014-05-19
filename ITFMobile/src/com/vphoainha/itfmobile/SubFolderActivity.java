@@ -107,14 +107,20 @@ public class SubFolderActivity extends FatherActivity {
 	@Override
 	public void finish() {
 		super.finish();
-		AppData.folders.remove(AppData.folders.size()-1);
+		try{
+			AppData.folders.remove(AppData.folders.size()-1);
+		}catch(Exception e){}
 	}
 
 	public void wsGetThreads() {
 		if(!Util.checkInternetConnection(this))
 			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
-		else	
-			(new jsGetThreads()).execute(new String[] { WsUrl.URL_GET_THREADS, Integer.toString(curFolder.getId()) });
+		else{
+			int user_id=(AppData.isLogin?AppData.saveUser.getId():-1);
+			(new jsGetThreads()).execute(new String[] { WsUrl.URL_GET_THREADS, 
+					Integer.toString(curFolder.getId()) ,
+					Integer.toString(user_id)});
+		}
 	}
 
 	public class jsGetThreads extends AsyncTask<String, Void, Integer> {
@@ -134,6 +140,7 @@ public class SubFolderActivity extends FatherActivity {
 		protected Integer doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
 			par.add(new BasicNameValuePair("folder_id", params[1]));
+			par.add(new BasicNameValuePair("user_id", params[2]));
 
 			JSONParser jsonParser = new JSONParser();
 			JSONObject json = jsonParser
@@ -161,6 +168,10 @@ public class SubFolderActivity extends FatherActivity {
 						t.setStatus(Integer.parseInt(obj.getString(JsonTag.TAG_STATUS)));
 						t.setNum_reply(Integer.parseInt(obj.getString(JsonTag.TAG_NUM_REPLY)));
 						t.setNum_view(Integer.parseInt(obj.getString(JsonTag.TAG_NUM_VIEW)));
+						t.setCountLiked(Integer.parseInt(obj.getString(JsonTag.TAG_COUNT_LIKED)));
+						t.setCountDisliked(Integer.parseInt(obj.getString(JsonTag.TAG_COUNT_DISLIKED)));
+						t.setIsLiked(Integer.parseInt(obj.getString(JsonTag.TAG_ISLIKED)));
+						t.setIsDisliked(Integer.parseInt(obj.getString(JsonTag.TAG_ISDISLIKED)));
 						
 						threads.add(t);
 					}

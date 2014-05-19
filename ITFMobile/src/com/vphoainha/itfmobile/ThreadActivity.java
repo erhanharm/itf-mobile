@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vphoainha.itfmobile.adapter.ReplyAdapter;
+import com.vphoainha.itfmobile.adapter.ReplyAdapter.jsLikeDislike;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Reply;
 import com.vphoainha.itfmobile.model.Thread;
@@ -63,16 +64,17 @@ public class ThreadActivity extends FatherActivity {
 		
 		tvTime = (TextView) findViewById(R.id.tvTime);
 		tvContent = (TextView) findViewById(R.id.tvContent);
-//		tvNumLike = (TextView) findViewById(R.id.tvNumLike);
-//		tvNumDisLike = (TextView) findViewById(R.id.tvNumDisLike);
 		tvAuthor = (TextView) findViewById(R.id.tvAuthor);
 		tvEdit = (TextView) findViewById(R.id.tvEdit);
 		tvDelete = (TextView) findViewById(R.id.tvDelete);
 		tvQuote = (TextView) findViewById(R.id.tvQuote);
-//		lnLike=(LinearLayout)findViewById(R.id.lnLike);
-//		lnDisLike=(LinearLayout)findViewById(R.id.lnDisLike);
-//		ivLike=(ImageView)findViewById(R.id.ivLike);
-//		ivDisLike=(ImageView)findViewById(R.id.ivDisLike);
+		
+		tvNumLike = (TextView) findViewById(R.id.tvNumLike);
+		tvNumDisLike = (TextView) findViewById(R.id.tvNumDisLike);
+		lnLike=(LinearLayout)findViewById(R.id.lnLike);
+		lnDisLike=(LinearLayout)findViewById(R.id.lnDisLike);
+		ivLike=(ImageView)findViewById(R.id.ivLike);
+		ivDisLike=(ImageView)findViewById(R.id.ivDisLike);
 		
 		tvTime.setText(DateTimeHelper.dateTimeToDateString(curThread.getTime()));
 		tvContent.setText(curThread.getContent());
@@ -120,6 +122,35 @@ public class ThreadActivity extends FatherActivity {
 			}
 		});
 		
+		loadLikeInfo();
+
+		lnLike.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(!AppData.isLogin){
+					startActivity(new Intent(ThreadActivity.this,LoginActivity.class));
+				}
+				else {
+					if(curThread.getIsLiked()==0)
+						wsLikeDislike(WsUrl.URL_LIKE_THREAD, 0, curThread.getId());
+					else wsLikeDislike(WsUrl.URL_UNLIKE_THREAD, 1, curThread.getId());
+				}
+			}
+		});
+		lnDisLike.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(!AppData.isLogin){
+					startActivity(new Intent(ThreadActivity.this,LoginActivity.class));
+				}
+				else {
+					if(curThread.getIsDisliked()==0)
+						wsLikeDislike(WsUrl.URL_DISLIKE_THREAD, 2, curThread.getId());
+					else wsLikeDislike(WsUrl.URL_UNDISLIKE_THREAD, 3, curThread.getId());
+				}
+			}
+		});
+		
 		btn_reply.setVisibility(View.VISIBLE);
 		btn_reply.setOnClickListener(new OnClickListener() {
 			@Override
@@ -136,6 +167,30 @@ public class ThreadActivity extends FatherActivity {
 		});
 		
 		wsGetReplies();
+	}
+	
+	private void loadLikeInfo(){
+		tvNumLike.setText(curThread.getCountLiked()+"");
+		tvNumDisLike.setText(curThread.getCountDisliked()+"");
+		int clike,cunlike;
+		clike=getResources().getColor(R.color.text_like);
+		cunlike=getResources().getColor(R.color.text_unlike);
+		if(curThread.getIsLiked()==1){
+			ivLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "like"));
+			tvNumLike.setTextColor(clike);
+		}
+		else {
+			ivLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "unlike"));
+			tvNumLike.setTextColor(cunlike);
+		}
+		if(curThread.getIsDisliked()==1){
+			ivDisLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "dislike"));
+			tvNumDisLike.setTextColor(clike);
+		}
+		else{
+			ivDisLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "undislike"));
+			tvNumDisLike.setTextColor(cunlike);
+		}
 	}
 	
 	@Override
@@ -155,11 +210,11 @@ public class ThreadActivity extends FatherActivity {
 			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else{
 			int user_id=(AppData.isLogin?AppData.saveUser.getId():-1);
-			(new jsGetReplys()).execute(new String[] { WsUrl.URL_GET_REPLIES, Integer.toString(curThread.getId()), Integer.toString(user_id) });
+			(new jsGetReplies()).execute(new String[] { WsUrl.URL_GET_REPLIES, Integer.toString(curThread.getId()), Integer.toString(user_id) });
 		}
 	}
 
-	public class jsGetReplys extends AsyncTask<String, Void, Integer> {
+	public class jsGetReplies extends AsyncTask<String, Void, Integer> {
 		
 		ProgressDialog pd;
 		
@@ -300,4 +355,81 @@ public class ThreadActivity extends FatherActivity {
 			}
 		}
 	}
+	
+	//=======================================//
+		public void wsLikeDislike(String url, int taskIndex, int thread_id) {
+			(new jsLikeDislike()).execute(new String[] { url,
+					Integer.toString(AppData.saveUser.getId()),
+					Integer.toString(thread_id), Integer.toString(taskIndex) });
+		}
+
+		public class jsLikeDislike extends AsyncTask<String, Void, Integer> {
+			ProgressDialog pd;
+			int taskIndex;
+			
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				pd=new ProgressDialog(ThreadActivity.this);
+				pd.setMessage("Processing...");
+				pd.setCancelable(false);
+				pd.show();
+			}
+			
+			@Override
+			protected Integer doInBackground(String... params) {
+				taskIndex=Integer.parseInt(params[3]);
+				
+				List<NameValuePair> par = new ArrayList<NameValuePair>();
+				par.add(new BasicNameValuePair("user_id", params[1]));
+				par.add(new BasicNameValuePair("thread_id", params[2]));
+				
+				JSONParser jsonParser = new JSONParser();
+				JSONObject json = jsonParser
+						.makeHttpRequest(params[0], "POST", par);
+				Log.d("Create Response", json.toString());
+				try {
+					int success = json.getInt(JsonTag.TAG_SUCCESS);
+					msg=json.getString(JsonTag.TAG_MESSAGE);
+					if (success == 1) {
+						return 1;
+					} else {
+						return 0;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+				return 0;
+			}
+
+			@Override
+			protected void onPostExecute(Integer result) {
+				if(pd!=null && pd.isShowing())  pd.dismiss();
+				
+				if(result==1){
+					switch(taskIndex){
+					case 0: 
+						curThread.setCountLiked(curThread.getCountLiked()+1);
+						curThread.setIsLiked(1);
+						break;
+					case 1:
+						curThread.setCountLiked(curThread.getCountLiked()-1);
+						curThread.setIsLiked(0);
+						break;
+					case 2:
+						curThread.setCountDisliked(curThread.getCountDisliked()+1);
+						curThread.setIsDisliked(1);
+						break;
+					case 3:
+						curThread.setCountDisliked(curThread.getCountDisliked()-1);
+						curThread.setIsDisliked(0);
+						break;
+					}
+
+					loadLikeInfo();
+					setResult(RESULT_OK);
+				}
+			}
+		}	
 }

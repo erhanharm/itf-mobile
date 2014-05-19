@@ -22,6 +22,10 @@ public class WsUrl {
 	public final static String URL_DISLIKE_REPLY = URL + "dislike_reply.php";
 	public final static String URL_UNLIKE_REPLY = URL + "unlike_reply.php";
 	public final static String URL_UNDISLIKE_REPLY = URL + "undislike_reply.php";
+	public final static String URL_LIKE_THREAD = URL + "like_thread.php";
+	public final static String URL_DISLIKE_THREAD = URL + "dislike_thread.php";
+	public final static String URL_UNLIKE_THREAD = URL + "unlike_thread.php";
+	public final static String URL_UNDISLIKE_THREAD = URL + "undislike_thread.php";
 	
 	public final static String URL_GET_FOLDERS = URL + "get_folders.php";
 
