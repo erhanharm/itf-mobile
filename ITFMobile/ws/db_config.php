@@ -15,8 +15,8 @@
 // define('DB_SERVER', "localhost"); // db server
 
 // online
-define('DB_USER', "instansw_android"); // db user
-define('DB_PASSWORD', "E9eki=.+elP4"); // db password (mention your db password here)
-define('DB_DATABASE', "instansw_data"); // database name
+define('DB_USER', "b7_14849617"); // db user
+define('DB_PASSWORD', "170891"); // db password (mention your db password here)
+define('DB_DATABASE', "b7_14849617_itfmobile"); // database name
 define('DB_SERVER', "localhost"); // db server
 ?>
