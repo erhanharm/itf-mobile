@@ -8,8 +8,11 @@
     <color name="text1">#2fb0e0</color>
     <color name="text2">#819231</color>
     <color name="text_hint">#CDCDCD</color>
-    <color name="text_like">#4D5E96</color>
-    <color name="text_unlike">#CDCDCD</color>
+    
+    <color name="text_like">#78A418</color>
+    <color name="text_dislike">#DF0024</color>
+    <color name="text_unlike">#A4A4A4</color>
+    <color name="text_undislike">#A4A4A4</color>
     
     <color name="dark_gray">#666666</color>
     

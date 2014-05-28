@@ -134,8 +134,12 @@ public class ThreadActivity extends FatherActivity {
 					startActivity(new Intent(ThreadActivity.this,LoginActivity.class));
 				}
 				else {
-					if(curThread.getIsLiked()==0)
-						wsLikeDislike(WsUrl.URL_LIKE_THREAD, 0, curThread.getId());
+					if(curThread.getIsLiked()==0){
+						if(curThread.getIsDisliked()==1){
+							Toast.makeText(ThreadActivity.this, "Can't like this while disliked!", Toast.LENGTH_SHORT).show();
+						}
+						else wsLikeDislike(WsUrl.URL_LIKE_THREAD, 0, curThread.getId());
+					}
 					else wsLikeDislike(WsUrl.URL_UNLIKE_THREAD, 1, curThread.getId());
 				}
 			}
@@ -147,8 +151,12 @@ public class ThreadActivity extends FatherActivity {
 					startActivity(new Intent(ThreadActivity.this,LoginActivity.class));
 				}
 				else {
-					if(curThread.getIsDisliked()==0)
-						wsLikeDislike(WsUrl.URL_DISLIKE_THREAD, 2, curThread.getId());
+					if(curThread.getIsDisliked()==0){
+						if(curThread.getIsLiked()==1){
+							Toast.makeText(ThreadActivity.this, "Can't like this while disliked!", Toast.LENGTH_SHORT).show();
+						}
+						else wsLikeDislike(WsUrl.URL_DISLIKE_THREAD, 2, curThread.getId());
+					}
 					else wsLikeDislike(WsUrl.URL_UNDISLIKE_THREAD, 3, curThread.getId());
 				}
 			}
@@ -175,9 +183,11 @@ public class ThreadActivity extends FatherActivity {
 	private void loadLikeInfo(){
 		tvNumLike.setText(curThread.getCountLiked()+"");
 		tvNumDisLike.setText(curThread.getCountDisliked()+"");
-		int clike,cunlike;
+		int clike,cunlike,cdislike,cundislike;
 		clike=getResources().getColor(R.color.text_like);
 		cunlike=getResources().getColor(R.color.text_unlike);
+		cdislike=getResources().getColor(R.color.text_dislike);
+		cundislike=getResources().getColor(R.color.text_undislike);
 		if(curThread.getIsLiked()==1){
 			ivLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "like"));
 			tvNumLike.setTextColor(clike);
@@ -188,11 +198,11 @@ public class ThreadActivity extends FatherActivity {
 		}
 		if(curThread.getIsDisliked()==1){
 			ivDisLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "dislike"));
-			tvNumDisLike.setTextColor(clike);
+			tvNumDisLike.setTextColor(cdislike);
 		}
 		else{
 			ivDisLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "undislike"));
-			tvNumDisLike.setTextColor(cunlike);
+			tvNumDisLike.setTextColor(cundislike);
 		}
 	}
 	

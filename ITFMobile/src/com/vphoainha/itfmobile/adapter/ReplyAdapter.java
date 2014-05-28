@@ -93,9 +93,11 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 		holder.tvNumLike.setText(reply.getCountLiked()+"");
 		holder.tvNumDisLike.setText(reply.getCountDisliked()+"");
 		
-		int clike,cunlike;
+		int clike,cunlike,cdislike,cundislike;
 		clike=act.getResources().getColor(R.color.text_like);
 		cunlike=act.getResources().getColor(R.color.text_unlike);
+		cdislike=act.getResources().getColor(R.color.text_dislike);
+		cundislike=act.getResources().getColor(R.color.text_undislike);
 		if(reply.getIsLiked()==1){
 			holder.ivLike.setImageDrawable(Util.getDrawable(act, "like"));
 			holder.tvNumLike.setTextColor(clike);
@@ -106,11 +108,11 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 		}
 		if(reply.getIsDisliked()==1){
 			holder.ivDisLike.setImageDrawable(Util.getDrawable(act, "dislike"));
-			holder.tvNumDisLike.setTextColor(clike);
+			holder.tvNumDisLike.setTextColor(cdislike);
 		}
 		else{
 			holder.ivDisLike.setImageDrawable(Util.getDrawable(act, "undislike"));
-			holder.tvNumDisLike.setTextColor(cunlike);
+			holder.tvNumDisLike.setTextColor(cundislike);
 		}
 
 		holder.lnLike.setTag(R.string.TAG_REPLY, reply);
@@ -147,7 +149,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 					save_reply=(Reply)v.getTag(R.string.TAG_REPLY);
 					save_pos=(Integer)v.getTag(R.string.TAG_POS);
 					if(save_reply.getIsDisliked()==0){
-						if(save_reply.getIsDisliked()==1){
+						if(save_reply.getIsLiked()==1){
 							Toast.makeText(act, "Can't dislike this while liked!", Toast.LENGTH_SHORT).show();
 						}
 						else wsLikeDislike(WsUrl.URL_DISLIKE_REPLY, 2, save_reply.getId());
@@ -354,7 +356,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 				lst.remove(save_pos);
 				notifyDataSetChanged();
 			} else {
-				Toast.makeText(act, "Sorry! Deleted fail, try a again later!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(act, "Sorry! Deleted fail, try reply again later!", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
