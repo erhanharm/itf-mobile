@@ -26,6 +26,7 @@ public class JsonTag {
 	
 	public final static String TAG_TITLE = "title";
 	public final static String TAG_CONTENT = "content";
+	public final static String TAG_QUOTE = "quote";
 	public final static String TAG_TIME = "time";
 	public final static String TAG_FOLDER_ID = "folder_id";
 	public final static String TAG_STATUS = "status";

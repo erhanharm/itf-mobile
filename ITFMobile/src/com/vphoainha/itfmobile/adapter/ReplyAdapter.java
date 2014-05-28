@@ -89,7 +89,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 		holder.tvIndex.setText("#"+(position+2));
 		holder.tvTime.setText(DateTimeHelper.dateTimeToDateString(reply.getTime()));
 		holder.tvContent.setText(reply.getContent());
-		holder.tvAuthor.setText("by "+reply.getUserName());
+		holder.tvAuthor.setText(reply.getUserName());
 		holder.tvNumLike.setText(reply.getCountLiked()+"");
 		holder.tvNumDisLike.setText(reply.getCountDisliked()+"");
 		

@@ -12,7 +12,7 @@ $response = array();
     $db = new DB_CONNECT();
 
 	mysql_query('SET CHARACTER SET utf8');
-    $result = mysql_query("SELECT reply.id as id, content, time, thread_id, reply.user_id as user_id, user.username as username FROM reply, user WHERE thread_id = ".$thread_id." AND user_id = user.id ORDER BY time DESC") or die(mysql_error());
+    $result = mysql_query("SELECT reply.id as id, content, quote, quoteUserId, time, thread_id, reply.user_id as user_id, user.username as username FROM reply, user WHERE thread_id = ".$thread_id." AND user_id = user.id ORDER BY time DESC") or die(mysql_error());
 
     if ($result && mysql_num_rows($result) > 0) {
         $response["replies"] = array();
@@ -23,11 +23,16 @@ $response = array();
                 $reply = array();
                 $reply["id"] = $row["id"];
                 $reply["content"] = $row["content"];
+				$reply["quote"] = $row["quote"];
                 $reply["time"] = $row["time"];
                 $reply["user_id"] = $row["user_id"];
                 $reply["username"] = $row["username"];
                 $reply["thread_id"] = $row["thread_id"];
-
+				
+				$reply["quoteUserId"] = $row["quoteUserId"];
+				$result_temp = mysql_query("SELECT username FROM user WHERE id = ".$row["quoteUserId"]) or die(mysql_error());
+				$reply["quoteUsername"] = current($result_temp)["username"];
+					
 				$result_temp = mysql_query("SELECT count(id) as count_liked FROM _like WHERE reply_id = ".$reply["id"]." group by reply_id") or die(mysql_error());
 				if ($result_temp && mysql_num_rows($result_temp) > 0) {
 					while ($row = mysql_fetch_array($result_temp)) {

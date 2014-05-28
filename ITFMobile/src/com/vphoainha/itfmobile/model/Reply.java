@@ -6,7 +6,7 @@ import java.util.Date;
 public class Reply implements Serializable{
 	private int id;
 	private int threadId;
-	private String content;
+	private String content, quote;
 	private int userId;
 	private String userName;
 	private Date time;
@@ -74,6 +74,12 @@ public class Reply implements Serializable{
 	}
 	public void setIsDisliked(int isDisliked) {
 		this.isDisliked = isDisliked;
+	}
+	public String getQuote() {
+		return quote;
+	}
+	public void setQuote(String quote) {
+		this.quote = quote;
 	}
 	
 	

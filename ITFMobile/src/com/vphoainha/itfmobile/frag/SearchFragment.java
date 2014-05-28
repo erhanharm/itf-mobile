@@ -184,7 +184,7 @@ public class SearchFragment extends Fragment {
 					public void run() {
 						threadAdapter = new ThreadAdapter(
 								getActivity(),
-								R.layout.list_item_thread, R.id.tv_index,
+								R.layout.list_item_thread, R.id.tvId,
 								threads);
 						lvThread.setAdapter(threadAdapter);
 						Util.setListViewHeightBasedOnChildren(lvThread, threadAdapter);

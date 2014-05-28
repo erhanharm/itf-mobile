@@ -63,7 +63,7 @@ public class SubFolderActivity extends FatherActivity {
 		
 		lvFolder = (ListView) findViewById(R.id.lvFolder);
 		subFolders=AppData.getSubFolders(curFolder.getId());
-		FolderAdapter adapter = new FolderAdapter(SubFolderActivity.this,R.layout.list_item_folder, R.id.tv_index, subFolders);
+		FolderAdapter adapter = new FolderAdapter(SubFolderActivity.this,R.layout.list_item_folder, R.id.tvId, subFolders);
 		lvFolder.setAdapter(adapter);
 		Util.setListViewHeightBasedOnChildren(lvFolder, adapter);
 		if(subFolders.size()<=0){
@@ -197,7 +197,7 @@ public class SubFolderActivity extends FatherActivity {
 						lvThread = (ListView) findViewById(R.id.lvThread);
 						threadAdapter = new ThreadAdapter(
 								SubFolderActivity.this,
-								R.layout.list_item_thread, R.id.tv_index,
+								R.layout.list_item_thread, R.id.tvId,
 								threads);
 						lvThread.setAdapter(threadAdapter);
 						Util.setListViewHeightBasedOnChildren(lvThread, threadAdapter);

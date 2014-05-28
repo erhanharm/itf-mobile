@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg">#e5e5e5</color>
+    <color name="bg">#F8F6FA</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    
+    <color name="main_green">#96CE1C</color>
+    <color name="main_green2">#78A418</color>
+    
     
     <color name="text">#494949</color>
     <color name="text1">#2fb0e0</color>

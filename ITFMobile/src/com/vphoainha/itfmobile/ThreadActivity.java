@@ -264,6 +264,7 @@ public class ThreadActivity extends FatherActivity {
 						Reply t = new Reply();
 						t.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
 						t.setContent(obj.getString(JsonTag.TAG_CONTENT));
+						t.setQuote(obj.getString(JsonTag.TAG_QUOTE));
 						t.setTime(DateTimeHelper.stringToDateTime(obj.getString(JsonTag.TAG_TIME)));
 						t.setUserId(Integer.parseInt(obj.getString(JsonTag.TAG_USER_ID)));
 						t.setUserName(obj.getString(JsonTag.TAG_USER_NAME));
@@ -297,7 +298,7 @@ public class ThreadActivity extends FatherActivity {
 						lvReply = (ListView) findViewById(R.id.lvReply);
 						ReplyAdapter adapter = new ReplyAdapter(
 								ThreadActivity.this,
-								R.layout.list_item_thread, R.id.tv_index,
+								R.layout.list_item_thread, R.id.tvId,
 								replies);
 						lvReply.setAdapter(adapter);
 						Util.setListViewHeightBasedOnChildren(lvReply, adapter);

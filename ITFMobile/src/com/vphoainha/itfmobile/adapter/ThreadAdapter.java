@@ -56,12 +56,9 @@ public class ThreadAdapter extends ArrayAdapter<Thread> {
 
 		holder.tvDate.setText(DateTimeHelper.dateTimeToDateString(f.getTime()));
 		holder.tvTitle.setText(f.getTitle());
-		holder.tvAuthor.setText("by "+f.getUserName());
+		holder.tvAuthor.setText(f.getUserName());
 		holder.tvNumreply.setText(f.getNum_reply()+" replies");
 		holder.tvNumview.setText(f.getNum_view()+" views");
-		
-		holder.tvAuthor.setText("by "+f.getUserName());
-		
 
 		return convertView;
 	}
