@@ -2,7 +2,7 @@ package com.vphoainha.itfmobile.util;
 
 public class WsUrl {
 //	public final static String URL = "http://192.168.1.43/answermeservice/";
-	public final static String URL = "http://instanswer.me/itf/";
+	public final static String URL = "http://vodailuong.byethost7.com/itfmobile/ws/";
 	
 	public final static String URL_REGISTER = URL + "register.php";
 	public final static String URL_LOGIN = URL + "login.php";

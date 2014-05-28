@@ -82,6 +82,7 @@ public class SearchFragment extends Fragment {
 		
 		txtSearch = (EditText) view.findViewById(R.id.txtSearch);
 		btnSearch = (ImageButton) view.findViewById(R.id.btnSearch);
+		txtSearch.setText(searchContent);
 		btnSearch.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -127,8 +127,12 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 				else {
 					save_reply=(Reply)v.getTag(R.string.TAG_REPLY);
 					save_pos=(Integer)v.getTag(R.string.TAG_POS);
-					if(save_reply.getIsLiked()==0)
-						wsLikeDislike(WsUrl.URL_LIKE_REPLY, 0, save_reply.getId());
+					if(save_reply.getIsLiked()==0){
+						if(save_reply.getIsDisliked()==1){
+							Toast.makeText(act, "Can't like this while disliked!", Toast.LENGTH_SHORT).show();
+						}
+						else wsLikeDislike(WsUrl.URL_LIKE_REPLY, 0, save_reply.getId());
+					}
 					else wsLikeDislike(WsUrl.URL_UNLIKE_REPLY, 1, save_reply.getId());
 				}
 			}
@@ -142,8 +146,12 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 				else {
 					save_reply=(Reply)v.getTag(R.string.TAG_REPLY);
 					save_pos=(Integer)v.getTag(R.string.TAG_POS);
-					if(save_reply.getIsDisliked()==0)
-						wsLikeDislike(WsUrl.URL_DISLIKE_REPLY, 2, save_reply.getId());
+					if(save_reply.getIsDisliked()==0){
+						if(save_reply.getIsDisliked()==1){
+							Toast.makeText(act, "Can't dislike this while liked!", Toast.LENGTH_SHORT).show();
+						}
+						else wsLikeDislike(WsUrl.URL_DISLIKE_REPLY, 2, save_reply.getId());
+					}
 					else wsLikeDislike(WsUrl.URL_UNDISLIKE_REPLY, 3, save_reply.getId());
 				}
 			}

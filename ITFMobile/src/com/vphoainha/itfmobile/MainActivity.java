@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -31,9 +30,9 @@ import android.widget.Toast;
 import com.vphoainha.itfmobile.frag.HomeFragment;
 import com.vphoainha.itfmobile.frag.MyAnswersFragment;
 import com.vphoainha.itfmobile.frag.MyQuestionsFragment;
-import com.vphoainha.itfmobile.frag.MyRatingFragment;
 import com.vphoainha.itfmobile.frag.ProfileFragment;
 import com.vphoainha.itfmobile.frag.SearchFragment;
+import com.vphoainha.itfmobile.frag.TopMemberFragment;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
@@ -47,6 +46,7 @@ public class MainActivity extends FragmentActivity {
 	final int FRAG_HOME=0;
 	final int FRAG_SEARCH=1;
 	final int FRAG_PROFILE=3;
+	final int FRAG_TOPMEMBER=4;
 	
 	private CustomSlidingPaneLayout spl;
 	private MySharedPreferences mySharedPreferences;
@@ -67,6 +67,7 @@ public class MainActivity extends FragmentActivity {
 	ProfileFragment profileFragment;
 	MyQuestionsFragment myQuestionsFragment;
 	MyAnswersFragment myAnswersFragment;
+	TopMemberFragment topMemberFragment;
 	
 	@Override
 	public void onCreate(Bundle arg0) {
@@ -130,6 +131,7 @@ public class MainActivity extends FragmentActivity {
 	
 	private void startSearch(){
 		String searchContent=txtSearch.getText().toString();
+		txtSearch.setText("");
 		if(searchContent.equals("")) {
 			Toast.makeText(MainActivity.this, "Please fill search content!", Toast.LENGTH_SHORT).show();
 			return;
@@ -199,11 +201,18 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 	
-	public void onclickHome(View v) {
+	public void onclickForum(View v) {
 		spl.closePane();
 		cur_frag=FRAG_HOME;
 		homeFragment=HomeFragment.newInstance();
 		setView(homeFragment);
+	}
+	
+	public void onclickTopMember(View v) {
+		spl.closePane();
+		cur_frag=FRAG_TOPMEMBER;
+		topMemberFragment=TopMemberFragment.newInstance();
+		setView(topMemberFragment);
 	}
 	
 	public void onclickProfile(View v) {
@@ -269,15 +278,15 @@ public class MainActivity extends FragmentActivity {
 	
 	//recheck login
 	public class JsonReadTaskReLogin extends AsyncTask<String, Void, Integer> {
-		ProgressDialog pd;
+//		ProgressDialog pd;
 		
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			pd=new ProgressDialog(MainActivity.this);
-			pd.setMessage("Checking user info...");
-			pd.setCancelable(false);
-			pd.show();
+//			pd=new ProgressDialog(MainActivity.this);
+//			pd.setMessage("Checking user info...");
+//			pd.setCancelable(false);
+//			pd.show();
 		}
 		
 		@Override
@@ -309,7 +318,7 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			if(pd!=null && pd.isShowing())  pd.dismiss();
+//			if(pd!=null && pd.isShowing())  pd.dismiss();
 			
 			if (result==1) {	
 				if(object!=null){
