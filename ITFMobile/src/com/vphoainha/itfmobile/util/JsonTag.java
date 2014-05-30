@@ -30,6 +30,9 @@ public class JsonTag {
 	public final static String TAG_TIME = "time";
 	public final static String TAG_FOLDER_ID = "folder_id";
 	public final static String TAG_STATUS = "status";
+	public final static String TAG_TAGS = "tags";
+	public final static String TAG_TAG = "tag";
+	public final static String TAG_PICTURES = "pictures";
 	
 	public final static String TAG_THREAD_ID = "thread_id";
 	public final static String TAG_REPLY_ID = "reply_id";

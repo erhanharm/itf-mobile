@@ -17,6 +17,8 @@ public class Thread implements Serializable{
 	private int countDisliked;
 	private int isLiked;
 	private int isDisliked;
+	private String tags;
+	private String pictures;
 	
 	public int getId() {
 		return id;
@@ -107,6 +109,20 @@ public class Thread implements Serializable{
 	}
 	public void setNum_view(int num_view) {
 		this.num_view = num_view;
+	}
+	public String getTags() {
+		return tags;
+	}
+	public void setTags(String tags) {
+		String keyword=tags.trim();
+		if(keyword.length()>0 && keyword.charAt(keyword.length()-1)==',') keyword=keyword.substring(0,keyword.length()-1);
+		this.tags = keyword;
+	}
+	public String getPictures() {
+		return pictures;
+	}
+	public void setPictures(String pictures) {
+		this.pictures = pictures;
 	}
 
 	

@@ -30,6 +30,10 @@ public class WsUrl {
 	public final static String URL_UNDISLIKE_THREAD = URL + "undislike_thread.php";
 	
 	public final static String URL_GET_FOLDERS = URL + "get_folders.php";
+	
+	public final static String URL_GET_TAGS = URL + "get_tags.php";
+	public final static String URL_GET_TOP_TAG = URL + "get_top_tag.php";
+	public final static String URL_UPLOAD_FILE = URL + "upload_image.php";
 
 	public final static String URL_CHECK_FACEBOOK_EMAIL = URL + "check_facebook_email.php";
 	

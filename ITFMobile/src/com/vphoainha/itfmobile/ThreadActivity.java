@@ -44,7 +44,7 @@ public class ThreadActivity extends FatherActivity {
 	Thread curThread;
 	
 	ListView lvReply;
-	public TextView tvTime, tvContent, tvAuthor, tvNumLike, tvNumDisLike, tvEdit, tvDelete, tvQuote;
+	public TextView tvTime, tvContent, tvAuthor, tvNumLike, tvNumDisLike, tvEdit, tvDelete, tvQuote, tvTag;
 	public LinearLayout lnLike, lnDisLike;
 	public ImageView ivLike, ivDisLike;
 	
@@ -71,6 +71,7 @@ public class ThreadActivity extends FatherActivity {
 		tvEdit = (TextView) findViewById(R.id.tvEdit);
 		tvDelete = (TextView) findViewById(R.id.tvDelete);
 		tvQuote = (TextView) findViewById(R.id.tvQuote);
+		tvTag = (TextView) findViewById(R.id.tvTag);
 		
 		tvNumLike = (TextView) findViewById(R.id.tvNumLike);
 		tvNumDisLike = (TextView) findViewById(R.id.tvNumDisLike);
@@ -81,7 +82,8 @@ public class ThreadActivity extends FatherActivity {
 		
 		tvTime.setText(DateTimeHelper.dateTimeToDateString(curThread.getTime()));
 		tvContent.setText(curThread.getContent());
-		tvAuthor.setText("by "+curThread.getUserName());
+		tvAuthor.setText(curThread.getUserName());
+		tvTag.setText(curThread.getTags());
 		
 		if(AppData.isLogin==true && curThread.getUserId()==AppData.saveUser.getId()) tvEdit.setVisibility(View.VISIBLE);
 		else tvEdit.setVisibility(View.GONE);

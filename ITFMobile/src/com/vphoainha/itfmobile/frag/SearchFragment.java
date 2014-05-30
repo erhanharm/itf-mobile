@@ -161,6 +161,8 @@ public class SearchFragment extends Fragment {
 						t.setCountDisliked(Integer.parseInt(obj.getString(JsonTag.TAG_COUNT_DISLIKED)));
 						t.setIsLiked(Integer.parseInt(obj.getString(JsonTag.TAG_ISLIKED)));
 						t.setIsDisliked(Integer.parseInt(obj.getString(JsonTag.TAG_ISDISLIKED)));
+						t.setTags(obj.getString(JsonTag.TAG_TAGS));
+						t.setPictures(obj.getString(JsonTag.TAG_PICTURES));
 						
 						threads.add(t);
 					}
