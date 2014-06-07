@@ -36,7 +36,7 @@ public class AttachPictureLargeAdapter extends ArrayAdapter<AttachPicture> {
 		if (convertView == null) {
 			holder = new ViewHolder();
 			LayoutInflater inflater = act.getLayoutInflater();
-			convertView = inflater.inflate(R.layout.list_item_attachpic, null);
+			convertView = inflater.inflate(R.layout.list_item_attachpic_large, null);
 	      
 			holder.ivPic = (ImageView) convertView.findViewById(R.id.ivPic);
 			holder.tvName = (TextView) convertView.findViewById(R.id.tvName);

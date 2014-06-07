@@ -7,36 +7,112 @@
 
 	<include layout="@layout/title_bar" />
 
-	<LinearLayout
+	<ScrollView
+	    android:id="@+id/scrollView1"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="vertical"
-	    android:padding="10dp" >
+	    android:layout_height="match_parent" >
 
-		<LinearLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="0dp"
-		    android:layout_weight="1" >
-		</LinearLayout>
-
-	    <EditText
-	        android:id="@+id/txtContent"
+	    <LinearLayout
 	        android:layout_width="match_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
-	        android:background="@drawable/bg_edittext"
-	        android:ems="10"
-	        android:gravity="top"
-	        android:hint="Content"
-	        android:inputType="textMultiLine"
-	        android:padding="5dp"
-	        android:textColor="@color/text1"
-	        android:textColorHint="@color/text_hint"
-	        android:textSize="16sp" >
+	        android:layout_height="match_parent"
+	        android:orientation="vertical" >
 
-	        <requestFocus />
-	    </EditText>
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:orientation="vertical"
+	            android:padding="10dp" >
 
-	</LinearLayout>
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="0dp"
+	                android:layout_weight="1"
+	                android:visibility="gone" >
+	            </LinearLayout>
+
+	            <EditText
+	                android:id="@+id/txtContent"
+	                android:layout_width="match_parent"
+	                android:layout_height="0dp"
+	                android:layout_weight="1"
+	                android:background="@drawable/bg_edittext"
+	                android:ems="10"
+	                android:gravity="top"
+	                android:hint="Content"
+	                android:inputType="textMultiLine"
+	                android:minLines="3"
+	                android:padding="5dp"
+	                android:textColor="@color/text1"
+	                android:textColorHint="@color/text_hint"
+	                android:textSize="16sp" >
+
+	                <requestFocus />
+	            </EditText>
+	        </LinearLayout>
+
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:orientation="vertical" >
+
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:orientation="horizontal" >
+
+	                <TextView
+	                    android:id="@+id/TextView01"
+	                    android:layout_width="0dp"
+	                    android:layout_height="wrap_content"
+	                    android:layout_weight="1"
+	                    android:background="@color/bg"
+	                    android:paddingBottom="2dp"
+	                    android:paddingLeft="10dp"
+	                    android:paddingTop="2dp"
+	                    android:text="ATTACHED PICTURES"
+	                    android:textAppearance="?android:attr/textAppearanceMedium"
+	                    android:textColor="@color/text"
+	                    android:textSize="12sp" />
+
+	                <Button
+	                    android:id="@+id/btnAnswer"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_marginBottom="10dp"
+	                    android:layout_marginRight="10dp"
+	                    android:background="@drawable/bg_button"
+	                    android:drawableLeft="@drawable/ic_attach_white"
+	                    android:drawablePadding="3dp"
+	                    android:focusableInTouchMode="false"
+	                    android:onClick="onClickAddAttach"
+	                    android:padding="5dp"
+	                    android:text="Add picture"
+	                    android:textColor="#FFFFFF"
+	                    android:textSize="14sp" />
+	            </LinearLayout>
+
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="1px"
+	                android:background="@color/text_hint"
+	                android:orientation="vertical" >
+	            </LinearLayout>
+
+	            <ListView
+	                android:id="@+id/lvAttach"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:cacheColorHint="@color/bg"
+	                android:divider="#BFBFBF"
+	                android:dividerHeight="1px"
+	                android:listSelector="@android:color/transparent" >
+	            </ListView>
+	        </LinearLayout>
+
+	    </LinearLayout>
+
+	</ScrollView>
 
 </LinearLayout>

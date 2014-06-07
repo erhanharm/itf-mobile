@@ -109,10 +109,10 @@ public class AddThreadActivity extends FatherActivity {
 
 					String pictures = "";
 					for (AttachPicture attachPicture : attachPictures)
-						pictures += attachPicture.getName() + "|";
+						pictures += attachPicture.getName() + ";";
 					if (pictures.length() > 0) {
 						pictures += "_";
-						pictures = pictures.replace("|_", "");
+						pictures = pictures.replace(";_", "");
 					}
 
 					if (mode == 1) {

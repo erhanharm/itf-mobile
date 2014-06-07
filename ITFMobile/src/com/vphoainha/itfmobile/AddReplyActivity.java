@@ -1,6 +1,8 @@
 package com.vphoainha.itfmobile;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -10,15 +12,24 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.vphoainha.itfmobile.adapter.AttachPictureAdapter;
+import com.vphoainha.itfmobile.adapter.AttachPictureAdapter.OnClickRemove;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
+import com.vphoainha.itfmobile.model.AttachPicture;
 import com.vphoainha.itfmobile.model.Reply;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
@@ -26,12 +37,18 @@ import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class AddReplyActivity extends FatherActivity {
+	private static final int ACTIVITY_SELECT_IMAGE = 1889;
 	EditText txtContent;
 	
 	Context context;
 	private int mode=1;
 	private int thread_id;
 	private Reply curReply;
+	
+	ListView lvAttach;
+	private List<AttachPicture> attachPictures;
+	AttachPictureAdapter attachPictureAdapter;
+	private ProgressDialog dialog = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +82,60 @@ public class AddReplyActivity extends FatherActivity {
 		});
 		
 		this.context = this;
+	}
+	
+	private void initAttachPicList() {
+		lvAttach = (ListView) findViewById(R.id.lvAttach);
+		attachPictures = new ArrayList<AttachPicture>();
+		attachPictureAdapter = new AttachPictureAdapter(AddReplyActivity.this, R.layout.list_item_attachpic, R.id.tvId, attachPictures);
+		lvAttach.setAdapter(attachPictureAdapter);
+		attachPictureAdapter.setOnClickRemoveListener(new OnClickRemove() {
+			@Override
+			public void onClickRemove(int pos) {
+				attachPictures.remove(pos);
+				attachPictureAdapter.notifyDataSetChanged();
+			}
+		});
+	}
+
+	public void onClickAddAttach(View v) {
+		Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		startActivityForResult(galleryIntent, ACTIVITY_SELECT_IMAGE);
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == ACTIVITY_SELECT_IMAGE && resultCode == RESULT_OK && null != data) {
+			Uri selectedImage = data.getData();
+			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+			Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+			cursor.moveToFirst();
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			String picturePath = cursor.getString(columnIndex);
+			cursor.close();
+
+			File file = new File(picturePath);
+			long length = file.length();
+			if (length / 1024.0 / 1024 < 2) {
+				AttachPicture attachPicture = new AttachPicture();
+				attachPicture.setFileName(picturePath);
+
+				int j = picturePath.lastIndexOf(".");
+				String extension = picturePath.substring(j + 1);
+				attachPicture.setName(new Date().getTime() + "." + extension);
+				attachPicture.setBitmap(BitmapFactory.decodeFile(picturePath));
+
+				for (AttachPicture a : attachPictures)
+					if (a.getFileName().equals(attachPicture.getFileName())) {
+						Toast.makeText(context, "Duplicated!", Toast.LENGTH_SHORT).show();
+						return;
+					}
+				attachPictures.add(attachPicture);
+				attachPictureAdapter.notifyDataSetChanged();
+				Utils.setListViewHeightBasedOnChildren(lvAttach, attachPictureAdapter);
+			} else {
+				Utils.showAlert(this, "", "Sorry! The picture size is over 2MB. Please select another picture!");
+			}
+		}
 	}
 
 	public void wsAddReply() {

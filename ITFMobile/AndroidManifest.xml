@@ -57,6 +57,12 @@
 			android:name=".ThreadActivity">
 		</activity>
 		<activity
+			android:name=".AttachedPicturesActivity">
+		</activity>
+		<activity
+			android:name=".PictureViewerActivity">
+		</activity>
+		<activity
 			android:name=".ProfileActivity"
 			android:windowSoftInputMode="stateHidden">
 		</activity>

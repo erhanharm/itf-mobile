@@ -33,6 +33,7 @@ public class AttachedPicturesActivity extends FatherActivity {
 
 		initFather();
 		tvTitle.setText("Attached pictures");
+		tvSubTitle.setVisibility(View.GONE);
 
 		picture=getIntent().getStringExtra("pictures");
 		

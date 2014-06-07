@@ -66,7 +66,7 @@ public class ThreadAdapter extends ArrayAdapter<TThread> {
 		holder.tvNumview.setText(f.getNum_view()+" views");
 		
 		if(f.getPictures()==null || f.getPictures().equals("")) holder.ivHasAttach.setVisibility(View.GONE);
-		holder.ivHasAttach.setVisibility(View.VISIBLE);
+		else holder.ivHasAttach.setVisibility(View.VISIBLE);
 		
 		return convertView;
 	}
