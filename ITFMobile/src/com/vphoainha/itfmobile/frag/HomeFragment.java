@@ -32,7 +32,7 @@ import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class HomeFragment extends Fragment implements SectionListAdapterAdapterDelegate{
@@ -166,7 +166,7 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 	//============================================//
 
 	public void wsGetFolders() {
-		if(!Util.checkInternetConnection(getActivity()))
+		if(!Utils.checkInternetConnection(getActivity()))
 			Toast.makeText(getActivity(), getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else		
 			(new jsGetFolders()).execute(new String[] { WsUrl.URL_GET_FOLDERS});

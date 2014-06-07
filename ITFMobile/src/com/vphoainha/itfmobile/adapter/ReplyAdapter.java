@@ -34,7 +34,7 @@ import com.vphoainha.itfmobile.model.Reply;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class ReplyAdapter extends ArrayAdapter<Reply> {
@@ -99,19 +99,19 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 		cdislike=act.getResources().getColor(R.color.text_dislike);
 		cundislike=act.getResources().getColor(R.color.text_undislike);
 		if(reply.getIsLiked()==1){
-			holder.ivLike.setImageDrawable(Util.getDrawable(act, "like"));
+			holder.ivLike.setImageDrawable(Utils.getDrawable(act, "like"));
 			holder.tvNumLike.setTextColor(clike);
 		}
 		else {
-			holder.ivLike.setImageDrawable(Util.getDrawable(act, "unlike"));
+			holder.ivLike.setImageDrawable(Utils.getDrawable(act, "unlike"));
 			holder.tvNumLike.setTextColor(cunlike);
 		}
 		if(reply.getIsDisliked()==1){
-			holder.ivDisLike.setImageDrawable(Util.getDrawable(act, "dislike"));
+			holder.ivDisLike.setImageDrawable(Utils.getDrawable(act, "dislike"));
 			holder.tvNumDisLike.setTextColor(cdislike);
 		}
 		else{
-			holder.ivDisLike.setImageDrawable(Util.getDrawable(act, "undislike"));
+			holder.ivDisLike.setImageDrawable(Utils.getDrawable(act, "undislike"));
 			holder.tvNumDisLike.setTextColor(cundislike);
 		}
 
@@ -302,7 +302,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 	//=======================================================
 	
 	public void wsDeleteReply() {
-		if(!Util.checkInternetConnection(act))
+		if(!Utils.checkInternetConnection(act))
 			Toast.makeText(act, act.getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else{
 			(new jsDeleteReply())

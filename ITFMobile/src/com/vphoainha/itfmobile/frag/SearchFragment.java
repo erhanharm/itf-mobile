@@ -32,17 +32,17 @@ import com.vphoainha.itfmobile.R;
 import com.vphoainha.itfmobile.ThreadActivity;
 import com.vphoainha.itfmobile.adapter.ThreadAdapter;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
-import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.model.TThread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class SearchFragment extends Fragment {
 	static View view;	
 	
-	private List<Thread> threads;
+	private List<TThread> threads;
 	
 	private ListView lvThread;
 	private EditText txtSearch;
@@ -101,7 +101,7 @@ public class SearchFragment extends Fragment {
 	}
 	
 	public void wsSearchThread() {
-		if(!Util.checkInternetConnection(getActivity()))
+		if(!Utils.checkInternetConnection(getActivity()))
 			Toast.makeText(getActivity(), getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else{
 			int user_id=(AppData.isLogin?AppData.saveUser.getId():-1);
@@ -123,7 +123,7 @@ public class SearchFragment extends Fragment {
 			pd.setCancelable(false);
 			pd.show();
 			
-			threads = new ArrayList<Thread>();
+			threads = new ArrayList<TThread>();
 		}
 		
 		@Override
@@ -146,7 +146,7 @@ public class SearchFragment extends Fragment {
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject obj = array.getJSONObject(i);
 
-						Thread t = new Thread();
+						TThread t = new TThread();
 						t.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
 						t.setTitle(obj.getString(JsonTag.TAG_TITLE));
 						t.setContent(obj.getString(JsonTag.TAG_CONTENT));
@@ -189,7 +189,7 @@ public class SearchFragment extends Fragment {
 								R.layout.list_item_thread, R.id.tvId,
 								threads);
 						lvThread.setAdapter(threadAdapter);
-						Util.setListViewHeightBasedOnChildren(lvThread, threadAdapter);
+						Utils.setListViewHeightBasedOnChildren(lvThread, threadAdapter);
 						lvThread.setOnItemClickListener(new OnItemClickListener() {
 							@Override
 							public void onItemClick(AdapterView<?> arg0,
@@ -204,7 +204,7 @@ public class SearchFragment extends Fragment {
 	}
 	
 	public void wsViewThread() {
-		if(!Util.checkInternetConnection(getActivity()))
+		if(!Utils.checkInternetConnection(getActivity()))
 			Toast.makeText(getActivity(), getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else	
 			(new jsViewThread()).execute(new String[] { WsUrl.URL_VIEW_THREAD, Integer.toString(threads.get(selectedIndexThread).getId()) });

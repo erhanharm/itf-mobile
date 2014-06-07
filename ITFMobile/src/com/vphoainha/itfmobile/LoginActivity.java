@@ -35,7 +35,7 @@ import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.MySharedPreferences;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class LoginActivity extends FatherActivity {
@@ -138,16 +138,16 @@ public class LoginActivity extends FatherActivity {
 		if (userName.equals(""))
 			msg = "Username is not be empty!";
 		if (!msg.equals("")) {
-			Util.showAlert(LoginActivity.this, "", msg);
+			Utils.showAlert(LoginActivity.this, "", msg);
 			return;
 		}
 
-		if (!Util.checkInternetConnection(this))
+		if (!Utils.checkInternetConnection(this))
 			Toast.makeText(this, getString(R.string.cant_connect_internet),
 					Toast.LENGTH_SHORT).show();
 		else
 			(new JsonReadTaskLOGIN()).execute(new String[] { WsUrl.URL_LOGIN,
-					userName, Util.md5(password), Util.getDeviceID(this) });
+					userName, Utils.md5(password), Utils.getDeviceID(this) });
 	}
 
 	public class JsonReadTaskLOGIN extends AsyncTask<String, Void, String> {
@@ -209,7 +209,7 @@ public class LoginActivity extends FatherActivity {
 
 	private void accessWebserviceCHECKEMAIL(String email) {
 		(new JsonReadTaskCHECKEMAIL()).execute(new String[] { WsUrl.URL_CHECK_FACEBOOK_EMAIL,
-				email, SECURITY_CODE, Util.getDeviceID(this) });
+				email, SECURITY_CODE, Utils.getDeviceID(this) });
 	}
 
 	public class JsonReadTaskCHECKEMAIL extends
@@ -263,7 +263,7 @@ public class LoginActivity extends FatherActivity {
 				setResult(RESULT_OK);
 				finish();
 			} else {
-				(new JsonReadTaskREGISTER()).execute(new String[] { WsUrl.URL_REGISTER, faceUser.getUsername(), faceUser.asMap().get("email").toString(), Util.md5(DEFAULT_PASS), Util.getDeviceID(LoginActivity.this)});
+				(new JsonReadTaskREGISTER()).execute(new String[] { WsUrl.URL_REGISTER, faceUser.getUsername(), faceUser.asMap().get("email").toString(), Utils.md5(DEFAULT_PASS), Utils.getDeviceID(LoginActivity.this)});
 			}
 		}
 	}
@@ -317,7 +317,7 @@ public class LoginActivity extends FatherActivity {
 			if (result != null) {
 				readAndSaveLoginJsonObject(LoginActivity.this, object);
 				
-				Util.showAlert(LoginActivity.this, "", "Register successfully! Your new account password is 123456, please go to your profile to change the password!", new DialogInterface.OnClickListener() {
+				Utils.showAlert(LoginActivity.this, "", "Register successfully! Your new account password is 123456, please go to your profile to change the password!", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						finish();

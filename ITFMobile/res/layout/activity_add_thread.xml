@@ -46,7 +46,7 @@
 	                android:background="@drawable/bg_edittext"
 	                android:ems="10"
 	                android:gravity="top"
-	                android:lines="3"
+	                android:minLines="3"
 	                android:hint="Content"
 	                android:inputType="textMultiLine"
 	                android:padding="5dp"
@@ -111,21 +111,22 @@
 	                    android:textColor="@color/text"
 	                    android:textSize="12sp" />
 
-	                <TextView
-	                    android:id="@+id/TextView02"
+	                <Button
+	                    android:id="@+id/btnAnswer"
 	                    android:layout_width="wrap_content"
 	                    android:layout_height="wrap_content"
-	                    android:clickable="true"
+	                    android:layout_marginBottom="10dp"
+	                    android:layout_marginRight="10dp"
+	                    android:background="@drawable/bg_button"
+	                    android:drawableLeft="@drawable/ic_attach_white"
+	                    android:drawablePadding="3dp"
+	                    android:focusableInTouchMode="false"
 	                    android:onClick="onClickAddAttach"
-	                    android:paddingBottom="5dp"
-	                    android:paddingLeft="10dp"
-	                    android:paddingRight="10dp"
-	                    android:paddingTop="5dp"
-	                    android:text="Add"
-	                    android:textAppearance="?android:attr/textAppearanceMedium"
-	                    android:textColor="@color/main_green"
-	                    android:textSize="16sp"
-	                    android:textStyle="bold" />
+	                    android:padding="5dp"
+	                    android:text="Add picture"
+	                    android:textColor="#FFFFFF"
+	                    android:textSize="14sp" />
+
 	            </LinearLayout>
 
 	            <LinearLayout

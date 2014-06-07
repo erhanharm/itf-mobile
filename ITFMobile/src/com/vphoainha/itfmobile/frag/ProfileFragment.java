@@ -29,7 +29,7 @@ import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.MySharedPreferences;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class ProfileFragment extends Fragment {
@@ -99,15 +99,15 @@ public class ProfileFragment extends Fragment {
 					if(!p3.equals(p2)) msg="Confirm password is not same with password!";
 					if(p1.equals(p2)) msg="New Password is must be different with Old Password!";
 					if(p2.equals("")) msg="Password is not be empty!";
-					if(!Util.md5(p1).equals(AppData.saveUser.getPassword())) msg="Old Password is not correct!";
+					if(!Utils.md5(p1).equals(AppData.saveUser.getPassword())) msg="Old Password is not correct!";
 					
 					
 					if(!msg.equals("")){
-						Util.showAlert(getActivity(), "", msg);
+						Utils.showAlert(getActivity(), "", msg);
 						return;
 					}
 					
-					password=Util.md5(p2);
+					password=Utils.md5(p2);
 				}
 				
 				(new JsonReadTask()).execute(new String[] { WsUrl.URL_UPDATE_PROFILE,
@@ -173,7 +173,7 @@ public class ProfileFragment extends Fragment {
 				
 				AppData.saveUser.setName(txtName.getText().toString());
 				if(!txtPassword.getText().toString().equals(""))
-					AppData.saveUser.setPassword(Util.md5(txtPassword.getText().toString()));
+					AppData.saveUser.setPassword(Utils.md5(txtPassword.getText().toString()));
 				new MySharedPreferences(getActivity()).setSaveUserPreferences();
 			}
 			else Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();

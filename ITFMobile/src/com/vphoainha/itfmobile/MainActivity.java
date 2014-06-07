@@ -28,8 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vphoainha.itfmobile.frag.HomeFragment;
-import com.vphoainha.itfmobile.frag.MyAnswersFragment;
-import com.vphoainha.itfmobile.frag.MyQuestionsFragment;
 import com.vphoainha.itfmobile.frag.ProfileFragment;
 import com.vphoainha.itfmobile.frag.SearchFragment;
 import com.vphoainha.itfmobile.frag.TopMemberFragment;
@@ -37,7 +35,7 @@ import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.MySharedPreferences;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 import com.vphoainha.itfmobile.view.CustomSlidingPaneLayout;
 
@@ -65,8 +63,6 @@ public class MainActivity extends FragmentActivity {
 	HomeFragment homeFragment;
 	SearchFragment searchFragment;
 	ProfileFragment profileFragment;
-	MyQuestionsFragment myQuestionsFragment;
-	MyAnswersFragment myAnswersFragment;
 	TopMemberFragment topMemberFragment;
 	
 	@Override
@@ -77,8 +73,8 @@ public class MainActivity extends FragmentActivity {
 
 		spl = (CustomSlidingPaneLayout) findViewById(R.id.slidingPane);
 
-		if(!Util.checkInternetConnection(this)){
-			Util.showAlert(this, "Sorry!", getString(R.string.cant_connect_internet), new DialogInterface.OnClickListener() {
+		if(!Utils.checkInternetConnection(this)){
+			Utils.showAlert(this, "Sorry!", getString(R.string.cant_connect_internet), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
 					finish();
@@ -125,7 +121,7 @@ public class MainActivity extends FragmentActivity {
 		mySharedPreferences.getSaveUserPreferences();
 		if(AppData.isLogin){
 			Log.i("======", AppData.saveUser.getEmail()+"    "+ AppData.saveUser.getPassword());
-			(new JsonReadTaskReLogin()).execute(new String[] { WsUrl.URL_LOGIN, AppData.saveUser.getUsername(), AppData.saveUser.getPassword(), Util.getDeviceID(this)});
+			(new JsonReadTaskReLogin()).execute(new String[] { WsUrl.URL_LOGIN, AppData.saveUser.getUsername(), AppData.saveUser.getPassword(), Utils.getDeviceID(this)});
 		}		
 	}
 	
@@ -327,7 +323,7 @@ public class MainActivity extends FragmentActivity {
 					showLoggedFunction();
 				}
 			} else {
-				Util.showAlert(MainActivity.this, "", "Your previous user info is incorrect. Please login again!");
+				Utils.showAlert(MainActivity.this, "", "Your previous user info is incorrect. Please login again!");
 				onclickLogout(null);
 			}
 		}
@@ -336,14 +332,6 @@ public class MainActivity extends FragmentActivity {
 
 	public HomeFragment getHomeFragment() {
 		return homeFragment;
-	}
-
-	public MyQuestionsFragment getMyQuestionsFragment() {
-		return myQuestionsFragment;
-	}
-
-	public MyAnswersFragment getMyAnswersFragment() {
-		return myAnswersFragment;
 	}
 
 	public int getCur_frag() {

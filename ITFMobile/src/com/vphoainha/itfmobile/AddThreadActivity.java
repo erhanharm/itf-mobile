@@ -1,5 +1,6 @@
 package com.vphoainha.itfmobile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,72 +37,104 @@ import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.AttachPicture;
 import com.vphoainha.itfmobile.model.Folder;
 import com.vphoainha.itfmobile.model.Tag;
-import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.model.TThread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.UploadPicture;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class AddThreadActivity extends FatherActivity {
 	private static final int ACTIVITY_SELECT_IMAGE = 1889;
-	
+
 	EditText txtContent, txtTitle;
 	ChipsMultiAutoCompleteTextview txtKeyword;
 	ListView lvAttach;
-	
+
 	private List<Tag> tags;
 	private List<AttachPicture> attachPictures;
-	
+
 	List<String> listAskOption;
 	ArrayAdapter<String> dataAskOptionAdapter;
 	AttachPictureAdapter attachPictureAdapter;
-	
+
 	Context context;
-	private int mode=1;
-	private Thread curThread;
-	
+	private int mode = 1;
+	private TThread curThread;
+
+	private ProgressDialog dialog = null;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_thread);
 		initFather();
-		
+
 		txtContent = (EditText) findViewById(R.id.txtContent);
 		txtTitle = (EditText) findViewById(R.id.txtTitle);
 		txtKeyword = (ChipsMultiAutoCompleteTextview) findViewById(R.id.txtKeyword);
-		
-		mode=getIntent().getIntExtra("mode", 1);
-		if(mode==1) tvTitle.setText("Post a new thread");
-		else{
-			curThread=(Thread)getIntent().getSerializableExtra("thread");
+
+		mode = getIntent().getIntExtra("mode", 1);
+		if (mode == 1)
+			tvTitle.setText("Post a new thread");
+		else {
+			curThread = (TThread) getIntent().getSerializableExtra("thread");
 			tvTitle.setText("Edit thread");
 			txtTitle.setEnabled(false);
-			
+
 			txtTitle.setText(curThread.getTitle());
 			txtContent.setText(curThread.getContent());
 		}
-		
+
 		tvSubTitle.setVisibility(View.GONE);
 		btn_ok.setVisibility(View.VISIBLE);
 		btn_ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mode==1)	wsAddThread();
-				else wsEditThread();
+				String content = txtContent.getText().toString().trim();
+				String title = txtTitle.getText().toString().trim();
+				if (title.equals("")) {
+					Toast.makeText(context, "Please fill title of this thread!", Toast.LENGTH_SHORT).show();
+				} else if (content.equals("")) {
+					Toast.makeText(context, "Please fill content of this thread!", Toast.LENGTH_SHORT).show();
+				} else if (!Utils.checkInternetConnection(AddThreadActivity.this)) {
+					Toast.makeText(AddThreadActivity.this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
+				} else {
+					String tag = txtKeyword.getText().toString();
+					tag = tag.replace(",", ", ");
+					tag = tag.replaceAll("\\s+", " ");
+					tag = tag.replace(" ,", ",").trim();
+					if (tag.length() > 0 && tag.charAt(tag.length() - 1) != ',')
+						tag += ',';
+
+					String pictures = "";
+					for (AttachPicture attachPicture : attachPictures)
+						pictures += attachPicture.getName() + "|";
+					if (pictures.length() > 0) {
+						pictures += "_";
+						pictures = pictures.replace("|_", "");
+					}
+
+					if (mode == 1) {
+						Folder f = AppData.folders.get(AppData.folders.size() - 1);
+						wsAddThread(f.getId(), title, content, tag, pictures);
+					} else
+						wsEditThread();
+				}
 			}
 		});
-		
+
 		tags = new ArrayList<Tag>();
 		this.context = this;
-		
+
 		wsGetKeywords();
 		initAttachPicList();
 	}
-	
+
 	public void onClickTagInfo(View v) {
-		Util.showAlert(this, "Tag tag", "You can tag your question with some tag split by , character. Type some things and select tag from dropdown or use , for make a new tag.");
+		Utils.showAlert(this, "Tag tag", "You can tag your question with some tag split by , character. Type some things and select tag from dropdown or use , for make a new tag.");
 	}
-	
+
 	private void initAttachPicList() {
 		lvAttach = (ListView) findViewById(R.id.lvAttach);
 		attachPictures = new ArrayList<AttachPicture>();
@@ -120,7 +153,7 @@ public class AddThreadActivity extends FatherActivity {
 		Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		startActivityForResult(galleryIntent, ACTIVITY_SELECT_IMAGE);
 	}
-	
+
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ACTIVITY_SELECT_IMAGE && resultCode == RESULT_OK && null != data) {
 			Uri selectedImage = data.getData();
@@ -131,71 +164,77 @@ public class AddThreadActivity extends FatherActivity {
 			String picturePath = cursor.getString(columnIndex);
 			cursor.close();
 
-			AttachPicture attachPicture = new AttachPicture();
-			attachPicture.setFileName(picturePath);
+			File file = new File(picturePath);
+			long length = file.length();
+			if (length / 1024.0 / 1024 < 2) {
+				AttachPicture attachPicture = new AttachPicture();
+				attachPicture.setFileName(picturePath);
 
-			int j = picturePath.lastIndexOf(".");
-			String extension = picturePath.substring(j + 1);
-			attachPicture.setName(new Date().getTime() + "." + extension);
-			attachPicture.setBitmap(BitmapFactory.decodeFile(picturePath));
+				int j = picturePath.lastIndexOf(".");
+				String extension = picturePath.substring(j + 1);
+				attachPicture.setName(new Date().getTime() + "." + extension);
+				attachPicture.setBitmap(BitmapFactory.decodeFile(picturePath));
 
-			attachPictures.add(attachPicture);
-			attachPictureAdapter.notifyDataSetChanged();
-			Util.setListViewHeightBasedOnChildren(lvAttach, attachPictureAdapter);
-		}
-	}
-
-	public void wsAddThread() {
-		String content = txtContent.getText().toString().trim();
-		String title = txtTitle.getText().toString().trim();
-		if (title.equals("")) {
-			Toast.makeText(context, "Please fill title of this thread!", Toast.LENGTH_SHORT).show();
-		}else if (content.equals("")) {
-			Toast.makeText(context, "Please fill content of this thread!", Toast.LENGTH_SHORT).show();
-		} else {
-			if(!Util.checkInternetConnection(this))
-				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
-			else{
-				Folder f=AppData.folders.get(AppData.folders.size()-1);
-				
-				String tag = txtKeyword.getText().toString();
-				tag = tag.replace(",", ", ");
-				tag = tag.replaceAll("\\s+", " ");
-				tag = tag.replace(" ,", ",").trim();
-				if (tag.length() > 0 && tag.charAt(tag.length() - 1) != ',')
-					tag += ',';
-
-				String pictures="";
-				for(AttachPicture attachPicture:attachPictures)
-					pictures+=attachPicture.getName()+"|";
-				if(pictures.length()>0) {
-					pictures+="_";
-					pictures=pictures.replace("|_", "");
-				}
-				
-				(new jsAddThread())
-					.execute(new String[] { WsUrl.URL_ADD_THREAD,
-							title,
-							content,
-							Integer.toString(f.getId()),
-							Integer.toString(AppData.saveUser.getId()),
-							tag, pictures});
+				for (AttachPicture a : attachPictures)
+					if (a.getFileName().equals(attachPicture.getFileName())) {
+						Toast.makeText(context, "Duplicated!", Toast.LENGTH_SHORT).show();
+						return;
+					}
+				attachPictures.add(attachPicture);
+				attachPictureAdapter.notifyDataSetChanged();
+				Utils.setListViewHeightBasedOnChildren(lvAttach, attachPictureAdapter);
+			} else {
+				Utils.showAlert(this, "", "Sorry! The picture size is over 2MB. Please select another picture!");
 			}
 		}
 	}
 
+	public void wsAddThread(final int folderId, final String title, final String content, final String tags, final String pictures) {
+
+		if (attachPictures.size() > 0) {
+			dialog = ProgressDialog.show(AddThreadActivity.this, "", "Uploading screenshots...", true);
+			// messageText.setText("uploading started.....");
+			new Thread(new Runnable() {
+				int i;
+
+				public void run() {
+					for (i = 0; i < attachPictures.size(); i++) {
+						runOnUiThread(new Runnable() {
+							public void run() {
+								dialog.setMessage("Uploading screenshots (" + (i + 1) + "/" + attachPictures.size() + ")...");
+							}
+						});
+
+						try {
+							UploadPicture.uploadFile(WsUrl.URL_UPLOAD_IMAGE, attachPictures.get(i).getFileName(), attachPictures.get(i).getName());
+						} catch (Exception e) {
+						}
+					}
+					dialog.dismiss();
+
+					runOnUiThread(new Runnable() {
+						public void run() {
+							(new jsAddThread()).execute(new String[] { WsUrl.URL_ADD_THREAD, title, content, Integer.toString(folderId), Integer.toString(AppData.saveUser.getId()), tags, pictures });
+						}
+					});
+				}
+			}).start();
+		} else
+			(new jsAddThread()).execute(new String[] { WsUrl.URL_ADD_THREAD, title, content, Integer.toString(folderId), Integer.toString(AppData.saveUser.getId()), tags, pictures });
+	}
+
 	public class jsAddThread extends AsyncTask<String, Void, String> {
 		ProgressDialog pd;
-		
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			pd=new ProgressDialog(AddThreadActivity.this);
+			pd = new ProgressDialog(AddThreadActivity.this);
 			pd.setMessage("Posting...");
 			pd.setCancelable(false);
 			pd.show();
 		}
-		
+
 		@Override
 		protected String doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
@@ -205,7 +244,7 @@ public class AddThreadActivity extends FatherActivity {
 			par.add(new BasicNameValuePair("user_id", params[4]));
 			par.add(new BasicNameValuePair("tags", params[5]));
 			par.add(new BasicNameValuePair("pictures", params[6]));
-			
+
 			JSONParser jsonParser = new JSONParser();
 			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
 			Log.d("Create Response", json.toString());
@@ -226,11 +265,12 @@ public class AddThreadActivity extends FatherActivity {
 
 		@Override
 		protected void onPostExecute(String result) {
-			if(pd!=null && pd.isShowing())  pd.dismiss();
-			
+			if (pd != null && pd.isShowing())
+				pd.dismiss();
+
 			if (result != null) {
 				Toast.makeText(context, "Your thread was posted!", Toast.LENGTH_SHORT).show();
-				
+
 				setResult(RESULT_OK);
 				finish();
 			} else {
@@ -238,38 +278,33 @@ public class AddThreadActivity extends FatherActivity {
 			}
 		}
 	}
-	
+
 	public void wsEditThread() {
 		String content = txtContent.getText().toString().trim();
 		String title = txtTitle.getText().toString().trim();
 		if (content.equals("")) {
 			Toast.makeText(context, "Please fill content of this thread!", Toast.LENGTH_SHORT).show();
 		} else {
-			if(!Util.checkInternetConnection(this))
+			if (!Utils.checkInternetConnection(this))
 				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
-			else{
-				(new jsEditThread())
-					.execute(new String[] { WsUrl.URL_EDIT_THREAD,
-							title,
-							content,
-							Integer.toString(1),
-							Integer.toString(curThread.getId())});
+			else {
+				(new jsEditThread()).execute(new String[] { WsUrl.URL_EDIT_THREAD, title, content, Integer.toString(1), Integer.toString(curThread.getId()) });
 			}
 		}
 	}
 
 	public class jsEditThread extends AsyncTask<String, Void, String> {
 		ProgressDialog pd;
-		
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			pd=new ProgressDialog(AddThreadActivity.this);
+			pd = new ProgressDialog(AddThreadActivity.this);
 			pd.setMessage("Saving...");
 			pd.setCancelable(false);
 			pd.show();
 		}
-		
+
 		@Override
 		protected String doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
@@ -277,7 +312,7 @@ public class AddThreadActivity extends FatherActivity {
 			par.add(new BasicNameValuePair("content", params[2]));
 			par.add(new BasicNameValuePair("status", params[3]));
 			par.add(new BasicNameValuePair("thread_id", params[4]));
-			
+
 			JSONParser jsonParser = new JSONParser();
 			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
 			Log.d("Create Response", json.toString());
@@ -298,12 +333,13 @@ public class AddThreadActivity extends FatherActivity {
 
 		@Override
 		protected void onPostExecute(String result) {
-			if(pd!=null && pd.isShowing())  pd.dismiss();
-			
+			if (pd != null && pd.isShowing())
+				pd.dismiss();
+
 			if (result != null) {
 				Toast.makeText(context, "Your thread was saved!", Toast.LENGTH_SHORT).show();
-				
-				Intent in=new Intent();
+
+				Intent in = new Intent();
 				in.putExtra("content", txtContent.getText().toString());
 				setResult(RESULT_OK, in);
 				finish();
@@ -312,9 +348,9 @@ public class AddThreadActivity extends FatherActivity {
 			}
 		}
 	}
-	
+
 	private void wsGetKeywords() {
-		if (!Util.checkInternetConnection(this))
+		if (!Utils.checkInternetConnection(this))
 			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else
 			(new jsGetKeywords()).execute(new String[] { WsUrl.URL_GET_TAGS });

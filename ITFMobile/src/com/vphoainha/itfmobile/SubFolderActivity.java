@@ -28,16 +28,16 @@ import com.vphoainha.itfmobile.adapter.FolderAdapter;
 import com.vphoainha.itfmobile.adapter.ThreadAdapter;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
-import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.model.TThread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 
 public class SubFolderActivity extends FatherActivity {
-	List<Thread> threads;
+	List<TThread> threads;
 	String msg;
 	
 	Folder curFolder;
@@ -65,7 +65,7 @@ public class SubFolderActivity extends FatherActivity {
 		subFolders=AppData.getSubFolders(curFolder.getId());
 		FolderAdapter adapter = new FolderAdapter(SubFolderActivity.this,R.layout.list_item_folder, R.id.tvId, subFolders);
 		lvFolder.setAdapter(adapter);
-		Util.setListViewHeightBasedOnChildren(lvFolder, adapter);
+		Utils.setListViewHeightBasedOnChildren(lvFolder, adapter);
 		if(subFolders.size()<=0){
 			((LinearLayout)findViewById(R.id.lnFolder)).setVisibility(View.GONE);
 		}
@@ -113,7 +113,7 @@ public class SubFolderActivity extends FatherActivity {
 	}
 
 	public void wsGetThreads() {
-		if(!Util.checkInternetConnection(this))
+		if(!Utils.checkInternetConnection(this))
 			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else{
 			int user_id=(AppData.isLogin?AppData.saveUser.getId():-1);
@@ -150,14 +150,14 @@ public class SubFolderActivity extends FatherActivity {
 			try {
 				int success = json.getInt(JsonTag.TAG_SUCCESS);
 				if (success == 1) {
-					threads = new ArrayList<Thread>();
+					threads = new ArrayList<TThread>();
 					JSONArray array = json.getJSONArray(JsonTag.TAG_THREADS);
 
 					// looping through All Products
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject obj = array.getJSONObject(i);
 
-						Thread t = new Thread();
+						TThread t = new TThread();
 						t.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
 						t.setTitle(obj.getString(JsonTag.TAG_TITLE));
 						t.setContent(obj.getString(JsonTag.TAG_CONTENT));
@@ -202,7 +202,7 @@ public class SubFolderActivity extends FatherActivity {
 								R.layout.list_item_thread, R.id.tvId,
 								threads);
 						lvThread.setAdapter(threadAdapter);
-						Util.setListViewHeightBasedOnChildren(lvThread, threadAdapter);
+						Utils.setListViewHeightBasedOnChildren(lvThread, threadAdapter);
 						if(threads.size()<=0){
 							((LinearLayout)findViewById(R.id.lnThread)).setVisibility(View.GONE);
 						}
@@ -223,7 +223,7 @@ public class SubFolderActivity extends FatherActivity {
 	}
 	
 	public void wsViewThread() {
-		if(!Util.checkInternetConnection(this))
+		if(!Utils.checkInternetConnection(this))
 			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else	
 			(new jsViewThread()).execute(new String[] { WsUrl.URL_VIEW_THREAD, Integer.toString(threads.get(selectedIndexThread).getId()) });
@@ -248,8 +248,7 @@ public class SubFolderActivity extends FatherActivity {
 			par.add(new BasicNameValuePair("thread_id", params[1]));
 			
 			JSONParser jsonParser = new JSONParser();
-			JSONObject json = jsonParser
-					.makeHttpRequest(params[0], "POST", par);
+			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
 			Log.d("Create Response", json.toString());
 			try {
 				int success = json.getInt(JsonTag.TAG_SUCCESS);

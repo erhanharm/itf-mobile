@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class RegisterActivity extends FatherActivity {
@@ -54,16 +54,16 @@ public class RegisterActivity extends FatherActivity {
 			String confirm = txtConfirm.getText().toString();
 			if(!confirm.equals(password)) msg="Confirm password is not same with password!";
 			if(password.equals("")) msg="Password is not be empty!";
-			if(!Util.validateEmail(email)) msg="Email is not correct!";
+			if(!Utils.validateEmail(email)) msg="Email is not correct!";
 			if(username.equals("")) msg="User name is not be empty!";
 			if(!msg.equals("")){
-				Util.showAlert(RegisterActivity.this, "", msg);
+				Utils.showAlert(RegisterActivity.this, "", msg);
 				return;
 			}
 			
-			if(!Util.checkInternetConnection(this))
+			if(!Utils.checkInternetConnection(this))
 				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
-			else accessWebserviceREGISTER(username, email, Util.md5(password), Util.getDeviceID(this));
+			else accessWebserviceREGISTER(username, email, Utils.md5(password), Utils.getDeviceID(this));
 		}
 	}
 

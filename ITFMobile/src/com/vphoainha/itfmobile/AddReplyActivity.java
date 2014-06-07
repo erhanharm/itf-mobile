@@ -22,7 +22,7 @@ import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Reply;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 public class AddReplyActivity extends FatherActivity {
@@ -72,7 +72,7 @@ public class AddReplyActivity extends FatherActivity {
 		if (content.equals("")) {
 			Toast.makeText(context, "Please fill content of this reply!", Toast.LENGTH_SHORT).show();
 		} else {
-			if(!Util.checkInternetConnection(this))
+			if(!Utils.checkInternetConnection(this))
 				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 			else{
 				(new jsAddReply())
@@ -141,7 +141,7 @@ public class AddReplyActivity extends FatherActivity {
 		if (content.equals("")) {
 			Toast.makeText(context, "Please fill content of this reply!", Toast.LENGTH_SHORT).show();
 		} else {
-			if(!Util.checkInternetConnection(this))
+			if(!Utils.checkInternetConnection(this))
 				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 			else{
 				(new jsEditReply())

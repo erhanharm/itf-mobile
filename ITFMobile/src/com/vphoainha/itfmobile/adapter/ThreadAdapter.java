@@ -2,29 +2,32 @@ package com.vphoainha.itfmobile.adapter;
 
 import java.util.List;
 
+import javax.crypto.spec.IvParameterSpec;
+
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vphoainha.itfmobile.R;
-import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.model.TThread;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 
-public class ThreadAdapter extends ArrayAdapter<Thread> {
+public class ThreadAdapter extends ArrayAdapter<TThread> {
 	
 	Activity act;
-	List<Thread> lst;
+	List<TThread> lst;
 	String msg;
 	
-	Thread save_q;
+	TThread save_q;
 	int save_pos;
 	
-	public ThreadAdapter(Activity context, int resource, int textViewResourceId, List<Thread> objects) {
+	public ThreadAdapter(Activity context, int resource, int textViewResourceId, List<TThread> objects) {
 		super(context, resource, textViewResourceId, objects);
 		act=context;
 		lst=objects;
@@ -32,6 +35,7 @@ public class ThreadAdapter extends ArrayAdapter<Thread> {
 	
 	public static class ViewHolder {
 		public TextView tvDate, tvTitle, tvAuthor, tvNumview, tvNumreply;
+		public ImageView ivHasAttach;
 	}
 
 	@Override
@@ -48,18 +52,22 @@ public class ThreadAdapter extends ArrayAdapter<Thread> {
 			holder.tvAuthor = (TextView) convertView.findViewById(R.id.tvAuthor);
 			holder.tvNumview=(TextView)convertView.findViewById(R.id.tvNumview);
 			holder.tvNumreply=(TextView)convertView.findViewById(R.id.tvNumreply);
+			holder.ivHasAttach=(ImageView)convertView.findViewById(R.id.ivHasAttach);
 			convertView.setTag(holder);
 	    }
 		holder = (ViewHolder) convertView.getTag();
 
-		Thread f = lst.get(position);
+		TThread f = lst.get(position);
 
 		holder.tvDate.setText(DateTimeHelper.dateTimeToDateString(f.getTime()));
 		holder.tvTitle.setText(f.getTitle());
 		holder.tvAuthor.setText(f.getUserName());
 		holder.tvNumreply.setText(f.getNum_reply()+" replies");
 		holder.tvNumview.setText(f.getNum_view()+" views");
-
+		
+		if(f.getPictures()==null || f.getPictures().equals("")) holder.ivHasAttach.setVisibility(View.GONE);
+		holder.ivHasAttach.setVisibility(View.VISIBLE);
+		
 		return convertView;
 	}
 

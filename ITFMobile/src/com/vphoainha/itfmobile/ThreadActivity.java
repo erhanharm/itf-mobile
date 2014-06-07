@@ -26,14 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vphoainha.itfmobile.adapter.ReplyAdapter;
-import com.vphoainha.itfmobile.adapter.ReplyAdapter.jsLikeDislike;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Reply;
-import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.model.TThread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
-import com.vphoainha.itfmobile.util.Util;
+import com.vphoainha.itfmobile.util.Utils;
 import com.vphoainha.itfmobile.util.WsUrl;
 
 
@@ -41,7 +40,7 @@ public class ThreadActivity extends FatherActivity {
 	List<Reply> replies;
 	String msg;
 	
-	Thread curThread;
+	TThread curThread;
 	
 	ListView lvReply;
 	public TextView tvTime, tvContent, tvAuthor, tvNumLike, tvNumDisLike, tvEdit, tvDelete, tvQuote, tvTag;
@@ -62,7 +61,7 @@ public class ThreadActivity extends FatherActivity {
 		}
 		else tvSubTitle.setVisibility(View.GONE);
 		
-		curThread=(Thread)getIntent().getSerializableExtra("thread");
+		curThread=(TThread)getIntent().getSerializableExtra("thread");
 		tvTitle.setText(curThread.getTitle());
 		
 		tvTime = (TextView) findViewById(R.id.tvTime);
@@ -179,6 +178,25 @@ public class ThreadActivity extends FatherActivity {
 			}
 		});
 		
+		LinearLayout lnPictures = (LinearLayout) findViewById(R.id.lnPictures);
+		TextView tvPictures = (TextView) findViewById(R.id.tvPictures);
+		
+		int num_pics=0;
+		for(Character c:curThread.getPictures().toCharArray())
+			if(c==';') num_pics++;
+		if(curThread.getPictures().trim().length()>0) num_pics++;
+		tvPictures.setText(num_pics+" pictures attached");
+		if(num_pics>0) lnPictures.setVisibility(View.VISIBLE);
+		else lnPictures.setVisibility(View.GONE);
+		lnPictures.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ThreadActivity.this, AttachedPicturesActivity.class);
+				intent.putExtra("pictures", curThread.getPictures());
+				startActivity(intent);
+			}
+		});
+		
 		wsGetReplies();
 	}
 	
@@ -191,19 +209,19 @@ public class ThreadActivity extends FatherActivity {
 		cdislike=getResources().getColor(R.color.text_dislike);
 		cundislike=getResources().getColor(R.color.text_undislike);
 		if(curThread.getIsLiked()==1){
-			ivLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "like"));
+			ivLike.setImageDrawable(Utils.getDrawable(ThreadActivity.this, "like"));
 			tvNumLike.setTextColor(clike);
 		}
 		else {
-			ivLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "unlike"));
+			ivLike.setImageDrawable(Utils.getDrawable(ThreadActivity.this, "unlike"));
 			tvNumLike.setTextColor(cunlike);
 		}
 		if(curThread.getIsDisliked()==1){
-			ivDisLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "dislike"));
+			ivDisLike.setImageDrawable(Utils.getDrawable(ThreadActivity.this, "dislike"));
 			tvNumDisLike.setTextColor(cdislike);
 		}
 		else{
-			ivDisLike.setImageDrawable(Util.getDrawable(ThreadActivity.this, "undislike"));
+			ivDisLike.setImageDrawable(Utils.getDrawable(ThreadActivity.this, "undislike"));
 			tvNumDisLike.setTextColor(cundislike);
 		}
 	}
@@ -221,7 +239,7 @@ public class ThreadActivity extends FatherActivity {
 	}
 
 	public void wsGetReplies() {
-		if(!Util.checkInternetConnection(this))
+		if(!Utils.checkInternetConnection(this))
 			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else{
 			int user_id=(AppData.isLogin?AppData.saveUser.getId():-1);
@@ -303,7 +321,7 @@ public class ThreadActivity extends FatherActivity {
 								R.layout.list_item_thread, R.id.tvId,
 								replies);
 						lvReply.setAdapter(adapter);
-						Util.setListViewHeightBasedOnChildren(lvReply, adapter);
+						Utils.setListViewHeightBasedOnChildren(lvReply, adapter);
 					}
 				});
 			} else {
@@ -313,7 +331,7 @@ public class ThreadActivity extends FatherActivity {
 	}
 	
 	public void wsDeleteThread() {
-			if(!Util.checkInternetConnection(this))
+			if(!Utils.checkInternetConnection(this))
 				Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 			else{
 				(new jsDeleteThread())
