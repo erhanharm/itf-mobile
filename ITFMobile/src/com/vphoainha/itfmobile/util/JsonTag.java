@@ -49,7 +49,7 @@ public class JsonTag {
 	public final static String TAG_ISLIKED = "is_liked";
 	public final static String TAG_ISDISLIKED = "is_disliked";
 	
-	
+	public final static String TAG_NOTIFICATION = "notifications";
 	
 	
 	

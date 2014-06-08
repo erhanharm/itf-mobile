@@ -40,6 +40,7 @@ public class WsUrl {
 	
 	public final static String URL_UPLOAD_IMAGE = URL + "upload_image.php";
 	
+	public final static String URL_ADD_NOTIFICATION = URL + "add_notification.php";
 	public final static String URL_GET_NOTIFICATIONS = URL + "get_notifications.php";
 	
 	

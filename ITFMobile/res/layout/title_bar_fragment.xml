@@ -61,6 +61,7 @@
             android:src="@drawable/alert" />
 
         <FrameLayout
+            android:id="@+id/fl_numunread"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_gravity="top|right"

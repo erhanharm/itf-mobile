@@ -70,12 +70,16 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 
 		((MainActivity) getActivity()).changeMainTitleBarText(getString(R.string.app_name));
 		
-		lvHome = (ListView) view.findViewById(R.id.lvHome);
+		lstFolder1=new ArrayList<Folder>();
+		lstFolder2=new ArrayList<List<Folder>>();;
 		
 		inflater = LayoutInflater.from(getActivity());
 		adapter = new HomeFolderAdapter();
         adapter.delegate = HomeFragment.this;
+        
+        lvHome = (ListView) view.findViewById(R.id.lvHome);
         lvHome.setOnItemClickListener(adapter.itemClickListener);
+        lvHome.setAdapter(adapter);
 		
         wsGetFolders();
 		return view;
@@ -229,8 +233,8 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 			if(pd!=null && pd.isShowing())  pd.dismiss();
 			
 			if (result==1) {
-				lstFolder1=new ArrayList<Folder>();
-				lstFolder2=new ArrayList<List<Folder>>();
+				lstFolder1.clear();
+				lstFolder2.clear();
 				
 				for(Folder f:AppData.allFolders)
 					if(f.getParrentId()==-1)
@@ -246,11 +250,7 @@ public class HomeFragment extends Fragment implements SectionListAdapterAdapterD
 					lstFolder2.add(lst);
 				}
 				
-				((MainActivity) getActivity()).runOnUiThread(new Runnable() {
-					public void run() {
-						lvHome.setAdapter(adapter);
-					}
-				});
+				adapter.notifyDataSetChanged();
 			} else {
 				Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
 			}

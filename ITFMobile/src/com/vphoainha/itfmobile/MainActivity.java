@@ -2,6 +2,8 @@ package com.vphoainha.itfmobile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -42,6 +44,8 @@ import com.vphoainha.itfmobile.view.CustomSlidingPaneLayout;
 
 public class MainActivity extends FragmentActivity {
 
+	private static final int ADD_FOLDER = 0;
+	
 	final int FRAG_HOME=0;
 	final int FRAG_SEARCH=1;
 	final int FRAG_PROFILE=3;
@@ -51,10 +55,10 @@ public class MainActivity extends FragmentActivity {
 	private MySharedPreferences mySharedPreferences;
 	
 	private LinearLayout lnMyQuestions, lnMyAnswers, lnMyRating, lnAccount, lnLogin, lnLogout;
-	private TextView tvUsername, tvUserEmail, tv_title;
+	private TextView tvUsername, tvUserEmail, tv_title, tv_numnotify;
 	private EditText txtSearch;
 	private ImageButton btnSearch, btnAddFolder;
-	private FrameLayout fl_numnotify;
+	private FrameLayout fl_numnotify, fl_numunread;
 
 	private boolean _doubleBackToExitPressedOnce = false;
 	
@@ -65,6 +69,9 @@ public class MainActivity extends FragmentActivity {
 	SearchFragment searchFragment;
 	ProfileFragment profileFragment;
 	TopMemberFragment topMemberFragment;
+	
+	private Timer _timer;
+	TickClass timer_tick;
 	
 	@Override
 	public void onCreate(Bundle arg0) {
@@ -89,7 +96,9 @@ public class MainActivity extends FragmentActivity {
 		tvUsername = (TextView) findViewById(R.id.tvUserName);
 		tvUserEmail = (TextView) findViewById(R.id.tvUserEmail);
 		tv_title = (TextView) findViewById(R.id.tv_title);
+		tv_numnotify = (TextView) findViewById(R.id.tv_numnotify);
 		fl_numnotify = (FrameLayout) findViewById(R.id.fl_numnotify);
+		fl_numunread = (FrameLayout) findViewById(R.id.fl_numunread);
 		btnAddFolder = (ImageButton) findViewById(R.id.btn_add_folder);
 
 		lnMyQuestions = (LinearLayout) findViewById(R.id.lnMyQuestions);
@@ -110,7 +119,7 @@ public class MainActivity extends FragmentActivity {
 		btnAddFolder.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(MainActivity.this, AddFolderActivity.class));
+				startActivityForResult(new Intent(MainActivity.this, AddFolderActivity.class), ADD_FOLDER);
 			}
 		});
 
@@ -118,6 +127,10 @@ public class MainActivity extends FragmentActivity {
 		cur_frag=FRAG_HOME;
 		homeFragment=HomeFragment.newInstance();
 		setView(homeFragment);
+		
+		_timer = new Timer();
+		timer_tick = new TickClass();
+		_timer.scheduleAtFixedRate(timer_tick, 0, 1000);
 	}
 	
 	private void init(){
@@ -128,7 +141,7 @@ public class MainActivity extends FragmentActivity {
 		mySharedPreferences.getSaveUserPreferences();
 		if(AppData.isLogin){
 			Log.i("======", AppData.saveUser.getEmail()+"    "+ AppData.saveUser.getPassword());
-			(new JsonReadTaskReLogin()).execute(new String[] { WsUrl.URL_LOGIN, AppData.saveUser.getUsername(), AppData.saveUser.getPassword(), Utils.getDeviceID(this)});
+			(new jsReLogin()).execute(new String[] { WsUrl.URL_LOGIN, AppData.saveUser.getUsername(), AppData.saveUser.getPassword(), Utils.getDeviceID(this)});
 		}		
 	}
 	
@@ -162,6 +175,9 @@ public class MainActivity extends FragmentActivity {
 //			if(cur_frag==1) myQuestionsFragment.accessWebserviceReset();
 //			if(cur_frag==2) myAnswersFragment.accessWebserviceReset();
 //		}
+		if(arg0==ADD_FOLDER && arg1==RESULT_OK){
+			homeFragment.wsGetFolders();
+		}
 	}
 	
 	@Override
@@ -285,7 +301,7 @@ public class MainActivity extends FragmentActivity {
 
 	
 	//recheck login
-	public class JsonReadTaskReLogin extends AsyncTask<String, Void, Integer> {
+	public class jsReLogin extends AsyncTask<String, Void, Integer> {
 //		ProgressDialog pd;
 		
 		@Override
@@ -348,6 +364,26 @@ public class MainActivity extends FragmentActivity {
 
 	public int getCur_frag() {
 		return cur_frag;
+	}
+	
+	class TickClass extends TimerTask {
+		@Override
+		public void run() {
+			if (Integer.parseInt(tv_numnotify.getText().toString())==Utils.numUnreadNotifications)
+				return;
+
+			runOnUiThread(new Runnable() {
+				public void run() {
+					if (Utils.numUnreadNotifications == 0) {
+						fl_numunread.setVisibility(View.GONE);
+					} else {
+						tv_numnotify.setText(Utils.numUnreadNotifications+"");
+						fl_numunread.setVisibility(View.VISIBLE);
+					}
+				}
+			});
+			
+		}
 	}
 	
 	

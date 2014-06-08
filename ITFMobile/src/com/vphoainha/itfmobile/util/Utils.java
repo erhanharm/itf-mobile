@@ -18,6 +18,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 public class Utils {
+	public static String regId="";
+	public static int numUnreadNotifications=0;
+	
 	public static boolean checkInternetConnection(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);

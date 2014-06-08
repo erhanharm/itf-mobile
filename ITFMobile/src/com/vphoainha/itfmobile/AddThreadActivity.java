@@ -33,11 +33,13 @@ import com.kpbird.chipsedittextlibrary.ChipsItem;
 import com.kpbird.chipsedittextlibrary.ChipsMultiAutoCompleteTextview;
 import com.vphoainha.itfmobile.adapter.AttachPictureAdapter;
 import com.vphoainha.itfmobile.adapter.AttachPictureAdapter.OnClickRemove;
+import com.vphoainha.itfmobile.gcm.NotificationUtil;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.AttachPicture;
 import com.vphoainha.itfmobile.model.Folder;
 import com.vphoainha.itfmobile.model.Tag;
 import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.model.User;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.UploadPicture;
@@ -225,7 +227,8 @@ public class AddThreadActivity extends FatherActivity {
 
 	public class jsAddThread extends AsyncTask<String, Void, String> {
 		ProgressDialog pd;
-
+		String[] params;
+		
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -237,6 +240,8 @@ public class AddThreadActivity extends FatherActivity {
 
 		@Override
 		protected String doInBackground(String... params) {
+			this.params=params;
+			
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
 			par.add(new BasicNameValuePair("title", params[1]));
 			par.add(new BasicNameValuePair("content", params[2]));
@@ -271,6 +276,11 @@ public class AddThreadActivity extends FatherActivity {
 			if (result != null) {
 				Toast.makeText(context, "Your thread was posted!", Toast.LENGTH_SHORT).show();
 
+				if(AppData.saveUser.getUserType()==User.USER_ADMIN){
+					Folder f = AppData.folders.get(AppData.folders.size() - 1);
+					NotificationUtil.sendNotify(AddThreadActivity.this, 4, AppData.saveUser.getName()+" posted new thread: \""+params[1]+"\" in folder: \""+f.getName()+"\"");
+				}
+				
 				setResult(RESULT_OK);
 				finish();
 			} else {

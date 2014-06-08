@@ -132,7 +132,7 @@ public class AddFolderActivity extends FatherActivity {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
 			par.add(new BasicNameValuePair("name", params[1]));
 			par.add(new BasicNameValuePair("note", params[2]));
-			par.add(new BasicNameValuePair("parrentId", params[3]));
+			par.add(new BasicNameValuePair("parrent_id", params[3]));
 
 			JSONParser jsonParser = new JSONParser();
 			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);

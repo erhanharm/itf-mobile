@@ -4,14 +4,11 @@ import java.util.Date;
 
 public class Notification {
 	private int id;
-	private int userId;
+	private int userId, forUserId;
 	private String content;
 	private Date time;
 	
 	public Notification(){
-		id = -1;
-		userId = -1;
-		content = "";
 	}
 
 	public int getId() {
@@ -44,6 +41,14 @@ public class Notification {
 
 	public void setTime(Date time) {
 		this.time = time;
+	}
+
+	public int getForUserId() {
+		return forUserId;
+	}
+
+	public void setForUserId(int forUserId) {
+		this.forUserId = forUserId;
 	}
 	
 	

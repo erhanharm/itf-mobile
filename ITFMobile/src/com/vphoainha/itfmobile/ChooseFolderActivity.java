@@ -30,7 +30,7 @@ public class ChooseFolderActivity extends FatherActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 
 				Intent intent = new Intent();
-				intent.putExtra("parrentFodlerId", AppData.allFolders.get(position).getId());
+				intent.putExtra("parrentFolderId", AppData.allFolders.get(position).getId());
 				intent.putExtra("parrentFolderName", AppData.allFolders.get(position).getName());
 				setResult(Activity.RESULT_OK, intent);
 				finish();
