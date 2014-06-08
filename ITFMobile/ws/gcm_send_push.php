@@ -3,7 +3,9 @@
 	//Sending Push Notification
    function send_push_notification($registatoin_ids, $message) {
 
-		$GOOGLE_API_KEY = "AIzaSyA5EjdXfRvmIsys4m3Cc273JXsdZbuYS3M";
+		//echo $registatoin_ids[0];
+   
+		$GOOGLE_API_KEY = "AIzaSyBX45xiF9EKD6LZiR3-SUjJZGU83s4N8go";
    
         // Set POST variables
         $url = 'https://android.googleapis.com/gcm/send';

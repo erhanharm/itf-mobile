@@ -73,7 +73,7 @@
         android:visibility="gone" />
 
     <ImageButton
-        android:id="@+id/btn_new"
+        android:id="@+id/btn_add_thread"
         android:layout_width="45dp"
         android:layout_height="match_parent"
         android:background="@drawable/bg_topbutton"
@@ -86,6 +86,22 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_topbutton"
         android:src="@drawable/ic_reply"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/btn_add_folder"
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_topbutton"
+        android:src="@drawable/btn_add"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/btn_share"
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_topbutton"
+        android:src="@drawable/ic_menu_share"
         android:visibility="gone" />
 
 </LinearLayout>

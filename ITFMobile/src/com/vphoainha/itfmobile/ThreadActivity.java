@@ -28,7 +28,7 @@ import android.widget.Toast;
 import com.vphoainha.itfmobile.adapter.ReplyAdapter;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Reply;
-import com.vphoainha.itfmobile.model.TThread;
+import com.vphoainha.itfmobile.model.Thread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
@@ -40,7 +40,7 @@ public class ThreadActivity extends FatherActivity {
 	List<Reply> replies;
 	String msg;
 	
-	TThread curThread;
+	Thread curThread;
 	
 	ListView lvReply;
 	public TextView tvTime, tvContent, tvAuthor, tvNumLike, tvNumDisLike, tvEdit, tvDelete, tvQuote, tvTag;
@@ -61,7 +61,7 @@ public class ThreadActivity extends FatherActivity {
 		}
 		else tvSubTitle.setVisibility(View.GONE);
 		
-		curThread=(TThread)getIntent().getSerializableExtra("thread");
+		curThread=(Thread)getIntent().getSerializableExtra("thread");
 		tvTitle.setText(curThread.getTitle());
 		
 		tvTime = (TextView) findViewById(R.id.tvTime);

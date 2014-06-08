@@ -15,19 +15,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vphoainha.itfmobile.R;
-import com.vphoainha.itfmobile.model.TThread;
+import com.vphoainha.itfmobile.model.Thread;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 
-public class ThreadAdapter extends ArrayAdapter<TThread> {
+public class ThreadAdapter extends ArrayAdapter<Thread> {
 	
 	Activity act;
-	List<TThread> lst;
+	List<Thread> lst;
 	String msg;
 	
-	TThread save_q;
+	Thread save_q;
 	int save_pos;
 	
-	public ThreadAdapter(Activity context, int resource, int textViewResourceId, List<TThread> objects) {
+	public ThreadAdapter(Activity context, int resource, int textViewResourceId, List<Thread> objects) {
 		super(context, resource, textViewResourceId, objects);
 		act=context;
 		lst=objects;
@@ -57,7 +57,7 @@ public class ThreadAdapter extends ArrayAdapter<TThread> {
 	    }
 		holder = (ViewHolder) convertView.getTag();
 
-		TThread f = lst.get(position);
+		Thread f = lst.get(position);
 
 		holder.tvDate.setText(DateTimeHelper.dateTimeToDateString(f.getTime()));
 		holder.tvTitle.setText(f.getTitle());

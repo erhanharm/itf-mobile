@@ -28,7 +28,7 @@ import com.vphoainha.itfmobile.adapter.FolderAdapter;
 import com.vphoainha.itfmobile.adapter.ThreadAdapter;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Folder;
-import com.vphoainha.itfmobile.model.TThread;
+import com.vphoainha.itfmobile.model.Thread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
@@ -37,7 +37,7 @@ import com.vphoainha.itfmobile.util.WsUrl;
 
 
 public class SubFolderActivity extends FatherActivity {
-	List<TThread> threads;
+	List<Thread> threads;
 	String msg;
 	
 	Folder curFolder;
@@ -80,8 +80,8 @@ public class SubFolderActivity extends FatherActivity {
 		
 		TextView tvThreadsinFolder = (TextView) findViewById(R.id.tvThreadsinFolder);
 		tvThreadsinFolder.setText(tvThreadsinFolder.getText().toString()+curFolder.getName());
-		btn_new.setVisibility(View.VISIBLE);
-		btn_new.setOnClickListener(new OnClickListener() {
+		btn_add_thread.setVisibility(View.VISIBLE);
+		btn_add_thread.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				if(!AppData.isLogin){
@@ -150,14 +150,14 @@ public class SubFolderActivity extends FatherActivity {
 			try {
 				int success = json.getInt(JsonTag.TAG_SUCCESS);
 				if (success == 1) {
-					threads = new ArrayList<TThread>();
+					threads = new ArrayList<Thread>();
 					JSONArray array = json.getJSONArray(JsonTag.TAG_THREADS);
 
 					// looping through All Products
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject obj = array.getJSONObject(i);
 
-						TThread t = new TThread();
+						Thread t = new Thread();
 						t.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
 						t.setTitle(obj.getString(JsonTag.TAG_TITLE));
 						t.setContent(obj.getString(JsonTag.TAG_CONTENT));

@@ -32,7 +32,7 @@ import com.vphoainha.itfmobile.R;
 import com.vphoainha.itfmobile.ThreadActivity;
 import com.vphoainha.itfmobile.adapter.ThreadAdapter;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
-import com.vphoainha.itfmobile.model.TThread;
+import com.vphoainha.itfmobile.model.Thread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
@@ -42,7 +42,7 @@ import com.vphoainha.itfmobile.util.WsUrl;
 public class SearchFragment extends Fragment {
 	static View view;	
 	
-	private List<TThread> threads;
+	private List<Thread> threads;
 	
 	private ListView lvThread;
 	private EditText txtSearch;
@@ -123,7 +123,7 @@ public class SearchFragment extends Fragment {
 			pd.setCancelable(false);
 			pd.show();
 			
-			threads = new ArrayList<TThread>();
+			threads = new ArrayList<Thread>();
 		}
 		
 		@Override
@@ -146,7 +146,7 @@ public class SearchFragment extends Fragment {
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject obj = array.getJSONObject(i);
 
-						TThread t = new TThread();
+						Thread t = new Thread();
 						t.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
 						t.setTitle(obj.getString(JsonTag.TAG_TITLE));
 						t.setContent(obj.getString(JsonTag.TAG_CONTENT));

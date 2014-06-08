@@ -3,6 +3,10 @@ package com.vphoainha.itfmobile.model;
 import java.util.Date;
 
 public class User {
+	public static final int USER_ADMIN=1;
+	public static final int USER_NORMAL=0;
+	public static final int USER_MODERATE=2;
+	
 	private int id;
 	private String username;
 	private String email;

@@ -37,7 +37,7 @@ import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.AttachPicture;
 import com.vphoainha.itfmobile.model.Folder;
 import com.vphoainha.itfmobile.model.Tag;
-import com.vphoainha.itfmobile.model.TThread;
+import com.vphoainha.itfmobile.model.Thread;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.UploadPicture;
@@ -60,7 +60,7 @@ public class AddThreadActivity extends FatherActivity {
 
 	Context context;
 	private int mode = 1;
-	private TThread curThread;
+	private Thread curThread;
 
 	private ProgressDialog dialog = null;
 
@@ -78,7 +78,7 @@ public class AddThreadActivity extends FatherActivity {
 		if (mode == 1)
 			tvTitle.setText("Post a new thread");
 		else {
-			curThread = (TThread) getIntent().getSerializableExtra("thread");
+			curThread = (Thread) getIntent().getSerializableExtra("thread");
 			tvTitle.setText("Edit thread");
 			txtTitle.setEnabled(false);
 
@@ -194,7 +194,7 @@ public class AddThreadActivity extends FatherActivity {
 		if (attachPictures.size() > 0) {
 			dialog = ProgressDialog.show(AddThreadActivity.this, "", "Uploading screenshots...", true);
 			// messageText.setText("uploading started.....");
-			new Thread(new Runnable() {
+			new java.lang.Thread(new Runnable() {
 				int i;
 
 				public void run() {

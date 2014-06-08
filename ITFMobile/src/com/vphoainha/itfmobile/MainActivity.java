@@ -32,6 +32,7 @@ import com.vphoainha.itfmobile.frag.ProfileFragment;
 import com.vphoainha.itfmobile.frag.SearchFragment;
 import com.vphoainha.itfmobile.frag.TopMemberFragment;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
+import com.vphoainha.itfmobile.model.User;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.MySharedPreferences;
@@ -52,7 +53,7 @@ public class MainActivity extends FragmentActivity {
 	private LinearLayout lnMyQuestions, lnMyAnswers, lnMyRating, lnAccount, lnLogin, lnLogout;
 	private TextView tvUsername, tvUserEmail, tv_title;
 	private EditText txtSearch;
-	private ImageButton btnSearch;
+	private ImageButton btnSearch, btnAddFolder;
 	private FrameLayout fl_numnotify;
 
 	private boolean _doubleBackToExitPressedOnce = false;
@@ -89,6 +90,7 @@ public class MainActivity extends FragmentActivity {
 		tvUserEmail = (TextView) findViewById(R.id.tvUserEmail);
 		tv_title = (TextView) findViewById(R.id.tv_title);
 		fl_numnotify = (FrameLayout) findViewById(R.id.fl_numnotify);
+		btnAddFolder = (ImageButton) findViewById(R.id.btn_add_folder);
 
 		lnMyQuestions = (LinearLayout) findViewById(R.id.lnMyQuestions);
 		lnMyAnswers = (LinearLayout) findViewById(R.id.lnMyAnswers);
@@ -105,7 +107,12 @@ public class MainActivity extends FragmentActivity {
 				startSearch();
 			}
 		});
-//		txtSearch.seton
+		btnAddFolder.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(MainActivity.this, AddFolderActivity.class));
+			}
+		});
 
 		initViewMenu();
 		cur_frag=FRAG_HOME;
@@ -240,10 +247,11 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	public void hideLoggedFunction() {
+		btnAddFolder.setVisibility(View.GONE);
 		fl_numnotify.setVisibility(View.GONE);
-		lnMyQuestions.setVisibility(View.GONE);
-		lnMyAnswers.setVisibility(View.GONE);
-		lnMyRating.setVisibility(View.GONE);
+//		lnMyQuestions.setVisibility(View.GONE);
+//		lnMyAnswers.setVisibility(View.GONE);
+//		lnMyRating.setVisibility(View.GONE);
 		lnAccount.setVisibility(View.GONE);
 		
 		lnLogin.setVisibility(View.VISIBLE);
@@ -251,7 +259,11 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	public void showLoggedFunction() {
-//		fl_numnotify.setVisibility(View.VISIBLE);
+		if(AppData.saveUser.getUserType()==User.USER_ADMIN || AppData.saveUser.getUserType()==User.USER_MODERATE){
+			btnAddFolder.setVisibility(View.VISIBLE);
+		}
+		
+		fl_numnotify.setVisibility(View.VISIBLE);
 //		lnMyQuestions.setVisibility(View.VISIBLE);
 //		lnMyAnswers.setVisibility(View.VISIBLE);
 //		lnMyRating.setVisibility(View.VISIBLE);
