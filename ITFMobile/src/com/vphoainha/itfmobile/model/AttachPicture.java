@@ -7,18 +7,11 @@ import com.vphoainha.itfmobile.adapter.AttachPictureLargeAdapter;
 import com.vphoainha.itfmobile.util.ImageService;
 
 public class AttachPicture {
-	private int id;
 	private String name, fileName;
 	private Bitmap bitmap;
 	
 	private AttachPictureLargeAdapter pa;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getName() {
 		return name;
 	}
@@ -45,7 +38,7 @@ public class AttachPicture {
         }
     }
  
-    private class ImageLoadTask extends AsyncTask<String, String, Bitmap> {
+    private class ImageLoadTask extends AsyncTask<String, Void, Bitmap> {
         protected Bitmap doInBackground(String... param) {
             try {
                 Bitmap b = ImageService.getBitmapFromURL(param[0]);

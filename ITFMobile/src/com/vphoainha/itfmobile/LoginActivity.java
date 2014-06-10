@@ -52,8 +52,9 @@ public class LoginActivity extends FatherActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		initFather();
-
+		
 		tvTitle.setText("Login");
+		tvSubTitle.setVisibility(View.VISIBLE);
 
 		txtUsername = (EditText) findViewById(R.id.edtLoginEmail);
 		txtPassword = (EditText) findViewById(R.id.edtLoginPassword);

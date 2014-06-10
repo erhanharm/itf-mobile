@@ -22,7 +22,7 @@ public class AttachedPicturesActivity extends FatherActivity {
 	ListView lvAttach;
 
 	AttachPictureLargeAdapter attachPictureLargeAdapter;
-	
+
 	String picture;
 
 	@Override
@@ -35,20 +35,20 @@ public class AttachedPicturesActivity extends FatherActivity {
 		tvTitle.setText("Attached pictures");
 		tvSubTitle.setVisibility(View.GONE);
 
-		picture=getIntent().getStringExtra("pictures");
-		
+		picture = getIntent().getStringExtra("pictures");
+
 		initAttachPicList();
 	}
 
 	private void initAttachPicList() {
 		lvAttach = (ListView) findViewById(R.id.lvAttach);
-		
-		String[] pictures=picture.split(";");
-		
-		attachPictures=new ArrayList<AttachPicture>();
-		for(int i=0;i<pictures.length;i++){
-			AttachPicture attachPicture=new AttachPicture();
-			String path=WsUrl.URL+"uploads/"+pictures[i];
+
+		String[] pictures = picture.split(";");
+
+		attachPictures = new ArrayList<AttachPicture>();
+		for (int i = 0; i < pictures.length; i++) {
+			AttachPicture attachPicture = new AttachPicture();
+			String path = WsUrl.URL + "uploads/" + pictures[i];
 			attachPicture.setFileName(path);
 			attachPicture.setName(pictures[i]);
 			attachPictures.add(attachPicture);
@@ -58,14 +58,14 @@ public class AttachedPicturesActivity extends FatherActivity {
 		lvAttach.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				bm=attachPictures.get(arg2).getBitmap();
-				Intent i=new Intent(AttachedPicturesActivity.this, PictureViewerActivity.class);
+				bm = attachPictures.get(arg2).getBitmap();
+				Intent i = new Intent(AttachedPicturesActivity.this, PictureViewerActivity.class);
 				startActivity(i);
 			}
 		});
-		
+
 		for (AttachPicture p : attachPictures) {
-            p.loadImage(attachPictureLargeAdapter);
+			p.loadImage(attachPictureLargeAdapter);
 		}
 	}
 
