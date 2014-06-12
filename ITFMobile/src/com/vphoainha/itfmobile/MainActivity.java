@@ -96,8 +96,8 @@ public class MainActivity extends FragmentActivity {
 		}
 		
 		// init GCM and save regId to Utils
-		initGCM();
 		init();
+		initGCM();
 
 		tvUsername = (TextView) findViewById(R.id.tvUserName);
 		tvUserEmail = (TextView) findViewById(R.id.tvUserEmail);
@@ -409,8 +409,10 @@ public class MainActivity extends FragmentActivity {
 		if(AppData.isLogin){
 			Log.i("======", AppData.saveUser.getEmail()+"    "+ AppData.saveUser.getPassword());
 			Log.i("===GCM device ID===", Utils.regId);
+//			Toast.makeText(this, "===GCM device ID==="+Utils.regId, Toast.LENGTH_SHORT).show();
 			(new jsReLogin()).execute(new String[] { WsUrl.URL_LOGIN, AppData.saveUser.getUsername(), AppData.saveUser.getPassword(), Utils.getDeviceID(this)});
 			
+			AppData.users=new ArrayList<User>();
 			if(AppData.saveUser.getUserType()==User.USER_ADMIN){
 				(new jsGetAllUsers()).execute(new String[] { WsUrl.URL_GET_USERS});
 			}
@@ -422,7 +424,6 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			AppData.users=new ArrayList<User>();
 		}
 		
 		@Override
@@ -441,20 +442,20 @@ public class MainActivity extends FragmentActivity {
 						JSONObject obj = array.getJSONObject(i);
 
 						User user = new User();
-						user.setId(Integer.parseInt(object.getString(JsonTag.TAG_ID)));
-						user.setUsername(object.getString(JsonTag.TAG_USER_NAME));
-						user.setPassword(object.getString(JsonTag.TAG_PASSWORD));
-						user.setName(object.getString(JsonTag.TAG_NAME));
-						user.setEmail(object.getString(JsonTag.TAG_EMAIL));
-						user.setUserType(Integer.parseInt(object.getString(JsonTag.TAG_USER_TYPE)));
-						user.setUserClass(object.getString(JsonTag.TAG_CLASS));
-						user.setBirthday(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_BIRTHDAY)));
-						user.setJoinDate(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_JOINDATE)));
-						user.setAddress(object.getString(JsonTag.TAG_ADDRESS));
-						user.setInterest(object.getString(JsonTag.TAG_INTEREST));
-						user.setSignature(object.getString(JsonTag.TAG_SIGNATURE));
-						user.setName(object.getString(JsonTag.TAG_NAME));
-						user.setDeviceId(object.getString(JsonTag.TAG_DEVICE_ID));
+						user.setId(Integer.parseInt(obj.getString(JsonTag.TAG_ID)));
+						user.setUsername(obj.getString(JsonTag.TAG_USER_NAME));
+						user.setPassword(obj.getString(JsonTag.TAG_PASSWORD));
+						user.setName(obj.getString(JsonTag.TAG_NAME));
+						user.setEmail(obj.getString(JsonTag.TAG_EMAIL));
+						user.setUserType(Integer.parseInt(obj.getString(JsonTag.TAG_USER_TYPE)));
+						user.setUserClass(obj.getString(JsonTag.TAG_CLASS));
+						user.setBirthday(DateTimeHelper.stringToDateTime(obj.getString(JsonTag.TAG_BIRTHDAY)));
+						user.setJoinDate(DateTimeHelper.stringToDateTime(obj.getString(JsonTag.TAG_JOINDATE)));
+						user.setAddress(obj.getString(JsonTag.TAG_ADDRESS));
+						user.setInterest(obj.getString(JsonTag.TAG_INTEREST));
+						user.setSignature(obj.getString(JsonTag.TAG_SIGNATURE));
+						user.setName(obj.getString(JsonTag.TAG_NAME));
+						user.setDeviceId(obj.getString(JsonTag.TAG_DEVICE_ID));
 						
 						AppData.users.add(user);
 					}

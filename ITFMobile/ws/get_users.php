@@ -16,19 +16,19 @@ $response = array();
             //$count++;
             //if($count>= $from && $count <= $to){
                 $user = array();
-				$user["id"] = $result["id"];
-				$user["username"] = $result["username"];
-				$user["password"] = $result["password"];
-				$user["name"] = $result["name"];
-				$user["email"] = $result["email"];
-				$user["user_type"] = $result["user_type"];
-				$user["class"] = $result["class"];
-				$user["birthday"] = $result["birthday"];
-				$user["address"] = $result["address"];
-				$user["interest"] = $result["interest"];
-				$user["signature"] = $result["signature"];
-				$user["join_date"] = $result["join_date"];
-				$user["device_id"] = $result["device_id"];
+				$user["id"] = $row["id"];
+				$user["username"] = $row["username"];
+				$user["password"] = $row["password"];
+				$user["name"] = $row["name"];
+				$user["email"] = $row["email"];
+				$user["user_type"] = $row["user_type"];
+				$user["class"] = $row["class"];
+				$user["birthday"] = $row["birthday"];
+				$user["address"] = $row["address"];
+				$user["interest"] = $row["interest"];
+				$user["signature"] = $row["signature"];
+				$user["join_date"] = $row["join_date"];
+				$user["device_id"] = $row["device_id"];
 
                 array_push($response["users"], $user);
             //}

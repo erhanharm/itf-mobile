@@ -27,7 +27,7 @@ import com.vphoainha.itfmobile.util.WsUrl;
 
 public class NotificationUtil {
 	
-	public static void sendNotify(Context cxt, int forUserid, String content) {
+	public void sendNotify(Context cxt, int forUserid, String content) {
 		new AsyncTask<String, Void, String>() {
 
 			@Override
@@ -39,8 +39,8 @@ public class NotificationUtil {
 			protected String doInBackground(String... params) {
 				List<NameValuePair> par = new ArrayList<NameValuePair>();
 				par.add(new BasicNameValuePair("content", params[1]));
-				par.add(new BasicNameValuePair("userId", params[2]));
-				par.add(new BasicNameValuePair("forUserId", params[3]));
+				par.add(new BasicNameValuePair("user_id", params[2]));
+				par.add(new BasicNameValuePair("for_user_id", params[3]));
 
 				JSONParser jsonParser = new JSONParser();
 				JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
@@ -61,7 +61,7 @@ public class NotificationUtil {
 
 			@Override
 			protected void onPostExecute(String result) {
-
+				Log.i("=======sendNotify======", result+"_");
 			}
 		}.execute(new String[] { WsUrl.URL_ADD_NOTIFICATION, content, AppData.saveUser.getId() + "", forUserid + "" });
 	}

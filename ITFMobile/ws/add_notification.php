@@ -1,17 +1,17 @@
 <?php
-require_once('gcm_send_push.php');
+require_once('send_notification.php');
 
-if (isset($_POST['content']) && isset($_POST['userId']) && isset($_POST['forUserId'])) {
+if (isset($_POST['content']) && isset($_POST['user_id']) && isset($_POST['for_user_id'])) {
 
 	$content = $_POST['content']; 
-	$userId = $_POST['userId']; 
-	$forUserId = $_POST['forUserId']; 
+	$user_id = $_POST['user_id']; 
+	$for_user_id = $_POST['for_user_id']; 
    
-	send_notification($content, $userId, $forUserId);
+	send_notification($content, $user_id, $for_user_id);
 	
 	$response["success"] = 1;
     $response["message"] = "Notification sent!";
-
+	echo json_encode($response);
 } else {
     $response["success"] = 0;
     $response["message"] = "Required field(s) is missing";

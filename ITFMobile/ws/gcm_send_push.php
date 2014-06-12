@@ -3,8 +3,6 @@
 	//Sending Push Notification
    function send_push_notification($registatoin_ids, $message) {
 
-		//echo $registatoin_ids[0];
-   
 		$GOOGLE_API_KEY = "AIzaSyBX45xiF9EKD6LZiR3-SUjJZGU83s4N8go";
    
         // Set POST variables

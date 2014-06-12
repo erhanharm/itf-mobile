@@ -282,8 +282,11 @@ public class AddThreadActivity extends FatherActivity {
 					
 					//send to all user by admin
 					for(User user:AppData.users)
-						if(user.getId()!=AppData.saveUser.getId())
-							NotificationUtil.sendNotify(AddThreadActivity.this, user.getId(), content);
+						if(user.getId()!=AppData.saveUser.getId()){
+							Log.i("=====send to user id=====", user.getId()+"");
+							new NotificationUtil().sendNotify(AddThreadActivity.this, user.getId(), content);
+						}
+					
 				}
 				
 				setResult(RESULT_OK);
