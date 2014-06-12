@@ -36,7 +36,8 @@ public class Utils {
 	}
 	
 	public static String getDeviceID(Context cxt){
-		return Secure.getString(cxt.getContentResolver(),Secure.ANDROID_ID); 
+		return regId;
+//		return Secure.getString(cxt.getContentResolver(),Secure.ANDROID_ID); 
 	}
 	
 	public static void showAlert(Context cxt, String title, String message) {

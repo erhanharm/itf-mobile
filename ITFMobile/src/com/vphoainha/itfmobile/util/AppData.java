@@ -14,6 +14,8 @@ public class AppData {
 
 	public static List<Folder> allFolders;
 	public static List<Folder> folders;
+	
+	public static List<User> users=null;
 
 	public static List<Folder> getSubFolders(int folderId) {
 		List<Folder> temp = new ArrayList<Folder>();

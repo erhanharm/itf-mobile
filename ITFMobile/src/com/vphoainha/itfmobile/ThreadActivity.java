@@ -29,6 +29,7 @@ import com.vphoainha.itfmobile.adapter.ReplyAdapter;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Reply;
 import com.vphoainha.itfmobile.model.Thread;
+import com.vphoainha.itfmobile.model.User;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
@@ -84,8 +85,13 @@ public class ThreadActivity extends FatherActivity {
 		tvAuthor.setText(curThread.getUserName());
 		tvTag.setText(curThread.getTags());
 		
-		if(AppData.isLogin==true && curThread.getUserId()==AppData.saveUser.getId()) tvEdit.setVisibility(View.VISIBLE);
-		else tvEdit.setVisibility(View.GONE);
+		tvEdit.setVisibility(View.GONE);
+		tvDelete.setVisibility(View.GONE);
+		if(AppData.isLogin==true){
+			if(curThread.getUserId()==AppData.saveUser.getId() || AppData.saveUser.getUserType()==User.USER_ADMIN) tvEdit.setVisibility(View.VISIBLE);
+			if(AppData.saveUser.getUserType()==User.USER_ADMIN) tvDelete.setVisibility(View.VISIBLE);
+		}
+		
 		tvEdit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -163,8 +169,8 @@ public class ThreadActivity extends FatherActivity {
 			}
 		});
 		
-		btn_reply.setVisibility(View.VISIBLE);
-		btn_reply.setOnClickListener(new OnClickListener() {
+		btnReply.setVisibility(View.VISIBLE);
+		btnReply.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				if(!AppData.isLogin){
@@ -175,6 +181,19 @@ public class ThreadActivity extends FatherActivity {
 					in.putExtra("thread_id", curThread.getId());
 					startActivityForResult(in, 112);
 				}
+			}
+		});
+		
+		btnShare.setVisibility(View.VISIBLE);
+		btnShare.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				String content=curThread.getTitle()+"\n\n"+curThread.getContent()+"\n\nBy "+curThread.getUserName()+", at "+DateTimeHelper.dateTimeToDateString(curThread.getTime());
+				
+				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+				sharingIntent.setType("text/html");
+				sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, content);
+				startActivity(Intent.createChooser(sharingIntent,"Share using"));
 			}
 		});
 		
@@ -297,6 +316,7 @@ public class ThreadActivity extends FatherActivity {
 						replies.add(t);
 					}
 					msg=json.getString("message");
+					Log.i("=======================", msg);
 					return 1;
 				} else {
 					return 0;

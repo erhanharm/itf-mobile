@@ -176,65 +176,6 @@
 						    </LinearLayout>
 
 						    <LinearLayout
-						        android:id="@+id/lnMyQuestions"
-						        android:layout_width="match_parent"
-						        android:layout_height="wrap_content"
-						        android:background="@drawable/bg_topbutton"
-						        android:clickable="true"
-						        android:gravity="center_vertical"
-						        android:onClick="onclickMyQuestions"
-						        android:padding="10dp"
-						        android:visibility="gone" >
-
-						        <TextView
-						            android:layout_width="wrap_content"
-						            android:layout_height="wrap_content"
-						            android:layout_weight="1"
-						            android:text="My Questions"
-						            android:textColor="#FFFFFF"
-						            android:textSize="16sp" />
-						    </LinearLayout>
-
-						    <LinearLayout
-						        android:id="@+id/lnMyAnswers"
-						        android:layout_width="match_parent"
-						        android:layout_height="wrap_content"
-						        android:background="@drawable/bg_topbutton"
-						        android:clickable="true"
-						        android:gravity="center_vertical"
-						        android:onClick="onclickMyAnswers"
-						        android:padding="10dp"
-						        android:visibility="gone" >
-
-						        <TextView
-						            android:layout_width="wrap_content"
-						            android:layout_height="wrap_content"
-						            android:text="My Answers"
-						            android:textColor="#FFFFFF"
-						            android:textSize="16sp" />
-						    </LinearLayout>
-
-						    <LinearLayout
-						        android:id="@+id/lnMyRating"
-						        android:layout_width="match_parent"
-						        android:layout_height="wrap_content"
-						        android:background="@drawable/bg_topbutton"
-						        android:clickable="true"
-						        android:gravity="center_vertical"
-						        android:onClick="onclickMyRating"
-						        android:padding="10dp"
-						        android:visibility="gone" >
-
-						        <TextView
-						            android:layout_width="wrap_content"
-						            android:layout_height="wrap_content"
-						            android:layout_weight="1"
-						            android:text="My Rating"
-						            android:textColor="#FFFFFF"
-						            android:textSize="16sp" />
-						    </LinearLayout>
-
-						    <LinearLayout
 						        android:layout_width="match_parent"
 						        android:layout_height="0dp"
 						        android:layout_weight="1"

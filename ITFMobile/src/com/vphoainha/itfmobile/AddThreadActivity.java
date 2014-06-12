@@ -89,8 +89,8 @@ public class AddThreadActivity extends FatherActivity {
 		}
 
 		tvSubTitle.setVisibility(View.GONE);
-		btn_ok.setVisibility(View.VISIBLE);
-		btn_ok.setOnClickListener(new OnClickListener() {
+		btnOk.setVisibility(View.VISIBLE);
+		btnOk.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String content = txtContent.getText().toString().trim();
@@ -278,7 +278,12 @@ public class AddThreadActivity extends FatherActivity {
 
 				if(AppData.saveUser.getUserType()==User.USER_ADMIN){
 					Folder f = AppData.folders.get(AppData.folders.size() - 1);
-					NotificationUtil.sendNotify(AddThreadActivity.this, 4, AppData.saveUser.getName()+" posted new thread: \""+params[1]+"\" in folder: \""+f.getName()+"\"");
+					String content=AppData.saveUser.getName()+" posted new thread: \""+params[1]+"\" in folder: \""+f.getName()+"\"";
+					
+					//send to all user by admin
+					for(User user:AppData.users)
+						if(user.getId()!=AppData.saveUser.getId())
+							NotificationUtil.sendNotify(AddThreadActivity.this, user.getId(), content);
 				}
 				
 				setResult(RESULT_OK);

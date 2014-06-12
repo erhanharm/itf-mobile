@@ -53,7 +53,7 @@ public class FolderAdapter extends ArrayAdapter<Folder> {
 		holder.tvTile.setText(q.getName());
 		holder.tvNumThread.setText(q.getNum_thread()+" threads");
 		if(q.getNote()!=null && !q.getNote().equals("")){
-			holder.tvDescription.setText("by "+q.getNote());
+			holder.tvDescription.setText(q.getNote());
 			holder.tvDescription.setVisibility(View.VISIBLE);
 		}
 		else holder.tvDescription.setVisibility(View.GONE);

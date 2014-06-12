@@ -7,6 +7,7 @@ public class WsUrl {
 	public final static String URL_REGISTER = URL + "register.php";
 	public final static String URL_LOGIN = URL + "login.php";
 	public final static String URL_UPDATE_PROFILE = URL + "update_profile.php";
+	public final static String URL_GET_USERS = URL + "get_users.php";
 	
 	public final static String URL_ADD_FOLDER = URL + "add_folder.php";
 	public final static String URL_ADD_THREAD = URL + "add_thread.php";

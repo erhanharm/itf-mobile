@@ -14,9 +14,9 @@
     
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <permission
-        android:name="com.inst.answer.permission.C2D_MESSAGE"
+        android:name="com.vphoainha.itfmobile.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.inst.answer.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.vphoainha.itfmobile.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     
 	<application

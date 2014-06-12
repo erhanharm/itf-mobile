@@ -31,6 +31,7 @@ import com.vphoainha.itfmobile.LoginActivity;
 import com.vphoainha.itfmobile.R;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.Reply;
+import com.vphoainha.itfmobile.model.User;
 import com.vphoainha.itfmobile.util.AppData;
 import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
@@ -159,8 +160,12 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 			}
 		});
 		
-		if(AppData.isLogin==true && reply.getUserId()==AppData.saveUser.getId()) holder.tvEdit.setVisibility(View.VISIBLE);
-		else holder.tvEdit.setVisibility(View.GONE);
+		holder.tvEdit.setVisibility(View.GONE);
+		holder.tvDelete.setVisibility(View.GONE);
+		if(AppData.isLogin==true){
+			if(reply.getUserId()==AppData.saveUser.getId() || AppData.saveUser.getUserType()==User.USER_ADMIN) holder.tvEdit.setVisibility(View.VISIBLE);
+			if(AppData.saveUser.getUserType()==User.USER_ADMIN) holder.tvDelete.setVisibility(View.VISIBLE);
+		}
 		
 		holder.tvEdit.setTag(R.string.TAG_REPLY, reply);
 		holder.tvDelete.setTag(R.string.TAG_REPLY, reply);

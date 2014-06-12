@@ -80,8 +80,8 @@ public class SubFolderActivity extends FatherActivity {
 		
 		TextView tvThreadsinFolder = (TextView) findViewById(R.id.tvThreadsinFolder);
 		tvThreadsinFolder.setText(tvThreadsinFolder.getText().toString()+curFolder.getName());
-		btn_add_thread.setVisibility(View.VISIBLE);
-		btn_add_thread.setOnClickListener(new OnClickListener() {
+		btnAddThread.setVisibility(View.VISIBLE);
+		btnAddThread.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				if(!AppData.isLogin){

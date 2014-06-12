@@ -72,8 +72,8 @@ public class AddReplyActivity extends FatherActivity {
 		}
 		
 		tvSubTitle.setVisibility(View.GONE);
-		btn_ok.setVisibility(View.VISIBLE);
-		btn_ok.setOnClickListener(new OnClickListener() {
+		btnOk.setVisibility(View.VISIBLE);
+		btnOk.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(mode==1)	wsAddReply();

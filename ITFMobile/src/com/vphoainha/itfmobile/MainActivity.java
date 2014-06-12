@@ -29,13 +29,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gcm.GCMRegistrar;
 import com.vphoainha.itfmobile.frag.HomeFragment;
 import com.vphoainha.itfmobile.frag.ProfileFragment;
 import com.vphoainha.itfmobile.frag.SearchFragment;
 import com.vphoainha.itfmobile.frag.TopMemberFragment;
+import com.vphoainha.itfmobile.gcm.Config;
+import com.vphoainha.itfmobile.gcm.Controller;
 import com.vphoainha.itfmobile.jsonparser.JSONParser;
 import com.vphoainha.itfmobile.model.User;
 import com.vphoainha.itfmobile.util.AppData;
+import com.vphoainha.itfmobile.util.DateTimeHelper;
 import com.vphoainha.itfmobile.util.JsonTag;
 import com.vphoainha.itfmobile.util.MySharedPreferences;
 import com.vphoainha.itfmobile.util.Utils;
@@ -54,7 +58,7 @@ public class MainActivity extends FragmentActivity {
 	private CustomSlidingPaneLayout spl;
 	private MySharedPreferences mySharedPreferences;
 	
-	private LinearLayout lnMyQuestions, lnMyAnswers, lnMyRating, lnAccount, lnLogin, lnLogout;
+	private LinearLayout lnAccount, lnLogin, lnLogout;
 	private TextView tvUsername, tvUserEmail, tv_title, tv_numnotify;
 	private EditText txtSearch;
 	private ImageButton btnSearch, btnAddFolder, btnRefresh;
@@ -81,7 +85,7 @@ public class MainActivity extends FragmentActivity {
 
 		spl = (CustomSlidingPaneLayout) findViewById(R.id.slidingPane);
 
-		if(!Utils.checkInternetConnection(this)){
+		if (!Utils.checkInternetConnection(this)) {
 			Utils.showAlert(this, "Sorry!", getString(R.string.cant_connect_internet), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
@@ -91,6 +95,8 @@ public class MainActivity extends FragmentActivity {
 			return;
 		}
 		
+		// init GCM and save regId to Utils
+		initGCM();
 		init();
 
 		tvUsername = (TextView) findViewById(R.id.tvUserName);
@@ -102,9 +108,6 @@ public class MainActivity extends FragmentActivity {
 		btnAddFolder = (ImageButton) findViewById(R.id.btn_add_folder);
 		btnRefresh = (ImageButton) findViewById(R.id.btn_refresh);
 
-		lnMyQuestions = (LinearLayout) findViewById(R.id.lnMyQuestions);
-		lnMyAnswers = (LinearLayout) findViewById(R.id.lnMyAnswers);
-		lnMyRating = (LinearLayout) findViewById(R.id.lnMyRating);
 		lnAccount = (LinearLayout) findViewById(R.id.lnAccount);
 		lnLogin = (LinearLayout) findViewById(R.id.lnLogin);
 		lnLogout = (LinearLayout) findViewById(R.id.lnLogout);
@@ -146,10 +149,6 @@ public class MainActivity extends FragmentActivity {
 		//load user saved
 		mySharedPreferences = new MySharedPreferences(this);
 		mySharedPreferences.getSaveUserPreferences();
-		if(AppData.isLogin){
-			Log.i("======", AppData.saveUser.getEmail()+"    "+ AppData.saveUser.getPassword());
-			(new jsReLogin()).execute(new String[] { WsUrl.URL_LOGIN, AppData.saveUser.getUsername(), AppData.saveUser.getPassword(), Utils.getDeviceID(this)});
-		}		
 	}
 	
 	private void startSearch(){
@@ -272,9 +271,6 @@ public class MainActivity extends FragmentActivity {
 	public void hideLoggedFunction() {
 		btnAddFolder.setVisibility(View.GONE);
 		fl_numnotify.setVisibility(View.GONE);
-//		lnMyQuestions.setVisibility(View.GONE);
-//		lnMyAnswers.setVisibility(View.GONE);
-//		lnMyRating.setVisibility(View.GONE);
 		lnAccount.setVisibility(View.GONE);
 		
 		lnLogin.setVisibility(View.VISIBLE);
@@ -282,14 +278,11 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	public void showLoggedFunction() {
-		if(AppData.saveUser.getUserType()==User.USER_ADMIN || AppData.saveUser.getUserType()==User.USER_MODERATE){
+		if(AppData.saveUser.getUserType()==User.USER_ADMIN){
 			btnAddFolder.setVisibility(View.VISIBLE);
 		}
 		
 		fl_numnotify.setVisibility(View.VISIBLE);
-//		lnMyQuestions.setVisibility(View.VISIBLE);
-//		lnMyAnswers.setVisibility(View.VISIBLE);
-//		lnMyRating.setVisibility(View.VISIBLE);
 		lnAccount.setVisibility(View.VISIBLE);
 		
 		lnLogin.setVisibility(View.GONE);
@@ -393,5 +386,91 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 	
+	private void initGCM() {
+		// Make sure the device has the proper dependencies.
+		GCMRegistrar.checkDevice(this);
+
+		// Make sure the manifest permissions was properly set
+		GCMRegistrar.checkManifest(this);
+
+		// Get GCM registration id
+		Utils.regId = GCMRegistrar.getRegistrationId(this);
+
+		// Check if regid already presents
+		if (Utils.regId.equals("")) {
+			GCMRegistrar.register(this, Config.GOOGLE_SENDER_ID); // Register
+																	// with GCM
+			// Get GCM registration id again
+			Utils.regId = GCMRegistrar.getRegistrationId(this);
+		}
+
+		Controller.register(MainActivity.this, Utils.regId, 0);
+		
+		if(AppData.isLogin){
+			Log.i("======", AppData.saveUser.getEmail()+"    "+ AppData.saveUser.getPassword());
+			Log.i("===GCM device ID===", Utils.regId);
+			(new jsReLogin()).execute(new String[] { WsUrl.URL_LOGIN, AppData.saveUser.getUsername(), AppData.saveUser.getPassword(), Utils.getDeviceID(this)});
+			
+			if(AppData.saveUser.getUserType()==User.USER_ADMIN){
+				(new jsGetAllUsers()).execute(new String[] { WsUrl.URL_GET_USERS});
+			}
+		}
+	}
 	
+	public class jsGetAllUsers extends AsyncTask<String, Void, Integer> {
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			AppData.users=new ArrayList<User>();
+		}
+		
+		@Override
+		protected Integer doInBackground(String... params) {
+			List<NameValuePair> par = new ArrayList<NameValuePair>();
+			JSONParser jsonParser = new JSONParser();
+			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
+			Log.d("Create Response", json.toString());
+
+			try {
+				int success = json.getInt(JsonTag.TAG_SUCCESS);
+				if (success == 1) {
+					JSONArray array = json.getJSONArray(JsonTag.TAG_USERS);
+
+					for (int i = 0; i < array.length(); i++) {
+						JSONObject obj = array.getJSONObject(i);
+
+						User user = new User();
+						user.setId(Integer.parseInt(object.getString(JsonTag.TAG_ID)));
+						user.setUsername(object.getString(JsonTag.TAG_USER_NAME));
+						user.setPassword(object.getString(JsonTag.TAG_PASSWORD));
+						user.setName(object.getString(JsonTag.TAG_NAME));
+						user.setEmail(object.getString(JsonTag.TAG_EMAIL));
+						user.setUserType(Integer.parseInt(object.getString(JsonTag.TAG_USER_TYPE)));
+						user.setUserClass(object.getString(JsonTag.TAG_CLASS));
+						user.setBirthday(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_BIRTHDAY)));
+						user.setJoinDate(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_JOINDATE)));
+						user.setAddress(object.getString(JsonTag.TAG_ADDRESS));
+						user.setInterest(object.getString(JsonTag.TAG_INTEREST));
+						user.setSignature(object.getString(JsonTag.TAG_SIGNATURE));
+						user.setName(object.getString(JsonTag.TAG_NAME));
+						user.setDeviceId(object.getString(JsonTag.TAG_DEVICE_ID));
+						
+						AppData.users.add(user);
+					}
+					Log.i("======num of users=====", AppData.users.size()+" user(s)");
+					
+					return 1;
+				} else {
+					return 0;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return 0;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) { }
+	}
 }

@@ -55,8 +55,8 @@ public class AddFolderActivity extends FatherActivity {
 		txtNote = (EditText) findViewById(R.id.txtNote);
 		spParrentFolder = (Spinner) findViewById(R.id.spParrentFolder);
 
-		btn_ok.setVisibility(View.VISIBLE);
-		btn_ok.setOnClickListener(new OnClickListener() {
+		btnOk.setVisibility(View.VISIBLE);
+		btnOk.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String content = txtTitle.getText().toString().trim();
