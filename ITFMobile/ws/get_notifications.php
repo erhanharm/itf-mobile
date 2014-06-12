@@ -1,9 +1,9 @@
 <?php
 $response = array();
  
- if (isset($_POST['userId']) && isset($_POST['from']) && isset($_POST['to'])) {
+ if (isset($_POST['user_id']) && isset($_POST['from']) && isset($_POST['to'])) {
      
-    $userId = $_POST['userId'];
+    $user_id = $_POST['user_id'];
     $from = $_POST['from'];
     $to = $_POST['to'];
 
@@ -11,7 +11,7 @@ $response = array();
 
     $db = new DB_CONNECT();
 
-    $result = mysql_query("SELECT * FROM notification WHERE forUserId = ".$userId." ORDER BY time DESC LIMIT ".$to) or die(mysql_error());
+    $result = mysql_query("SELECT * FROM notification WHERE for_user_id = ".$user_id." ORDER BY time DESC LIMIT ".$to) or die(mysql_error());
 
     if ($result && mysql_num_rows($result) > 0) {
 
@@ -22,10 +22,10 @@ $response = array();
             if($count>= $from && $count <= $to){
                 $question = array();
                 $question["id"] = $row["id"];
-                $question["userId"] = $row["userId"];
+                $question["user_id"] = $row["user_id"];
                 $question["content"] = $row["content"];
                 $question["time"] = $row["time"];
-				$question["forUserId"] = $row["forUserId"];
+				$question["for_user_id"] = $row["for_user_id"];
 
                 array_push($response["notifications"], $question);
             }

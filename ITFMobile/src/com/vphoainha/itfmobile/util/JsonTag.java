@@ -11,6 +11,7 @@ public class JsonTag {
 	public final static String TAG_USER = "user";
 	public final static String TAG_ID = "id";
 	public final static String TAG_USER_ID = "user_id";
+	public final static String TAG_FOR_USER_Id = "for_user_id";
 	public final static String TAG_USER_NAME = "username";
 	public final static String TAG_PASSWORD = "password";
 	public final static String TAG_NAME = "name";
@@ -53,38 +54,4 @@ public class JsonTag {
 	
 	
 	
-	////
-	
-	public final static String TAG_QUESTION_ID = "questionId";
-	public final static String TAG_ANSWER_ID = "answerId";
-	
-	
-	public final static String TAG_CATEGORY = "categories";
-	public final static String TAG_MYEXPERT = "myexpert";
-	
-	
-//	public final static String TAG_TIME = "time";
-//	public final static String TAG_CONTENT = "content";
-	
-	
-	public final static String TAG_COUNTER_ASKED = "counterAsked";
-	public final static String TAG_COUNTER_ANSWER = "counterAnswer";
-	public final static String TAG_COUNTER_QUESTION = "counterQuestion";
-	
-	
-	public final static String TAG_RANK = "rank";
-	
-	public final static String TAG_FOR_USER_Id = "forUserId";
-	public final static String TAG_FOR_USER_NAME = "forUserName";
-	public final static String TAG_IS_ANSWERED = "isAnswered";
-//	public final static String TAG_EMAIL = "email";
-//	public final static String TAG_NAME = "name";
-//	public final static String TAG_DEVICE_ID = "deviceId";
-//	public final static String TAG_USER_NAME = "userName";
-	public final static String TAG_CATEGORY_NAME = "categoryName";
-	public final static String TAG_TOP_EXPERT = "TopExpert";
-	public final static String TAG_CATEGORY_ID = "categoryId";
-	public final static String TAG_ISANONYMOUS = "isAnonymous";
-//	public final static String TAG_PASSWORD = "password";
-	public final static String TAG_SAVEUSERID = "saveUserId";
 }

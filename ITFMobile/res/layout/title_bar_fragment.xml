@@ -43,6 +43,13 @@
 
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/btn_refresh"
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_topbutton"
+        android:src="@drawable/ic_refresh" />
+
     <FrameLayout
         android:id="@+id/fl_numnotify"
         android:layout_width="45dp"

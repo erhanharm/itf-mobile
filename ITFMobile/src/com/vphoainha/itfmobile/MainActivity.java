@@ -57,7 +57,7 @@ public class MainActivity extends FragmentActivity {
 	private LinearLayout lnMyQuestions, lnMyAnswers, lnMyRating, lnAccount, lnLogin, lnLogout;
 	private TextView tvUsername, tvUserEmail, tv_title, tv_numnotify;
 	private EditText txtSearch;
-	private ImageButton btnSearch, btnAddFolder;
+	private ImageButton btnSearch, btnAddFolder, btnRefresh;
 	private FrameLayout fl_numnotify, fl_numunread;
 
 	private boolean _doubleBackToExitPressedOnce = false;
@@ -100,6 +100,7 @@ public class MainActivity extends FragmentActivity {
 		fl_numnotify = (FrameLayout) findViewById(R.id.fl_numnotify);
 		fl_numunread = (FrameLayout) findViewById(R.id.fl_numunread);
 		btnAddFolder = (ImageButton) findViewById(R.id.btn_add_folder);
+		btnRefresh = (ImageButton) findViewById(R.id.btn_refresh);
 
 		lnMyQuestions = (LinearLayout) findViewById(R.id.lnMyQuestions);
 		lnMyAnswers = (LinearLayout) findViewById(R.id.lnMyAnswers);
@@ -120,6 +121,12 @@ public class MainActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				startActivityForResult(new Intent(MainActivity.this, AddFolderActivity.class), ADD_FOLDER);
+			}
+		});
+		btnRefresh.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				homeFragment.refreshHome();
 			}
 		});
 

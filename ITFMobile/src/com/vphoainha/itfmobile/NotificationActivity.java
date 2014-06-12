@@ -92,7 +92,7 @@ public class NotificationActivity extends FatherActivity {
 		@Override
 		protected String doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
-			par.add(new BasicNameValuePair("userId", params[1]));
+			par.add(new BasicNameValuePair("user_id", params[1]));
 			par.add(new BasicNameValuePair("from", params[2]));
 			par.add(new BasicNameValuePair("to", params[3]));
 

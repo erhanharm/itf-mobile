@@ -222,14 +222,14 @@ public class SubFolderActivity extends FatherActivity {
 		}
 	}
 	
-	public void wsViewThread() {
+	private void wsViewThread() {
 		if(!Utils.checkInternetConnection(this))
 			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else	
 			(new jsViewThread()).execute(new String[] { WsUrl.URL_VIEW_THREAD, Integer.toString(threads.get(selectedIndexThread).getId()) });
 	}
 
-	public class jsViewThread extends AsyncTask<String, Void, Integer> {
+	private class jsViewThread extends AsyncTask<String, Void, Integer> {
 		
 		ProgressDialog pd;
 		

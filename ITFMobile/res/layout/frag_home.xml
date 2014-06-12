@@ -5,16 +5,62 @@
     android:background="@color/bg"
     android:orientation="vertical" >
 
-			<ListView
-			    android:id="@+id/lvHome"
-			    android:layout_width="match_parent"
-			    android:layout_height="0dip"
-			    android:layout_weight="1"
-			    android:cacheColorHint="@color/bg"
-			    android:divider="@android:color/transparent"
-			    android:dividerHeight="0dp"
-			    android:listSelector="@android:color/transparent" >
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-			</ListView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#819231"
+                android:padding="5dp"
+                android:text="LATEST THREADS"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <ListView
+                android:id="@+id/lvLatestThreads"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:cacheColorHint="@color/bg"
+                android:divider="@color/text_hint"
+                android:dividerHeight="1px"
+                android:listSelector="@android:color/transparent" >
+            </ListView>
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#819231"
+                android:padding="5dp"
+                android:text="FORUM"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <ListView
+                android:id="@+id/lvHome"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:cacheColorHint="@color/bg"
+                android:divider="@color/text_hint"
+                android:dividerHeight="1px"
+                android:listSelector="@android:color/transparent" >
+            </ListView>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

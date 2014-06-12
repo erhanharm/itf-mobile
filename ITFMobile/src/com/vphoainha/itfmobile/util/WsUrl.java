@@ -13,6 +13,7 @@ public class WsUrl {
 	public final static String URL_EDIT_THREAD = URL + "edit_thread.php";
 	public final static String URL_DELETE_THREAD = URL + "delete_thread.php";
 	public final static String URL_GET_THREADS = URL + "get_threads.php";
+	public final static String URL_GET_LATEST_THREADS = URL + "get_latest_threads.php";
 	public final static String URL_VIEW_THREAD = URL + "view_thread.php";
 	public final static String URL_SEARCH_THREAD = URL + "search_thread.php";
 	
