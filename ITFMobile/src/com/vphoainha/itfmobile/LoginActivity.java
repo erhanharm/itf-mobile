@@ -43,7 +43,7 @@ public class LoginActivity extends FatherActivity {
 	final String DEFAULT_PASS = "123456";
 
 	private EditText txtUsername, txtPassword;
-	
+
 	private JSONObject object;
 	GraphUser faceUser;
 
@@ -52,7 +52,7 @@ public class LoginActivity extends FatherActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		initFather();
-		
+
 		tvTitle.setText("Login");
 		tvSubTitle.setVisibility(View.VISIBLE);
 
@@ -67,28 +67,25 @@ public class LoginActivity extends FatherActivity {
 			}
 		});
 		// set permission list, Don't foeget to add email
-		btnLoginFacebook.setReadPermissions(Arrays.asList("basic_info",
-				"email", "user_friends"));
+		btnLoginFacebook.setReadPermissions(Arrays.asList("basic_info", "email", "user_friends"));
 		// session state call back event
 		btnLoginFacebook.setSessionStatusCallback(new Session.StatusCallback() {
 			@Override
-			public void call(Session session, SessionState state,
-					Exception exception) {
+			public void call(Session session, SessionState state, Exception exception) {
 				if (session.isOpened()) {
 					Log.i("", "Access Token" + session.getAccessToken());
-					Request request = Request.newMeRequest(session,
-							new Request.GraphUserCallback() {
-								@Override
-								public void onCompleted(GraphUser user,
-										Response response) {
-									if (user != null) {
-										faceUser=user;
-//										Log.i("========", "facebook login ok"+user.getFirstName());
-										
-										accessWebserviceCHECKEMAIL(user.asMap().get("email").toString());
-									}
-								}
-							});
+					Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+						@Override
+						public void onCompleted(GraphUser user, Response response) {
+							if (user != null) {
+								faceUser = user;
+								// Log.i("========",
+								// "facebook login ok"+user.getFirstName());
+
+								accessWebserviceCHECKEMAIL(user.asMap().get("email").toString());
+							}
+						}
+					});
 					request.executeAsync();
 				}
 			}
@@ -111,8 +108,7 @@ public class LoginActivity extends FatherActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode,
-				resultCode, data);
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 	}
 
 	public void logoutFacebook() {
@@ -144,11 +140,9 @@ public class LoginActivity extends FatherActivity {
 		}
 
 		if (!Utils.checkInternetConnection(this))
-			Toast.makeText(this, getString(R.string.cant_connect_internet),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getString(R.string.cant_connect_internet), Toast.LENGTH_SHORT).show();
 		else
-			(new JsonReadTaskLOGIN()).execute(new String[] { WsUrl.URL_LOGIN,
-					userName, Utils.md5(password), Utils.getDeviceID(this) });
+			(new JsonReadTaskLOGIN()).execute(new String[] { WsUrl.URL_LOGIN, userName, Utils.md5(password), Utils.getDeviceID(this) });
 	}
 
 	public class JsonReadTaskLOGIN extends AsyncTask<String, Void, String> {
@@ -201,20 +195,16 @@ public class LoginActivity extends FatherActivity {
 				setResult(RESULT_OK);
 				finish();
 			} else {
-				Toast.makeText(LoginActivity.this,
-						"Login fail! Try a again later.", Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(LoginActivity.this, "Login fail! Try a again later.", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
 
 	private void accessWebserviceCHECKEMAIL(String email) {
-		(new JsonReadTaskCHECKEMAIL()).execute(new String[] { WsUrl.URL_CHECK_FACEBOOK_EMAIL,
-				email, SECURITY_CODE, Utils.getDeviceID(this) });
+		(new JsonReadTaskCHECKEMAIL()).execute(new String[] { WsUrl.URL_CHECK_FACEBOOK_EMAIL, email, SECURITY_CODE, Utils.getDeviceID(this) });
 	}
 
-	public class JsonReadTaskCHECKEMAIL extends
-			AsyncTask<String, Void, Integer> {
+	public class JsonReadTaskCHECKEMAIL extends AsyncTask<String, Void, Integer> {
 		ProgressDialog pd;
 
 		@Override
@@ -264,23 +254,23 @@ public class LoginActivity extends FatherActivity {
 				setResult(RESULT_OK);
 				finish();
 			} else {
-				(new JsonReadTaskREGISTER()).execute(new String[] { WsUrl.URL_REGISTER, faceUser.getUsername(), faceUser.asMap().get("email").toString(), Utils.md5(DEFAULT_PASS), Utils.getDeviceID(LoginActivity.this)});
+				(new JsonReadTaskREGISTER()).execute(new String[] { WsUrl.URL_REGISTER, faceUser.getUsername(), faceUser.asMap().get("email").toString(), Utils.md5(DEFAULT_PASS), Utils.getDeviceID(LoginActivity.this) });
 			}
 		}
 	}
-	
+
 	private class JsonReadTaskREGISTER extends AsyncTask<String, Void, String> {
 		ProgressDialog pd;
-		
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			pd=new ProgressDialog(LoginActivity.this);
+			pd = new ProgressDialog(LoginActivity.this);
 			pd.setMessage("Registering your new account...");
 			pd.setCancelable(false);
 			pd.show();
 		}
-		
+
 		@Override
 		protected String doInBackground(String... params) {
 			List<NameValuePair> par = new ArrayList<NameValuePair>();
@@ -288,10 +278,9 @@ public class LoginActivity extends FatherActivity {
 			par.add(new BasicNameValuePair("email", params[2]));
 			par.add(new BasicNameValuePair("password", params[3]));
 			par.add(new BasicNameValuePair("device_id", params[4]));
-			
+
 			JSONParser jsonParser = new JSONParser();
-			JSONObject json = jsonParser
-					.makeHttpRequest(params[0], "POST", par);
+			JSONObject json = jsonParser.makeHttpRequest(params[0], "POST", par);
 			Log.d("Create Response", json.toString());
 
 			try {
@@ -313,18 +302,19 @@ public class LoginActivity extends FatherActivity {
 
 		@Override
 		protected void onPostExecute(String result) {
-			if(pd!=null && pd.isShowing())  pd.dismiss();
-			
+			if (pd != null && pd.isShowing())
+				pd.dismiss();
+
 			if (result != null) {
 				readAndSaveLoginJsonObject(LoginActivity.this, object);
-				
+
 				Utils.showAlert(LoginActivity.this, "", "Register successfully! Your new account password is 123456, please go to your profile to change the password!", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						finish();
 					}
 				});
-				
+
 			} else {
 				Toast.makeText(LoginActivity.this, "Register fail. Try again later!", Toast.LENGTH_SHORT).show();
 			}
@@ -339,20 +329,19 @@ public class LoginActivity extends FatherActivity {
 				AppData.saveUser.setId(Integer.parseInt(object.getString(JsonTag.TAG_ID)));
 				AppData.saveUser.setUsername(object.getString(JsonTag.TAG_USER_NAME));
 				AppData.saveUser.setPassword(object.getString(JsonTag.TAG_PASSWORD));
-				AppData.saveUser.setName(object.getString(JsonTag.TAG_NAME));	
-				AppData.saveUser.setEmail(object.getString(JsonTag.TAG_EMAIL));	
+				AppData.saveUser.setName(object.getString(JsonTag.TAG_NAME));
+				AppData.saveUser.setEmail(object.getString(JsonTag.TAG_EMAIL));
 				AppData.saveUser.setUserType(Integer.parseInt(object.getString(JsonTag.TAG_USER_TYPE)));
-				AppData.saveUser.setUserClass(object.getString(JsonTag.TAG_CLASS));	
-				AppData.saveUser.setBirthday(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_BIRTHDAY)));	
-				AppData.saveUser.setJoinDate(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_JOINDATE)));	
-				AppData.saveUser.setAddress(object.getString(JsonTag.TAG_ADDRESS));	
-				AppData.saveUser.setInterest(object.getString(JsonTag.TAG_INTEREST));	
-				AppData.saveUser.setSignature(object.getString(JsonTag.TAG_SIGNATURE));	
-				AppData.saveUser.setName(object.getString(JsonTag.TAG_NAME));	
+				AppData.saveUser.setUserClass(object.getString(JsonTag.TAG_CLASS));
+				AppData.saveUser.setBirthday(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_BIRTHDAY)));
+				AppData.saveUser.setJoinDate(DateTimeHelper.stringToDateTime(object.getString(JsonTag.TAG_JOINDATE)));
+				AppData.saveUser.setAddress(object.getString(JsonTag.TAG_ADDRESS));
+				AppData.saveUser.setInterest(object.getString(JsonTag.TAG_INTEREST));
+				AppData.saveUser.setSignature(object.getString(JsonTag.TAG_SIGNATURE));
+				AppData.saveUser.setName(object.getString(JsonTag.TAG_NAME));
 				AppData.saveUser.setDeviceId(object.getString(JsonTag.TAG_DEVICE_ID));
 
-				new MySharedPreferences(ctx)
-						.setSaveUserPreferences();
+				new MySharedPreferences(ctx).setSaveUserPreferences();
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

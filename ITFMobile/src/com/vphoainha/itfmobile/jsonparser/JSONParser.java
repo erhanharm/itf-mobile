@@ -23,18 +23,10 @@ import android.util.Log;
 
 public class JSONParser {
 
-	static InputStream is = null;
-	static JSONObject jObj = null;
-	static String json = "";
-
-	// constructor
-	public JSONParser() {
-
-	}
-
 	// function get json from url
 	// by making HTTP POST or GET mehtod
 	public JSONObject makeHttpRequest(String url, String method, List<NameValuePair> params) {
+		InputStream is = null;
 
 		// Making HTTP request
 		try {
@@ -71,6 +63,7 @@ public class JSONParser {
 			e.printStackTrace();
 		}
 
+		String json = "";
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
 			StringBuilder sb = new StringBuilder();
@@ -85,6 +78,7 @@ public class JSONParser {
 		}
 
 		// try parse the string to a JSON object
+		JSONObject jObj = null;
 		try {
 			jObj = new JSONObject(json);
 		} catch (JSONException e) {
