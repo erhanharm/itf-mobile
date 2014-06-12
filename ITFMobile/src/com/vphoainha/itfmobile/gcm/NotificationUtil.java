@@ -38,6 +38,8 @@ public class NotificationUtil {
 			@Override
 			protected String doInBackground(String... params) {
 				List<NameValuePair> par = new ArrayList<NameValuePair>();
+				Log.i("content", params[1]+"_");
+				
 				par.add(new BasicNameValuePair("content", params[1]));
 				par.add(new BasicNameValuePair("user_id", params[2]));
 				par.add(new BasicNameValuePair("for_user_id", params[3]));

@@ -278,7 +278,7 @@ public class AddThreadActivity extends FatherActivity {
 
 				if(AppData.saveUser.getUserType()==User.USER_ADMIN){
 					Folder f = AppData.folders.get(AppData.folders.size() - 1);
-					String content=AppData.saveUser.getName()+" posted new thread: \""+params[1]+"\" in folder: \""+f.getName()+"\"";
+					String content=AppData.saveUser.getUsername()+" posted new thread: \""+params[1]+"\" in folder: \""+f.getName()+"\"";
 					
 					//send to all user by admin
 					for(User user:AppData.users)

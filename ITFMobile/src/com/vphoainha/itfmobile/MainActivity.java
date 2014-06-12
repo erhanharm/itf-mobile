@@ -265,6 +265,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	public void onclickNotification(View v) {
+		Utils.numUnreadNotifications = 0;
 		startActivity(new Intent(getApplicationContext(), NotificationActivity.class));
 	}
 

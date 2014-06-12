@@ -13,7 +13,7 @@ function send_notification($content, $user_id, $for_user_id) {
 		$result = mysql_query("INSERT INTO notification(user_id, for_user_id, content, time) VALUES('$user_id','$for_user_id', '$msg', NOW())");
 		
 		if($result){
-			$content=str_replace("\\", "", $content);
+			//$content=str_replace("\\", "", $content);
 		
 			$deviceIds = mysql_query("SELECT * FROM user WHERE id=".$for_user_id) or die(mysql_error());
 			if ($deviceIds && mysql_num_rows($deviceIds) > 0) {

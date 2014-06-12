@@ -64,7 +64,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 		// Waking up mobile if it is sleeping
 		Controller.acquireWakeLock(getApplicationContext());
 
-		Log.i(TAG, "Received message");
 		// String message = getString(R.string.gcm_message);
 		String message = intent.getExtras().getString("message");
 		// notifies user
@@ -73,6 +72,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			json = new JSONObject(message);
 			String msg = json.getString("data");
 			if(msg!=null && !msg.equals("")){
+				Log.i(TAG, "Received message:"+msg+"_");
 				NotificationUtil.generateNotification(context, msg);
 				Utils.numUnreadNotifications++;
 			}
