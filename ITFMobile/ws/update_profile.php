@@ -23,7 +23,7 @@ if (isset($_POST['user_id']) && isset($_POST['password']) && isset($_POST['name'
         if($password == ""){
             $result = mysql_query("UPDATE user SET  class = '$class', name = '$name', address='$address', interest='$interest', signature='$signature'  WHERE id = $user_id");            
         }else{
-            $result = mysql_query("UPDATE user SET  class = '$class', password = '$passwordMD5', name = '$name', address='$address', interest='$interest', signature='$signature'  WHERE id = $user_id");            
+            $result = mysql_query("UPDATE user SET  class = '$class', password = '$password', name = '$name', address='$address', interest='$interest', signature='$signature'  WHERE id = $user_id");            
         }
 
         if ($result) {
