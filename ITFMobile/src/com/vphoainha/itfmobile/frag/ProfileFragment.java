@@ -36,7 +36,6 @@ public class ProfileFragment extends Fragment {
 	static View view;	
 	
 	EditText txtEmail, txtName, txtOldPass, txtPassword, txtConfirm, txtClass, txtAddress, txtInterest, txtSignature;
-	CheckBox chkAnonymous;
 	Button btnUpdate;
 	
 	String msg;
@@ -91,7 +90,7 @@ public class ProfileFragment extends Fragment {
 				p2=txtPassword.getText().toString();
 				p3=txtConfirm.getText().toString();
 				
-				String password="";
+				String password=AppData.saveUser.getPassword();
 				
 				if(!p1.equals("") || !p2.equals("") || !p3.equals("")){
 					
@@ -111,8 +110,8 @@ public class ProfileFragment extends Fragment {
 				}
 				
 				(new JsonReadTask()).execute(new String[] { WsUrl.URL_UPDATE_PROFILE,
-						Integer.toString(AppData.saveUser.getId()),
-						AppData.saveUser.getEmail(), password, txtName.getText().toString(), 
+						AppData.saveUser.getId()+"",
+						password, txtName.getText().toString(), 
 						txtClass.getText().toString(),txtAddress.getText().toString(),
 						txtInterest.getText().toString(),txtSignature.getText().toString()});
 			}
@@ -174,6 +173,10 @@ public class ProfileFragment extends Fragment {
 				AppData.saveUser.setName(txtName.getText().toString());
 				if(!txtPassword.getText().toString().equals(""))
 					AppData.saveUser.setPassword(Utils.md5(txtPassword.getText().toString()));
+				AppData.saveUser.setUserClass(txtClass.getText().toString());
+				AppData.saveUser.setAddress(txtAddress.getText().toString());
+				AppData.saveUser.setInterest(txtInterest.getText().toString());
+				AppData.saveUser.setSignature(txtSignature.getText().toString());
 				new MySharedPreferences(getActivity()).setSaveUserPreferences();
 			}
 			else Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
