@@ -90,7 +90,7 @@ public class ProfileFragment extends Fragment {
 				p2=txtPassword.getText().toString();
 				p3=txtConfirm.getText().toString();
 				
-				String password=AppData.saveUser.getPassword();
+				String password="";
 				
 				if(!p1.equals("") || !p2.equals("") || !p3.equals("")){
 					
